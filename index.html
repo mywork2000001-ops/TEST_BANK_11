@@ -54,6 +54,11 @@
       color: var(--primary);
       transform: translateX(3px);
     }
+    .page-badge {
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--primary);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
     .search-input:focus {
       outline: none;
       border-color: var(--primary);
@@ -101,8 +106,28 @@
           📘 <span id="lbl-part1-tab">I Hissə (21 Bölmə)</span>
         </button>
         <button onclick="setPart('part2')" id="btn-part2" class="px-6 py-2.5 rounded-xl font-extrabold text-sm transition-all text-slate-300 hover:text-white">
-          📗 <span id="lbl-part2-tab">II Hissə (16 Bölmə)</span>
+          📗 <span id="lbl-part2-tab">II Hissə (18 Bölmə)</span>
         </button>
+      </div>
+    </div>
+
+    <!-- Stats & Overview Cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+      <div class="topic-card rounded-2xl p-4">
+        <p id="stat-lbl-chapters" class="text-xs text-slate-400 font-medium">Əsas Bölmələr</p>
+        <p id="stat-val-chapters" class="text-2xl font-black text-white mt-1">21 <span class="text-xs font-normal text-sky-400">bölmə</span></p>
+      </div>
+      <div class="topic-card rounded-2xl p-4">
+        <p id="stat-lbl-subtopics" class="text-xs text-slate-400 font-medium">Alt Mövzular</p>
+        <p id="stat-val-subtopics" class="text-2xl font-black text-sky-400 mt-1">71 <span id="stat-lbl-topics-unit" class="text-xs font-normal text-slate-400">mövzu</span></p>
+      </div>
+      <div class="topic-card rounded-2xl p-4">
+        <p id="stat-lbl-pages" class="text-xs text-slate-400 font-medium">Səhifə Həcmi</p>
+        <p id="stat-val-pages" class="text-2xl font-black text-indigo-400 mt-1">213 <span id="stat-lbl-page-unit" class="text-xs font-normal text-slate-400">səhifə</span></p>
+      </div>
+      <div class="topic-card rounded-2xl p-4">
+        <p id="stat-lbl-edition" class="text-xs text-slate-400 font-medium">Nəşr İli / Tiraj</p>
+        <p class="text-2xl font-black text-emerald-400 mt-1">2025 <span class="text-xs font-normal text-slate-400">/ 50.000</span></p>
       </div>
     </div>
 
@@ -113,7 +138,7 @@
           type="text" 
           id="searchInput" 
           oninput="handleSearch()"
-          placeholder="Mövzu və ya açar söz axtarın..." 
+          placeholder="Mövzu, açar söz və ya səhifə nömrəsi axtarın..." 
           class="search-input w-full bg-[#16223f] border border-[#24345d] rounded-xl px-4 py-3 pl-11 text-sm text-white placeholder-slate-400"
         >
         <svg class="w-5 h-5 absolute left-3.5 top-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -158,9 +183,16 @@
         mainTitle: "Riyaziyyat Test Toplusu 2025",
         subTitle: "Tam Orta (11 illik) və 9 illik Təhsil Səviyyəsi · I və II Hissə",
         part1Tab: "I Hissə (21 Bölmə)",
-        part2Tab: "II Hissə (16 Bölmə)",
-        searchPh: "Mövzu və ya açar söz axtarın...",
+        part2Tab: "II Hissə (18 Bölmə)",
+        statChapters: "Əsas Bölmələr",
+        statSubtopics: "Alt Mövzular",
+        statPages: "Səhifə Həcmi",
+        statPageUnit: "səhifə",
+        statEdition: "Nəşr İli / Tiraj",
         statTopicsUnit: "mövzu",
+        statChaptersUnit: "bölmə",
+        pagePrefix: "səh.",
+        searchPh: "Mövzu, açar söz və ya səhifə nömrəsi axtarın...",
         fltAll: "Bütün Mövzular",
         fltAlgebra: "Cəbr",
         fltGeometry: "Həndəsə",
@@ -176,9 +208,16 @@
         mainTitle: "Сборник тестов по математике 2025",
         subTitle: "Для выпускников 9 и 11 классов (ГЭЦ / DİM) · Часть I и II",
         part1Tab: "Часть I (21 Раздел)",
-        part2Tab: "Часть II (16 Разделов)",
-        searchPh: "Поиск темы или ключевого слова...",
+        part2Tab: "Часть II (18 Разделов)",
+        statChapters: "Количество разделов",
+        statSubtopics: "Тем и параграфов",
+        statPages: "Объем книги",
+        statPageUnit: "стр.",
+        statEdition: "Год / Тираж",
         statTopicsUnit: "тем",
+        statChaptersUnit: "разделов",
+        pagePrefix: "стр.",
+        searchPh: "Поиск темы, ключевого слова или страницы...",
         fltAll: "Все разделы",
         fltAlgebra: "Алгебра",
         fltGeometry: "Геометрия",
@@ -194,9 +233,16 @@
         mainTitle: "Mathematics Test Collection 2025",
         subTitle: "Official SEC/DIM Test Collection for Grades 9 & 11 · Parts I & II",
         part1Tab: "Part I (21 Chapters)",
-        part2Tab: "Part II (16 Chapters)",
-        searchPh: "Search topic or keyword...",
+        part2Tab: "Part II (18 Chapters)",
+        statChapters: "Main Chapters",
+        statSubtopics: "Subtopics",
+        statPages: "Book Volume",
+        statPageUnit: "pages",
+        statEdition: "Year / Print Run",
         statTopicsUnit: "topics",
+        statChaptersUnit: "chapters",
+        pagePrefix: "p.",
+        searchPh: "Search topic, keyword or page number...",
         fltAll: "All Chapters",
         fltAlgebra: "Algebra",
         fltGeometry: "Geometry",
@@ -210,651 +256,699 @@
       }
     };
 
+    // DİM 2025 RƏSMİ MÜNDƏRİCAT BAZASI (I VƏ II HİSSƏ)
     const partsData = {
       // ==========================================
       // ============ I HİSSƏ (1 - 21) ============
       // ==========================================
       part1: {
         folder: "1-ci_hissə",
+        totalPages: 213,
         chapters: [
           {
             id: 1,
+            page: 4,
             category: "algebra",
             folder: "Natural ədədlər",
             az: {
               title: "Natural ədədlər",
               items: [
-                { text: "Natural ədədlər. Natural ədədlərin onluq say sistemində yazılışı", file: "Natural ədədlər. Natural ədədlərin onluq say sistemində yazılışı.html" },
-                { text: "Natural ədədlərin toplanması, çıxılması, vurulması və bölünməsi", file: "Natural ədədlərin toplanması, çıxılması, vurulması və bölünməsi.html" },
-                { text: "Natural ədədlərin bölünmə əlamətləri. Qalıqlı bölmə", file: "Natural ədədlərin bölünmə əlamətləri. Qalıqlı bölmə.html" },
-                { text: "Natural ədədlərin sadə vuruqlara ayrılışı. ƏBOB və ƏKOB", file: "Natural ədədlərin sadə vuruqlara ayrılışı. ƏBOB və ƏKOB.html" }
+                { text: "Natural ədədlər. Natural ədədlərin onluq say sistemində yazılışı", page: 4, file: "Natural ədədlər. Natural ədədlərin onluq say sistemində yazılışı.html" },
+                { text: "Natural ədədlərin toplanması, çıxılması, vurulması və bölünməsi", page: 5, file: "Natural ədədlərin toplanması, çıxılması, vurulması və bölünməsi.html" },
+                { text: "Natural ədədlərin bölünmə əlamətləri. Qalıqlı bölmə", page: 6, file: "Natural ədədlərin bölünmə əlamətləri. Qalıqlı bölmə.html" },
+                { text: "Natural ədədlərin sadə vuruqlara ayrılışı. Ən böyük ortaq bölən (ƏBOB). Ən kiçik ortaq bölünən (ƏKOB)", page: 7, file: "Natural ədədlərin sadə vuruqlara ayrılışı. ƏBOB və ƏKOB.html" }
               ]
             },
             ru: {
               title: "Натуральные числа",
               items: [
-                { text: "Натуральные числа. Десятичная запись чисел" },
-                { text: "Сложение, вычитание, умножение и деление натуральных чисел" },
-                { text: "Признаки делимости. Деление с остатком" },
-                { text: "Разложение на простые множители. НОД и НОК" }
+                { text: "Натуральные числа. Запись натуральных чисел в десятичной системе счисления", page: 4 },
+                { text: "Сложение, вычитание, умножение и деление натуральных чисел", page: 5 },
+                { text: "Признаки делимости натуральных чисел. Деление с остатком", page: 6 },
+                { text: "Разложение натуральных чисел на простые множители. Наибольший общий делитель (НОД). Наименьшее общее кратное (НОК)", page: 7 }
               ]
             },
             en: {
               title: "Natural Numbers",
               items: [
-                { text: "Natural numbers and decimal representation" },
-                { text: "Addition, subtraction, multiplication, and division" },
-                { text: "Divisibility rules. Division with remainder" },
-                { text: "Prime factorization. GCD and LCM" }
+                { text: "Natural numbers. Decimal representation of natural numbers", page: 4 },
+                { text: "Addition, subtraction, multiplication, and division of natural numbers", page: 5 },
+                { text: "Divisibility rules for natural numbers. Division with remainder", page: 6 },
+                { text: "Prime factorization of natural numbers. GCD and LCM", page: 7 }
               ]
             }
           },
           {
             id: 2,
+            page: 13,
             category: "algebra",
             folder: "Adi və onluq kəsrlər",
             az: {
               title: "Adi və onluq kəsrlər",
               items: [
-                { text: "Adi və onluq kəsrlər. Dörd əməl", file: "Adi və onluq kəsrlər.html" },
-                { text: "Düzgün və düzgün olmayan kəsrlər. Sonsuz dövri onluq kəsrlər", file: "Düzgün və düzgün olmayan kəsrlər.html" },
-                { text: "Adi kəsrin onluq kəsrə çevrilməsi və tərsi", file: "Adi kəsrin onluq kəsrə çevrilməsi.html" },
-                { text: "Kəsrlərin müqayisəsi", file: "Kəsrlərin müqayisəsi.html" },
-                { text: "Ədədin hissəsinin və hissəsinə görə ədədin tapılması", file: "Ədədin hissəsinin tapılması.html" }
+                { text: "Adi və onluq kəsrlər. Adi və onluq kəsrlərin toplanması, çıxılması, vurulması və bölünməsi", page: 13, file: "Adi və onluq kəsrlər.html" },
+                { text: "Düzgün və düzgün olmayan kəsrlər. Sonsuz dövri onluq kəsrlər", page: 13, file: "Düzgün və düzgün olmayan kəsrlər.html" },
+                { text: "Adi kəsrin onluq kəsrə çevrilməsi. Onluq kəsrin adi kəsrə çevrilməsi", page: 14, file: "Adi kəsrin onluq kəsrə çevrilməsi.html" },
+                { text: "Kəsrlərin müqayisəsi", page: 16, file: "Kəsrlərin müqayisəsi.html" },
+                { text: "Ədədin hissəsinin və hissəsinə görə ədədin tapılması", page: 17, file: "Ədədin hissəsinin tapılması.html" }
               ]
             },
             ru: {
               title: "Обыкновенные и десятичные дроби",
               items: [
-                { text: "Обыкновенные и десятичные дроби. Действия с дробями" },
-                { text: "Правильные и неправильные дроби. Периодические дроби" },
-                { text: "Преобразование обыкновенных и десятичных дробей" },
-                { text: "Сравнение дробей" },
-                { text: "Нахождение части от числа и числа по части" }
+                { text: "Обыкновенные и десятичные дроби. Сложение, вычитание, умножение и деление дробей", page: 13 },
+                { text: "Правильные и неправильные дроби. Бесконечные периодические десятичные дроби", page: 13 },
+                { text: "Обращение обыкновенной дроби в десятичную и десятичной дроби в обыкновенную", page: 14 },
+                { text: "Сравнение дробей", page: 16 },
+                { text: "Нахождение части от числа и числа по его части", page: 17 }
               ]
             },
             en: {
               title: "Fractions and Decimals",
               items: [
-                { text: "Fractions and decimals arithmetic" },
-                { text: "Proper/improper fractions. Repeating decimals" },
-                { text: "Converting fractions to decimals" },
-                { text: "Comparing fractions" },
-                { text: "Finding fractions of numbers" }
+                { text: "Common and decimal fractions. Basic arithmetic operations", page: 13 },
+                { text: "Proper and improper fractions. Infinite repeating decimals", page: 13 },
+                { text: "Converting common fractions to decimals and decimals to common fractions", page: 14 },
+                { text: "Comparing fractions", page: 16 },
+                { text: "Finding a fraction of a number and a number by its fraction", page: 17 }
               ]
             }
           },
           {
             id: 3,
+            page: 20,
             category: "algebra",
             folder: "Faiz. Nisbət. Tənasüb",
             az: {
               title: "Faiz. Nisbət. Tənasüb",
               items: [
-                { text: "Nisbət. Tənasüb. Tənasübün xassələri. Mütənasiblik", file: "Nisbət. Tənasüb.html" },
-                { text: "Faiz. Ədədin faizinin tapılması", file: "Faiz. Ədədin faizinin tapılması.html" },
-                { text: "Faizinə görə ədədin tapılması. İki ədədin faiz nisbəti", file: "Faizinə görə ədədin tapılması.html" },
-                { text: "Faizə aid məsələlər", file: "Faizə aid məsələlər.html" }
+                { text: "Nisbət. Tənasüb. Tənasübün xassələri. Düz və tərs mütənasiblik", page: 20, file: "Nisbət. Tənasüb.html" },
+                { text: "Faiz. Ədədin faizinin tapılması", page: 22, file: "Faiz. Ədədin faizinin tapılması.html" },
+                { text: "Faizinə görə ədədin tapılması. İki ədədin faiz nisbəti", page: 22, file: "Faizinə görə ədədin tapılması.html" },
+                { text: "Faizə aid məsələlər", page: 25, file: "Faizə aid məsələlər.html" }
               ]
             },
             ru: {
               title: "Проценты. Отношение. Пропорция",
               items: [
-                { text: "Отношение и пропорция. Пропорциональность" },
-                { text: "Процент. Нахождение процента от числа" },
-                { text: "Нахождение числа по его проценту" },
-                { text: "Задачи на проценты" }
+                { text: "Отношение. Пропорция. Свойства пропорции. Прямая и обратная пропорциональность", page: 20 },
+                { text: "Процент. Нахождение процента от числа", page: 22 },
+                { text: "Нахождение числа по его проценту. Процентное отношение двух чисел", page: 22 },
+                { text: "Задачи на проценты", page: 25 }
               ]
             },
             en: {
               title: "Percent. Ratio. Proportion",
               items: [
-                { text: "Ratio, proportion, and proportionality" },
-                { text: "Percentages of numbers" },
-                { text: "Finding numbers from percentages" },
-                { text: "Percentage word problems" }
+                { text: "Ratio. Proportion. Properties of proportion. Direct and inverse proportionality", page: 20 },
+                { text: "Percentage. Finding a percentage of a number", page: 22 },
+                { text: "Finding a number from its percentage. Percentage ratio", page: 22 },
+                { text: "Word problems involving percentages", page: 25 }
               ]
             }
           },
           {
             id: 4,
+            page: 31,
             category: "algebra",
             folder: "Həqiqi ədədlər",
             az: {
               title: "Həqiqi ədədlər",
               items: [
-                { text: "Rasional ədədlər. Rasional ədədlər üzərində əməllər", file: "Rasional ədədlər.html" },
-                { text: "İrrasional ədədlər", file: "İrrasional ədədlər.html" },
-                { text: "Ədədin modulu. Modul daxil olan ifadələrin çevrilməsi", file: "Ədədin modulu.html" },
-                { text: "Ədədi orta. Həqiqi ədədlərin müqayisəsi", file: "Ədədi orta.html" },
-                { text: "Ədədin tam və kəsr hissəsi. Ədədin standart şəkli", file: "Ədədin tam və kəsr hissəsi.html" }
+                { text: "Rasional ədədlər. Rasional ədədlər üzərində əməllər", page: 31, file: "Rasional ədədlər.html" },
+                { text: "İrrasional ədədlər", page: 31, file: "İrrasional ədədlər.html" },
+                { text: "Ədədin modulu. Modul daxil olan ifadələrin çevrilməsi", page: 32, file: "Ədədin modulu.html" },
+                { text: "Ədədi orta. Həqiqi ədədlərin müqayisəsi", page: 33, file: "Ədədi orta.html" },
+                { text: "Ədədin tam və kəsr hissəsi. Ədədin standart şəkli", page: 35, file: "Ədədin tam və kəsr hissəsi.html" }
               ]
             },
             ru: {
               title: "Действительные числа",
               items: [
-                { text: "Рациональные числа" },
-                { text: "Иррациональные числа" },
-                { text: "Модуль числа" },
-                { text: "Среднее арифметическое" },
-                { text: "Целая и дробная части. Стандартный вид" }
+                { text: "Рациональные числа. Действия над рациональными числами", page: 31 },
+                { text: "Иррациональные числа", page: 31 },
+                { text: "Модуль числа. Преобразование выражений с модулем", page: 32 },
+                { text: "Среднее арифметическое. Сравнение действительных чисел", page: 33 },
+                { text: "Целая и дробная части числа. Стандартный вид числа", page: 35 }
               ]
             },
             en: {
               title: "Real Numbers",
               items: [
-                { text: "Rational numbers" },
-                { text: "Irrational numbers" },
-                { text: "Absolute value expressions" },
-                { text: "Arithmetic mean and comparisons" },
-                { text: "Floor/fractional parts and standard notation" }
+                { text: "Rational numbers. Operations on rational numbers", page: 31 },
+                { text: "Irrational numbers", page: 31 },
+                { text: "Absolute value (modulus) transformations", page: 32 },
+                { text: "Arithmetic mean. Comparison of real numbers", page: 33 },
+                { text: "Floor and fractional parts. Scientific notation", page: 35 }
               ]
             }
           },
           {
             id: 5,
+            page: 36,
             category: "algebra",
             folder: "Tam cəbri ifadələr",
             az: {
               title: "Tam cəbri ifadələr",
               items: [
-                { text: "Birhədli və onun standart şəkli. Natural üstlü qüvvət", file: "Birhədli və onun standart şəkli.html" },
-                { text: "Çoxhədlilər və onlar üzərində əməllər", file: "Çoxhədlilər və onlar üzərində əməllər.html" },
-                { text: "Müxtəsər vurma düsturları", file: "Müxtəsər vurma düsturları.html" },
-                { text: "İfadələrin ədədi qiymətlərinin hesablanması", file: "İfadələrin ədədi qiymətləri.html" },
-                { text: "İfadələrinin ən kiçik və ən böyük qiymətlərinin tapılması", file: "İfadələrinin ən kiçik və ən böyük qiymətləri.html" }
+                { text: "Birhədli və onun standart şəkli. Natural üstlü qüvvət", page: 36, file: "Birhədli və onun standart şəkli.html" },
+                { text: "Çoxhədlilər və onlar üzərində əməllər", page: 36, file: "Çoxhədlilər və onlar üzərində əməllər.html" },
+                { text: "Müxtəsər vurma düsturları", page: 38, file: "Müxtəsər vurma düsturları.html" },
+                { text: "İfadələrin ədədi qiymətlərinin hesablanması", page: 39, file: "İfadələrin ədədi qiymətləri.html" },
+                { text: "İfadələrinin ən kiçik və ən böyük qiymətlərinin tapılması", page: 40, file: "İfadələrinin ən kiçik və ən böyük qiymətləri.html" }
               ]
             },
             ru: {
               title: "Целые алгебраические выражения",
               items: [
-                { text: "Одночлены и многочлены" },
-                { text: "Формулы сокращенного умножения" },
-                { text: "Вычисление числовых значений выражений" },
-                { text: "Наибольшие и наименьшие значения выражений" }
+                { text: "Одночлен и его стандартный вид. Степень с натуральным показателем", page: 36 },
+                { text: "Многочлены и действия над ними", page: 36 },
+                { text: "Формулы сокращенного умножения", page: 38 },
+                { text: "Вычисление числовых значений выражений", page: 39 },
+                { text: "Нахождение наименьшего и наибольшего значений выражений", page: 40 }
               ]
             },
             en: {
               title: "Algebraic Expressions",
               items: [
-                { text: "Monomials and polynomials" },
-                { text: "Special algebraic identities" },
-                { text: "Evaluating algebraic expressions" },
-                { text: "Maximum and minimum values" }
+                { text: "Monomials and standard form. Powers with natural exponents", page: 36 },
+                { text: "Polynomials and algebraic operations on polynomials", page: 36 },
+                { text: "Short multiplication formulas (special algebraic identities)", page: 38 },
+                { text: "Evaluating numerical values of algebraic expressions", page: 39 },
+                { text: "Finding maximum and minimum values of algebraic expressions", page: 40 }
               ]
             }
           },
           {
             id: 6,
+            page: 41,
             category: "algebra",
             folder: "Çoxhədlinin vuruqlara ayrılması",
             az: {
               title: "Çoxhədlinin vuruqlara ayrılması",
               items: [
-                { text: "Müxtəsər vurma düsturlarının köməyi ilə vuruqlara ayırma", file: "Müxtəsər vurma ilə vuruqlara ayırma.html" },
-                { text: "Müxtəlif üsulların köməyi ilə vuruqlara ayırma", file: "Müxtəlif üsullarla vuruqlara ayırma.html" },
-                { text: "Vuruqlara ayırma üsulu ilə ifadələrin qiymətinin hesablanması", file: "Vuruqlara ayırma ilə qiymət hesablanması.html" }
+                { text: "Müxtəsər vurma düsturlarının köməyi ilə vuruqlara ayırma", page: 41, file: "Müxtəsər vurma ilə vuruqlara ayırma.html" },
+                { text: "Müxtəlif üsulların köməyi ilə vuruqlara ayırma", page: 41, file: "Müxtəlif üsullarla vuruqlara ayırma.html" },
+                { text: "Vuruqlara ayırma üsulu ilə ifadələrin ədədi qiymətinin hesablanması", page: 45, file: "Vuruqlara ayırma ilə qiymət hesablanması.html" }
               ]
             },
             ru: {
               title: "Разложение многочлена на множители",
               items: [
-                { text: "Разложение на множители формулами умножения" },
-                { text: "Различные методы разложения на множители" },
-                { text: "Вычисление значений через разложение" }
+                { text: "Разложение на множители с помощью формул сокращенного умножения", page: 41 },
+                { text: "Разложение на множители различными способами", page: 41 },
+                { text: "Вычисление числовых значений методом разложения на множители", page: 45 }
               ]
             },
             en: {
               title: "Factoring Polynomials",
               items: [
-                { text: "Factoring via algebraic identities" },
-                { text: "Factoring methods (grouping, substitution)" },
-                { text: "Evaluating expressions by factoring" }
+                { text: "Factoring polynomials using algebraic identities", page: 41 },
+                { text: "Factoring polynomials using various techniques", page: 41 },
+                { text: "Evaluating expressions via polynomial factorization", page: 45 }
               ]
             }
           },
           {
             id: 7,
+            page: 47,
             category: "algebra",
             folder: "Rasional kəsrlər",
             az: {
               title: "Rasional kəsrlər",
               items: [
-                { text: "Kəsrlərin ixtisarı. Dəyişənin Mümkün Qiymətlər çoxluğu (DMQ)", file: "Kəsrlərin ixtisarı. DMQ.html" },
-                { text: "İfadələrin sadələşdirilməsi", file: "Rasional kəsrlərin sadələşdirilməsi.html" },
-                { text: "İfadələrin ədədi qiymətlərinin tapılması", file: "Rasional ifadələrin ədədi qiyməti.html" }
+                { text: "Kəsrlərin ixtisarı. DMQ çoxluğu", page: 47, file: "Kəsrlərin ixtisarı. DMQ.html" },
+                { text: "İfadələrin sadələşdirilməsi", page: 49, file: "Rasional kəsrlərin sadələşdirilməsi.html" },
+                { text: "İfadələrin ədədi qiymətlərinin tapılması", page: 52, file: "Rasional ifadələrin ədədi qiyməti.html" }
               ]
             },
             ru: {
               title: "Рациональные дроби",
               items: [
-                { text: "Сокращение дробей. ОДЗ" },
-                { text: "Упрощение рациональных выражений" },
-                { text: "Нахождение числовых значений" }
+                { text: "Сокращение дробей. Область допустимых значений (ОДЗ)", page: 47 },
+                { text: "Упрощение рациональных выражений", page: 49 },
+                { text: "Нахождение числовых значений рациональных выражений", page: 52 }
               ]
             },
             en: {
               title: "Rational Fractions",
               items: [
-                { text: "Simplifying rational fractions and domain" },
-                { text: "Simplification of rational expressions" },
-                { text: "Numerical values of expressions" }
+                { text: "Simplifying rational fractions. Domain of permissible values", page: 47 },
+                { text: "Simplification of rational expressions", page: 49 },
+                { text: "Evaluating numerical values of rational expressions", page: 52 }
               ]
             }
           },
           {
             id: 8,
+            page: 55,
             category: "algebra",
             folder: "Kvadrat köklər. Həqiqi üstlü qüvvət",
             az: {
               title: "Kvadrat köklər. Həqiqi üstlü qüvvət",
               items: [
-                { text: "Hesabi kvadrat kök və onun xassələri", file: "Hesabi kvadrat kök.html" },
-                { text: "n-ci dərəcədən kök. Həqiqi üstlü qüvvət. Ədədlərin müqayisəsi", file: "n-ci dərəcədən kök.html" },
-                { text: "Kəsrlərin ixtisarı. İfadələrin sadələşdirilməsi", file: "Köklər ifadələrin sadələşdirilməsi.html" }
+                { text: "Hesabi kvadrat kök və onun xassələri", page: 55, file: "Hesabi kvadrat kök.html" },
+                { text: "n-ci dərəcədən kök. Həqiqi üstlü qüvvət və onun xassələri. Ədədlərin müqayisəsi", page: 58, file: "n-ci dərəcədən kök.html" },
+                { text: "Kəsrlərin ixtisarı. İfadələrin sadələşdirilməsi və ədədi qiymətinin tapılması", page: 62, file: "Köklər ifadələrin sadələşdirilməsi.html" }
               ]
             },
             ru: {
               title: "Квадратные корни. Степень с действительным показателем",
               items: [
-                { text: "Арифметический квадратный корень" },
-                { text: "Корень n-й степени и свойства степеней" },
-                { text: "Упрощение выражений с корнями" }
+                { text: "Арифметический квадратный корень и его свойства", page: 55 },
+                { text: "Корень n-й степени. Степень с действительным показателем. Сравнение чисел", page: 58 },
+                { text: "Сокращение дробей. Упрощение выражений и вычисление значений", page: 62 }
               ]
             },
             en: {
               title: "Square Roots. Real Exponents",
               items: [
-                { text: "Principal square roots" },
-                { text: "Nth roots and power properties" },
-                { text: "Simplifying radical expressions" }
+                { text: "Principal square root and its properties", page: 55 },
+                { text: "Nth roots. Real exponents and comparing radical values", page: 58 },
+                { text: "Simplifying radical fractions and evaluating numerical expressions", page: 62 }
               ]
             }
           },
           {
             id: 9,
+            page: 68,
             category: "algebra",
             folder: "Birməchullu tənliklər və məsələlər",
             az: {
               title: "Birməchullu tənliklər və məsələlər",
               items: [
-                { text: "Xətti tənliklər", file: "Xətti tənliklər.html" },
-                { text: "Kvadrat tənliklər və onların araşdırılması", file: "Kvadrat tənliklər.html" },
-                { text: "Viyet teoremi və onun tərsi olan teorem", file: "Viyet teoremi.html" },
-                { text: "Rasional tənliklər", file: "Rasional tənliklər.html" },
-                { text: "Modul və irrasional tənliklər", file: "Modul və irrasional tənliklər.html" },
-                { text: "Tənlik qurmaqla məsələlər həlli", file: "Tənlik qurmaqla məsələlər.html" }
+                { text: "Xətti tənliklər", page: 68, file: "Xətti tənliklər.html" },
+                { text: "Kvadrat tənliklər və onların araşdırılması", page: 69, file: "Kvadrat tənliklər.html" },
+                { text: "Viyet teoremi və onun tərsi olan teorem", page: 71, file: "Viyet teoremi.html" },
+                { text: "Rasional tənliklər", page: 75, file: "Rasional tənliklər.html" },
+                { text: "Modul işarəsi daxilində dəyişəni olan tənliklər. İrrasional tənliklər", page: 76, file: "Modul və irrasional tənliklər.html" },
+                { text: "Tənlik qurmaqla məsələlər həlli", page: 81, file: "Tənlik qurmaqla məsələlər.html" }
               ]
             },
             ru: {
               title: "Уравнения с одной переменной и задачи",
               items: [
-                { text: "Линейные и квадратные уравнения" },
-                { text: "Теорема Виета" },
-                { text: "Рациональные и иррациональные уравнения" },
-                { text: "Текстовые задачи на составление уравнений" }
+                { text: "Линейные уравнения", page: 68 },
+                { text: "Квадратные уравнения и их исследование", page: 69 },
+                { text: "Теорема Виета и обратная к ней теорема", page: 71 },
+                { text: "Рациональные уравнения", page: 75 },
+                { text: "Уравнения с модулем. Иррациональные уравнения", page: 76 },
+                { text: "Решение задач с помощью составления уравнений", page: 81 }
               ]
             },
             en: {
-              title: "Single-Variable Equations and Problems",
+              title: "Single-Variable Equations and Word Problems",
               items: [
-                { text: "Linear and quadratic equations" },
-                { text: "Vieta's theorem" },
-                { text: "Rational and radical equations" },
-                { text: "Applied word problems" }
+                { text: "Linear equations with one variable", page: 68 },
+                { text: "Quadratic equations and discriminant analysis", page: 69 },
+                { text: "Vieta's theorem and its converse", page: 71 },
+                { text: "Rational equations", page: 75 },
+                { text: "Absolute value equations. Radical equations", page: 76 },
+                { text: "Solving applied word problems by formulating equations", page: 81 }
               ]
             }
           },
           {
             id: 10,
+            page: 86,
             category: "algebra",
             folder: "Tənliklər sistemi",
             az: {
               title: "Tənliklər sistemi",
               items: [
-                { text: "Xətti tənliklər sistemi", file: "Xətti tənliklər sistemi.html" },
-                { text: "Xətti tənliklər sisteminin həllinin araşdırılması", file: "Xətti tənliklər sisteminin araşdırılması.html" },
-                { text: "Qeyri-xətti və yüksək dərəcəli tənliklər sistemi", file: "Qeyri-xətti tənliklər sistemi.html" },
-                { text: "Tənliklər sistemi qurmaqla məsələlər həlli", file: "Tənliklər sistemi ilə məsələlər.html" }
+                { text: "Xətti tənliklər sistemi", page: 86, file: "Xətti tənliklər sistemi.html" },
+                { text: "Xətti tənliklər sisteminin həllinin araşdırılması", page: 88, file: "Xətti tənliklər sisteminin araşdırılması.html" },
+                { text: "Biri birdərəcəli, digəri ikidərəcəli və daha yüksək dərəcəli olan tənliklər sistemi", page: 90, file: "Qeyri-xətti tənliklər sistemi.html" },
+                { text: "Hər iki tənliyi ikidərəcəli və daha yüksək dərəcəli olan tənliklər sistemi", page: 93, file: "Yüksək dərəcəli tənliklər sistemi.html" },
+                { text: "Tənliklər sistemi qurmaqla məsələlər həlli", page: 94, file: "Tənliklər sistemi ilə məsələlər.html" }
               ]
             },
             ru: {
               title: "Системы уравнений",
               items: [
-                { text: "Системы линейных уравнений" },
-                { text: "Исследование систем уравнений" },
-                { text: "Нелинейные системы уравнений" },
-                { text: "Задачи на составление систем уравнений" }
+                { text: "Системы линейных уравнений", page: 86 },
+                { text: "Исследование решений систем линейных уравнений", page: 88 },
+                { text: "Системы уравнений первой и высшей степени", page: 90 },
+                { text: "Системы уравнений высших степеней", page: 93 },
+                { text: "Решение задач с помощью систем уравнений", page: 94 }
               ]
             },
             en: {
               title: "Systems of Equations",
               items: [
-                { text: "Systems of linear equations" },
-                { text: "Analysis of linear systems" },
-                { text: "Non-linear systems" },
-                { text: "Word problems via systems" }
+                { text: "Systems of linear equations", page: 86 },
+                { text: "Analysis of solutions of linear systems", page: 88 },
+                { text: "Systems of linear and non-linear equations", page: 90 },
+                { text: "Systems of two non-linear equations", page: 93 },
+                { text: "Solving word problems via systems of equations", page: 94 }
               ]
             }
           },
           {
             id: 11,
+            page: 97,
             category: "algebra",
             folder: "Bərabərsizliklər və bərabərsizliklər sistemi",
             az: {
               title: "Bərabərsizliklər və bərabərsizliklər sistemi",
               items: [
-                { text: "Ədədi bərabərsizliklər və onların əsas xassələri", file: "Ədədi bərabərsizliklər.html" },
-                { text: "Birdəyişənli xətti bərabərsizliklər və sistemlər", file: "Xətti bərabərsizliklər sistemi.html" },
-                { text: "İkidərəcəli və yüksək dərəcəli bərabərsizliklər (İntervallar üsulu)", file: "İkidərəcəli bərabərsizliklər.html" },
-                { text: "Rasional və modul bərabərsizliklər", file: "Rasional bərabərsizliklər.html" },
-                { text: "Kvadrat və irrasional bərabərsizliklər sistemi", file: "Kvadrat və irrasional bərabərsizliklər.html" }
+                { text: "Ədədi bərabərsizliklər və onların əsas xassələri", page: 97, file: "Ədədi bərabərsizliklər.html" },
+                { text: "Birdəyişənli xətti bərabərsizliklər. Birdəyişənli xətti bərabərsizliklər sistemi. Bərabərsizliklər heyəti", page: 98, file: "Xətti bərabərsizliklər sistemi.html" },
+                { text: "İkidərəcəli və yüksək dərəcəli bərabərsizliklər", page: 101, file: "İkidərəcəli bərabərsizliklər.html" },
+                { text: "Rasional bərabərsizliklər", page: 105, file: "Rasional bərabərsizliklər.html" },
+                { text: "Modul işarəsi daxilində dəyişəni olan bərabərsizliklər", page: 108, file: "Modul bərabərsizliklər.html" },
+                { text: "Kvadrat bərabərsizliklər sistemi. İrrasional bərabərsizliklər", page: 110, file: "Kvadrat və irrasional bərabərsizliklər.html" }
               ]
             },
             ru: {
               title: "Неравенства и системы неравенств",
               items: [
-                { text: "Числовые неравенства" },
-                { text: "Линейные неравенства и системы" },
-                { text: "Квадратные неравенства и метод интервалов" },
-                { text: "Рациональные и модульные неравенства" }
+                { text: "Числовые неравенства и их основные свойства", page: 97 },
+                { text: "Линейные неравенства и системы линейных неравенств", page: 98 },
+                { text: "Квадратные неравенства и метод интервалов", page: 101 },
+                { text: "Рациональные неравенства", page: 105 },
+                { text: "Неравенства с переменной под знаком модуля", page: 108 },
+                { text: "Системы квадратных неравенств. Иррациональные неравенства", page: 110 }
               ]
             },
             en: {
-              title: "Inequalities and Systems",
+              title: "Inequalities and Systems of Inequalities",
               items: [
-                { text: "Numerical inequalities" },
-                { text: "Linear inequalities and systems" },
-                { text: "Quadratic inequalities (interval method)" },
-                { text: "Rational and radical inequalities" }
+                { text: "Numerical inequalities and properties", page: 97 },
+                { text: "Linear inequalities and systems", page: 98 },
+                { text: "Quadratic and higher-degree inequalities (interval method)", page: 101 },
+                { text: "Rational inequalities", page: 105 },
+                { text: "Absolute value inequalities", page: 108 },
+                { text: "Systems of quadratic and radical inequalities", page: 110 }
               ]
             }
           },
           {
             id: 12,
+            page: 113,
             category: "algebra",
             folder: "Ədədi ardıcıllıqlar. Silsilələr",
             az: {
               title: "Ədədi ardıcıllıqlar. Silsilələr",
               items: [
-                { text: "Ədədi ardıcıllıqlar", file: "Ədədi ardıcıllıqlar.html" },
-                { text: "Ədədi silsilələr", file: "Ədədi silsilələr.html" },
-                { text: "Həndəsi silsilələr. Sonsuz həndəsi silsilənin cəmi (|q| < 1)", file: "Həndəsi silsilələr.html" },
-                { text: "Silsilələrə aid məsələlər", file: "Silsilələrə aid məsələlər.html" }
+                { text: "Ədədi ardıcıllıqlar", page: 113, file: "Ədədi ardıcıllıqlar.html" },
+                { text: "Ədədi silsilələr", page: 115, file: "Ədədi silsilələr.html" },
+                { text: "Həndəsi silsilələr. Sonsuz həndəsi silsilənin cəmi (|q| < 1)", page: 121, file: "Həndəsi silsilələr.html" },
+                { text: "Ədədi və həndəsi silsilələrə aid məsələlər", page: 125, file: "Silsilələrə aid məsələlər.html" }
               ]
             },
             ru: {
               title: "Числовые последовательности. Прогрессии",
               items: [
-                { text: "Числовые последовательности" },
-                { text: "Арифметическая прогрессия" },
-                { text: "Геометрическая прогрессия" },
-                { text: "Задачи на прогрессии" }
+                { text: "Числовые последовательности", page: 113 },
+                { text: "Арифметическая прогрессия", page: 115 },
+                { text: "Геометрическая прогрессия. Бесконечно убывающая прогрессия (|q| < 1)", page: 121 },
+                { text: "Задачи на прогрессии", page: 125 }
               ]
             },
             en: {
-              title: "Sequences and Progressions",
+              title: "Numerical Sequences. Progressions",
               items: [
-                { text: "Number sequences" },
-                { text: "Arithmetic progressions" },
-                { text: "Geometric progressions" },
-                { text: "Applied progression problems" }
+                { text: "Number sequences and formulas", page: 113 },
+                { text: "Arithmetic progressions", page: 115 },
+                { text: "Geometric progressions and infinite series (|q| < 1)", page: 121 },
+                { text: "Applied problems involving progressions", page: 125 }
               ]
             }
           },
           {
             id: 13,
+            page: 129,
             category: "algebra",
             folder: "Çoxluqlar",
             az: {
               title: "Çoxluqlar",
               items: [
-                { text: "Çoxluqlar. Çoxluqların birləşməsi, kəsişməsi, fərqi", file: "Çoxluqlar.html" },
-                { text: "Çoxluqların elementlərinin sayı", file: "Çoxluqların elementlərinin sayı.html" }
+                { text: "Çoxluqlar. Çoxluqların birləşməsi, kəsişməsi, fərqi", page: 129, file: "Çoxluqlar.html" },
+                { text: "Çoxluqların birləşməsi, kəsişməsi və fərqinin elementlərinin sayı", page: 131, file: "Çoxluqların elementlərinin sayı.html" }
               ]
             },
             ru: {
               title: "Множества",
               items: [
-                { text: "Множества: объединение, пересечение, разность" },
-                { text: "Число элементов множеств" }
+                { text: "Множества. Объединение, пересечение и разность множеств", page: 129 },
+                { text: "Число элементов объединения, пересечения и разности множеств", page: 131 }
               ]
             },
             en: {
               title: "Set Theory",
               items: [
-                { text: "Sets: union, intersection, difference" },
-                { text: "Cardinality of sets" }
+                { text: "Sets: Union, intersection, and set difference", page: 129 },
+                { text: "Cardinality of set union, intersection, and difference", page: 131 }
               ]
             }
           },
           {
             id: 14,
+            page: 135,
             category: "geometry",
             folder: "Həndəsənin əsas ANLAYIŞI",
             az: {
               title: "Həndəsənin əsas anlayışları",
               items: [
-                { text: "Düz xətt, şüa, parça. Parçaların ölçülməsi", file: "Düz xətt, şüa, parça. Parçaların ölçülməsi.html" },
-                { text: "Bucaq. Bucaqların ölçülməsi. Bucağın tənböləni", file: "Bucaq. Bucaqların ölçülməsi. Bucağın tənböləni.html" },
-                { text: "Qonşu və qarşılıqlı bucaqlar", file: "Qonşu və qarşılıqlı bucaqlar.html" },
-                { text: "İki paralel düz xəttin üçüncü ilə kəsişməsindən alınan bucaqlar", file: "İki paralel düz xəttin üçüncü ilə kəsişməsindən alınan bucaqlar.html" },
-                { text: "Uyğun tərəfləri paralel və perpendikulyar olan bucaqlar", file: "Uyğun tərəfləri paralel və perpendikulyar olan bucaqlar.html" }
+                { text: "Düz xətt, şüa, parça. Parçaların ölçülməsi", page: 135, file: "Düz xətt, şüa, parça. Parçaların ölçülməsi.html" },
+                { text: "Bucaq. Bucaqların ölçülməsi. Bucağın tənböləni", page: 137, file: "Bucaq. Bucaqların ölçülməsi. Bucağın tənböləni.html" },
+                { text: "Qonşu və qarşılıqlı bucaqlar", page: 138, file: "Qonşu və qarşılıqlı bucaqlar.html" },
+                { text: "İki paralel düz xəttin üçüncü ilə kəsişməsindən alınan bucaqlar", page: 138, file: "İki paralel düz xəttin üçüncü ilə kəsişməsindən alınan bucaqlar.html" },
+                { text: "Uyğun tərəfləri paralel və perpendikulyar olan bucaqlar", page: 143, file: "Uyğun tərəfləri paralel və perpendikulyar olan bucaqlar.html" }
               ]
             },
             ru: {
               title: "Основные понятия геометрии",
               items: [
-                { text: "Прямая, луч, отрезок. Измерение отрезков", file: "Düz xətt, şüa, parça. Parçaların ölçülməsi.html" },
-                { text: "Угол. Измерение углов. Биссектриса угла", file: "Bucaq. Bucaqların ölçülməsi. Bucağın tənböləni.html" },
-                { text: "Смежные и вертикальные углы", file: "Qonşu və qarşılıqlı bucaqlar.html" },
-                { text: "Углы при пересечении параллельных прямых секущей", file: "İki paralel düz xəttin üçüncü ilə kəsişməsindən alınan bucaqlar.html" },
-                { text: "Углы с параллельными и перпендикулярными сторонами", file: "Uyğun tərəfləri paralel və perpendikulyar olan bucaqlar.html" }
+                { text: "Прямая, луч, отрезок. Измерение отрезков", page: 135, file: "Düz xətt, şüa, parça. Parçaların ölçülməsi.html" },
+                { text: "Угол. Измерение углов. Биссектриса угла", page: 137, file: "Bucaq. Bucaqların ölçülməsi. Bucağın tənböləni.html" },
+                { text: "Смежные и вертикальные углы", page: 138, file: "Qonşu və qarşılıqlı bucaqlar.html" },
+                { text: "Углы, образованные при пересечении параллельных прямых секущей", page: 138, file: "İki paralel düz xəttin üçüncü ilə kəsişməsindən alınan bucaqlar.html" },
+                { text: "Углы с соответственно параллельными и перпендикулярными сторонами", page: 143, file: "Uyğun tərəfləri paralel və perpendikulyar olan bucaqlar.html" }
               ]
             },
             en: {
               title: "Basic Geometric Concepts",
               items: [
-                { text: "Line, ray, segment", file: "Düz xətt, şüa, parça. Parçaların ölçülməsi.html" },
-                { text: "Angle and bisector", file: "Bucaq. Bucaqların ölçülməsi. Bucağın tənböləni.html" },
-                { text: "Supplementary and vertical angles", file: "Qonşu və qarşılıqlı bucaqlar.html" },
-                { text: "Angles with parallel lines and transversals", file: "İki paralel düz xəttin üçüncü ilə kəsişməsindən alınan bucaqlar.html" },
-                { text: "Angles with parallel/perpendicular sides", file: "Uyğun tərəfləri paralel və perpendikulyar olan bucaqlar.html" }
+                { text: "Line, ray, line segment. Measurement of line segments", page: 135, file: "Düz xətt, şüa, parça. Parçaların ölçülməsi.html" },
+                { text: "Angle. Angle measurement. Angle bisector", page: 137, file: "Bucaq. Bucaqların ölçülməsi. Bucağın tənböləni.html" },
+                { text: "Supplementary and vertical angles", page: 138, file: "Qonşu və qarşılıqlı bucaqlar.html" },
+                { text: "Angles formed by two parallel lines cut by a transversal", page: 138, file: "İki paralel düz xəttin üçüncü ilə kəsişməsindən alınan bucaqlar.html" },
+                { text: "Angles with mutually parallel and perpendicular sides", page: 143, file: "Uyğun tərəfləri paralel və perpendikulyar olan bucaqlar.html" }
               ]
             }
           },
           {
             id: 15,
+            page: 144,
             category: "geometry",
             folder: "Üçbucaqlar",
             az: {
               title: "Üçbucaqlar",
               items: [
-                { text: "Üçbucaq. Üçbucaq bərabərsizliyi. Üçbucağın perimetri", file: "Üçbucaq bərabərsizliyi.html" },
-                { text: "Üçbucağın medianı, tənböləni, hündürlüyü", file: "Üçbucağın medianı və tənböləni.html" },
-                { text: "Üçbucağın daxili və xarici bucaqları", file: "Üçbucağın daxili bucaqları.html" },
-                { text: "Konqruyentlik əlamətləri. Fales teoremi. Orta xətt", file: "Fales teoremi. Üçbucağın orta xətti.html" },
-                { text: "Bərabəryanlı və bərabərtərəfli üçbucaqlar", file: "Bərabəryanlı və bərabərtərəfli üçbucaqlar.html" },
-                { text: "Düzbucaqlı üçbucaq. Pifaqor teoremi", file: "Düzbucaqlı üçbucaq. Pifaqor teoremi.html" },
-                { text: "Sinuslar və Kosinuslar teoremi", file: "Sinuslar və kosinuslar teoremi.html" }
+                { text: "Üçbucaq. Üçbucaq bərabərsizliyi. Üçbucağın perimetri", page: 144, file: "Üçbucaq bərabərsizliyi.html" },
+                { text: "Üçbucağın medianı, tənböləni, hündürlüyü. Medianların və tənbölənlərin xassəsi", page: 145, file: "Üçbucağın medianı və tənböləni.html" },
+                { text: "Üçbucağın daxili bucaqlarının cəmi. Üçbucağın xarici bucağının xassəsi", page: 147, file: "Üçbucağın daxili bucaqları.html" },
+                { text: "Üçbucaqların konqruyentlik əlaməti. Fales teoremi. Üçbucağın orta xətti", page: 150, file: "Fales teoremi. Üçbucağın orta xətti.html" },
+                { text: "Bərabəryanlı üçbucaqlar. Bərabərtərəfli üçbucaqlar", page: 150, file: "Bərabəryanlı və bərabərtərəfli üçbucaqlar.html" },
+                { text: "Düzbucaqlı üçbucaq. Pifaqor teoremi", page: 153, file: "Düzbucaqlı üçbucaq. Pifaqor teoremi.html" },
+                { text: "Düzbucaqlı üçbucağın tərəfləri və bucaqları arasındakı münasibətlər", page: 153, file: "Düzbucaqlı üçbucağın münasibətləri.html" },
+                { text: "Sinuslar teoremi. Kosinuslar teoremi", page: 160, file: "Sinuslar və kosinuslar teoremi.html" }
               ]
             },
             ru: {
               title: "Треугольники",
               items: [
-                { text: "Треугольник и неравенство треугольника" },
-                { text: "Медианы, биссектрисы и высоты" },
-                { text: "Сумма углов треугольника" },
-                { text: "Признаки равенства. Теорема Фалеса" },
-                { text: "Прямоугольный треугольник. Теорема Пифагора" },
-                { text: "Теоремы синусов и косинусов" }
+                { text: "Треугольник. Неравенство треугольника. Периметр треугольника", page: 144 },
+                { text: "Медиана, биссектриса, высота треугольника", page: 145 },
+                { text: "Сумма внутренних углов. Внешний угол треугольника", page: 147 },
+                { text: "Признаки равенства треугольников. Теорема Фалеса. Средняя линия", page: 150 },
+                { text: "Равнобедренные и равносторонние треугольники", page: 150 },
+                { text: "Прямоугольный треугольник. Теорема Пифагора", page: 153 },
+                { text: "Соотношения между сторонами и углами в прямоугольном треугольнике", page: 153 },
+                { text: "Теорема синусов. Теорема косинусов", page: 160 }
               ]
             },
             en: {
               title: "Triangles",
               items: [
-                { text: "Triangle inequality and perimeter" },
-                { text: "Medians, bisectors, altitudes" },
-                { text: "Interior and exterior angles" },
-                { text: "Congruence criteria and Thales theorem" },
-                { text: "Right triangle and Pythagorean theorem" },
-                { text: "Law of Sines and Law of Cosines" }
+                { text: "Triangle. Triangle inequality. Perimeter", page: 144 },
+                { text: "Median, bisector, altitude of a triangle", page: 145 },
+                { text: "Sum of interior angles. Exterior angle theorem", page: 147 },
+                { text: "Congruence criteria. Thales theorem. Midline", page: 150 },
+                { text: "Isosceles and equilateral triangles", page: 150 },
+                { text: "Right triangle. Pythagorean theorem", page: 153 },
+                { text: "Trigonometric ratios in a right triangle", page: 153 },
+                { text: "Law of Sines. Law of Cosines", page: 160 }
               ]
             }
           },
           {
             id: 16,
+            page: 162,
             category: "geometry",
             folder: "Çoxbucaqlılar. Dördbucaqlılar",
             az: {
               title: "Çoxbucaqlılar. Dördbucaqlılar",
               items: [
-                { text: "Qabarıq və düzgün çoxbucaqlılar", file: "Qabarıq çoxbucaqlı.html" },
-                { text: "Paraleloqram, xassələri və əlamətləri", file: "Paraleloqram.html" },
-                { text: "Düzbucaqlı, kvadrat və romb", file: "Düzbucaqlı, kvadrat, romb.html" },
-                { text: "Trapesiyanın və onun orta xətti", file: "Trapesiyanın orta xətti.html" }
+                { text: "Qabarıq çoxbucaqlı. Qabarıq çoxbucaqlının daxili və xarici bucaqlarının cəmi", page: 162, file: "Qabarıq çoxbucaqlı.html" },
+                { text: "Düzgün çoxbucaqlı", page: 162, file: "Düzgün çoxbucaqlı.html" },
+                { text: "Paraleloqram, onun xassələri və əlamətləri", page: 164, file: "Paraleloqram.html" },
+                { text: "Düzbucaqlı, kvadrat, romb və onların xassələri", page: 166, file: "Düzbucaqlı, kvadrat, romb.html" },
+                { text: "Trapesiyanın və onun orta xətti", page: 169, file: "Trapesiyanın orta xətti.html" }
               ]
             },
             ru: {
-              title: "Многоугольники и четырехугольники",
+              title: "Многоугольники. Четырехугольники",
               items: [
-                { text: "Выпуклые и правильные многоугольники" },
-                { text: "Параллелограмм и его свойства" },
-                { text: "Прямоугольник, ромб, квадрат" },
-                { text: "Трапеция и средняя линия" }
+                { text: "Выпуклый многоугольник. Сумма углов", page: 162 },
+                { text: "Правильный многоугольник", page: 162 },
+                { text: "Параллелограмм, его свойства и признаки", page: 164 },
+                { text: "Прямоугольник, квадрат, ромб и их свойства", page: 166 },
+                { text: "Трапеция и ее средняя линия", page: 169 }
               ]
             },
             en: {
               title: "Polygons and Quadrilaterals",
               items: [
-                { text: "Convex and regular polygons" },
-                { text: "Parallelogram properties" },
-                { text: "Rectangle, square, rhombus" },
-                { text: "Trapezoid and midsegment" }
+                { text: "Convex polygon and angles sum", page: 162 },
+                { text: "Regular polygon", page: 162 },
+                { text: "Parallelogram: properties and criteria", page: 164 },
+                { text: "Rectangle, square, rhombus", page: 166 },
+                { text: "Trapezoid and its midsegment", page: 169 }
               ]
             }
           },
           {
             id: 17,
+            page: 173,
             category: "geometry",
             folder: "Çevrə və dairə",
             az: {
               title: "Çevrə və dairə",
               items: [
-                { text: "Çevrə. Dairə. Radius, diametr, vətər. Qövs", file: "Çevrə və dairə.html" },
-                { text: "Mərkəzi və daxilə çəkilmiş bucaqlar", file: "Mərkəzi və daxilə çəkilmiş bucaqlar.html" },
-                { text: "Mütənasib parçalar. Toxunan və kəsən", file: "Toxunan və kəsənin xassələri.html" },
-                { text: "Daxilə və xaricə çəkilmiş çoxbucaqlılar", file: "Çevrə daxilinə və xaricinə çəkilmiş üçbucaqlar.html" }
+                { text: "Çevrə. Dairə. Radius, diametr, vətər. Çevrənin və çevrə qövsünün uzunluğu. Çevrələrin qarşılıqlı vəziyyəti", page: 173, file: "Çevrə və dairə.html" },
+                { text: "Mərkəzi bucaq. Daxilə çəkilmiş bucaq. Toxunanla vətər arasındakı bucaq", page: 175, file: "Mərkəzi və daxilə çəkilmiş bucaqlar.html" },
+                { text: "Çevrədə mütənasib parçalar. Toxunan və kəsənin xassələri", page: 182, file: "Toxunan və kəsənin xassələri.html" },
+                { text: "Çevrənin daxilinə və xaricinə çəkilmiş üçbucaqlar", page: 186, file: "Çevrə daxilinə və xaricinə çəkilmiş üçbucaqlar.html" },
+                { text: "Çevrənin daxilinə və xaricinə çəkilmiş çoxbucaqlılar", page: 190, file: "Çevrə daxilinə çəkilmiş çoxbucaqlılar.html" }
               ]
             },
             ru: {
               title: "Окружность и круг",
               items: [
-                { text: "Элементы окружности и круга" },
-                { text: "Центральные и вписанные углы" },
-                { text: "Касательные и секущие" },
-                { text: "Вписанные и описанные фигуры" }
+                { text: "Окружность. Круг. Радиус, диаметр, хорда. Взаимное расположение", page: 173 },
+                { text: "Центральный и вписанный угол", page: 175 },
+                { text: "Пропорциональные отрезки в окружности. Касательные и секущие", page: 182 },
+                { text: "Вписанные и описанные треугольники", page: 186 },
+                { text: "Вписанные и описанные многоугольники", page: 190 }
               ]
             },
             en: {
               title: "Circle and Disk",
               items: [
-                { text: "Circle components and arcs" },
-                { text: "Central and inscribed angles" },
-                { text: "Tangents and secants" },
-                { text: "Inscribed/circumscribed figures" }
+                { text: "Circle. Disk. Radius, diameter, chord. Arcs", page: 173 },
+                { text: "Central and inscribed angles", page: 175 },
+                { text: "Proportional segments. Tangents and secants", page: 182 },
+                { text: "Inscribed and circumscribed triangles", page: 186 },
+                { text: "Inscribed and circumscribed polygons", page: 190 }
               ]
             }
           },
           {
             id: 18,
+            page: 194,
             category: "exams",
             folder: "İsbat məsələləri",
             az: {
               title: "İsbat məsələləri (I Hissə)",
               items: [
-                { text: "Cəbr və Həndəsə üzrə isbat və əsaslandırma tapşırıqları", file: "İsbat məsələləri.html" }
+                { text: "Cəbr və Həndəsə üzrə isbat və əsaslandırma tələb edən açıq tipli tapşırıqlar", page: 194, file: "İsbat məsələləri.html" }
               ]
             },
             ru: {
               title: "Задачи на доказательство (Часть I)",
               items: [
-                { text: "Задания на математическое доказательство" }
+                { text: "Задания открытого типа на математическое доказательство", page: 194 }
               ]
             },
             en: {
               title: "Proof Problems (Part I)",
               items: [
-                { text: "Open-ended proof problems in algebra and geometry" }
+                { text: "Open-ended proof and mathematical argumentation problems", page: 194 }
               ]
             }
           },
           {
             id: 19,
+            page: 197,
             category: "exams",
             folder: "Situasiya məsələləri",
             az: {
               title: "Situasiya məsələləri (I Hissə)",
               items: [
-                { text: "Praktik tətbiqli situasiya blok test tapşırıqları", file: "Situasiya məsələləri.html" }
+                { text: "Praktik tətbiqli situasiya və kontekst əsaslı blok test tapşırıqları", page: 197, file: "Situasiya məsələləri.html" }
               ]
             },
             ru: {
               title: "Ситуационные задачи (Часть I)",
               items: [
-                { text: "Контекстные практические блоки задач" }
+                { text: "Комплексные ситуационные задачи с практическим содержанием", page: 197 }
               ]
             },
             en: {
-              title: "Context-Based Scenario Problems (Part I)",
+              title: "Context-Based Situation Problems (Part I)",
               items: [
-                { text: "Applied real-life context scenario tasks" }
+                { text: "Real-life contextual math scenario problems", page: 197 }
               ]
             }
           },
           {
             id: 20,
+            page: 207,
             category: "exams",
             folder: "2025 Buraxılış İmtahanı",
             az: {
-              title: "2025-ci il Buraxılış İmtahanı (11 illik)",
+              title: "2025-ci il Buraxılış İmtahanı Testləri (11 illik)",
               items: [
-                { text: "Tam orta təhsil bazası üzrə buraxılış testləri", file: "2025 Buraxılış İmtahanı 11 illik.html" }
+                { text: "2025-ci ildə tam orta təhsil bazası üzrə buraxılış imtahanında istifadə olunmuş rəsmi testlər", page: 207, file: "2025 Buraxılış İmtahanı 11 illik.html" }
               ]
             },
             ru: {
-              title: "Выпускной экзамен 2025 (11 класс)",
+              title: "Тесты выпускного экзамена 2025 года (11 класс)",
               items: [
-                { text: "Официальные задания выпускного экзамена" }
+                { text: "Официальные тестовые задания выпускного экзамена 2025 года", page: 207 }
               ]
             },
             en: {
-              title: "2025 Graduation Exam (Grade 11)",
+              title: "2025 Graduation Exam Tests (Grade 11)",
               items: [
-                { text: "Official Graduation Exam test papers" }
+                { text: "Official test questions used in the 2025 Grade 11 Graduation Examination", page: 207 }
               ]
             }
           },
           {
             id: 21,
+            page: 209,
             category: "exams",
             folder: "2025 Qəbul İmtahanı",
             az: {
-              title: "2025-ci il Qəbul İmtahanı (I və II qrup)",
+              title: "2025-ci il Qəbul İmtahanı Testləri (I və II qrup)",
               items: [
-                { text: "I və II qruplar üzrə qəbul imtahanı testləri", file: "2025 Qəbul İmtahanı.html" }
+                { text: "2025-ci ildə I və II ixtisas qrupları üzrə ali məktəblərə qəbul imtahanında (yaz imtahanı) istifadə olunmuş testlər", page: 209, file: "2025 Qəbul İmtahanı.html" }
               ]
             },
             ru: {
-              title: "Вступительный экзамен 2025 (I и II группы)",
+              title: "Вступительные экзамены 2025 года (I и II группы)",
               items: [
-                { text: "Официальные тесты вступительного экзамена" }
+                { text: "Официальные тесты вступительного экзамена в вузы по I и II группам", page: 209 }
               ]
             },
             en: {
-              title: "2025 Entrance Exam (Groups I & II)",
+              title: "2025 University Entrance Exam Tests (Groups I & II)",
               items: [
-                { text: "University Admission Exam test questions" }
+                { text: "Official examination test questions used in the 2025 university admission exam", page: 209 }
               ]
             }
           }
@@ -862,503 +956,600 @@
       },
 
       // ==========================================
-      // ============ II HİSSƏ (1 - 16) ===========
+      // ============ II HİSSƏ (1 - 18) ===========
       // ==========================================
       part2: {
         folder: "2-ci_hissə",
+        totalPages: 280,
         chapters: [
           {
             id: 1,
+            page: 4,
             category: "algebra",
             folder: "Funksiyalar və qrafiklər",
             az: {
               title: "Funksiyalar və qrafiklər",
               items: [
-                { text: "Funksiya anlayışı. Təyin oblastı və qiymətlər çoxluğu", file: "Funksiya anlayışı.html" },
-                { text: "Funksiyanın xassələri (tək, cüt, periodik, artan, azalan)", file: "Funksiyanın xassələri.html" },
-                { text: "Xətti və Kvadratik funksiya, onların qrafikləri", file: "Xətti və kvadratik funksiya.html" },
-                { text: "Qüvvət və kəsr-xətti funksiya", file: "Qüvvət funksiyası.html" },
-                { text: "Mürəkkəb və tərs funksiya. Qrafiklərin çevrilməsi", file: "Mürəkkəb və tərs funksiya.html" }
+                { text: "Funksiya anlayışı. Funksiyanın təyin oblastı və qiymətlər çoxluğu", page: 4, file: "Funksiya anlayışı.html" },
+                { text: "Funksiyanın xassələri (tək, cüt, periodik, artan, azalan)", page: 7, file: "Funksiyanın xassələri.html" },
+                { text: "Xətti funksiya və onun qrafiki", page: 11, file: "Xətti funksiya.html" },
+                { text: "Kvadratik funksiya və onun qrafiki", page: 14, file: "Kvadratik funksiya.html" },
+                { text: "Qüvvət funksiyası. Kəsr-xətti funksiya", page: 21, file: "Qüvvət funksiyası.html" },
+                { text: "Mürəkkəb və tərs funksiya. Qrafiklərin çevrilməsi", page: 25, file: "Mürəkkəb və tərs funksiya.html" }
               ]
             },
             ru: {
               title: "Функции и графики",
               items: [
-                { text: "Понятие функции. Область определения и множество значений" },
-                { text: "Свойства функций (чётность, периодичность, монотонность)" },
-                { text: "Линейная и квадратичная функции" },
-                { text: "Степенные и дробно-линейные функции" },
-                { text: "Сложная и обратная функции" }
+                { text: "Понятие функции. Область определения и множество значений", page: 4 },
+                { text: "Свойства функций (чётность, периодичность, монотонность)", page: 7 },
+                { text: "Линейная функция и её график", page: 11 },
+                { text: "Квадратичная функция и её график", page: 14 },
+                { text: "Степенная и дробно-линейная функция", page: 21 },
+                { text: "Сложная и обратная функции. Преобразование графиков", page: 25 }
               ]
             },
             en: {
               title: "Functions and Graphs",
               items: [
-                { text: "Function concept, domain and range" },
-                { text: "Function properties (parity, periodicity, monotonicity)" },
-                { text: "Linear and quadratic functions" },
-                { text: "Power and rational functions" },
-                { text: "Composite and inverse functions" }
+                { text: "Concept of function. Domain and Range", page: 4 },
+                { text: "Function properties (parity, periodicity, monotonicity)", page: 7 },
+                { text: "Linear function and graph", page: 11 },
+                { text: "Quadratic function and graph", page: 14 },
+                { text: "Power and rational functions", page: 21 },
+                { text: "Composite and inverse functions. Transformation of graphs", page: 25 }
               ]
             }
           },
           {
             id: 2,
+            page: 28,
             category: "algebra",
             folder: "Triqonometrik funksiyalar",
             az: {
               title: "Triqonometrik funksiyalar",
               items: [
-                { text: "İxtiyari bucağın triqonometrik funksiyaları. Əsas eyniliklər", file: "Əsas triqonometrik eyniliklər.html" },
-                { text: "Çevirmə düsturları", file: "Çevirmə düsturları.html" },
-                { text: "Toplama düsturları. İkiqat və üçqat bucaq düsturları", file: "Toplama düsturları.html" },
-                { text: "Triqonometrik funksiyaların cəminin hasilə və hasilin cəmə çevrilməsi", file: "Cəmin hasilə çevrilməsi.html" },
-                { text: "Triqonometrik funksiyaların xassələri və qrafikləri", file: "Triqonometrik qrafiklər.html" },
-                { text: "Tərs triqonometrik funksiyalar", file: "Tərs triqonometrik funksiyalar.html" }
+                { text: "İxtiyari bucağın triqonometrik funksiyaları. Əsas triqonometrik eyniliklər", page: 28, file: "Əsas triqonometrik eyniliklər.html" },
+                { text: "Çevirmə düsturları", page: 33, file: "Çevirmə düsturları.html" },
+                { text: "Toplama düsturları", page: 36, file: "Toplama düsturları.html" },
+                { text: "İkiqat və üçqat arqumentin triqonometrik funksiyaları. Yarım arqument düsturları", page: 40, file: "İkiqat və üçqat bucaq düsturları.html" },
+                { text: "Triqonometrik funksiyaların cəminin və fərqinin hasilə çevrilməsi", page: 45, file: "Cəmin hasilə çevrilməsi.html" },
+                { text: "Triqonometrik funksiyaların hasilinin cəmə çevrilməsi", page: 48, file: "Hasilin cəmə çevrilməsi.html" },
+                { text: "Triqonometrik funksiyaların qrafikləri və xassələri", page: 50, file: "Triqonometrik qrafiklər.html" },
+                { text: "Tərs triqonometrik funksiyalar", page: 56, file: "Tərs triqonometrik funksiyalar.html" }
               ]
             },
             ru: {
               title: "Тригонометрические функции",
               items: [
-                { text: "Основные тригонометрические тождества" },
-                { text: "Формулы приведения" },
-                { text: "Формулы сложения и кратных углов" },
-                { text: "Преобразование сумм и произведений" },
-                { text: "Свойства и графики функций" },
-                { text: "Обратные тригонометрические функции" }
+                { text: "Основные тригонометрические тождества", page: 28 },
+                { text: "Формулы приведения", page: 33 },
+                { text: "Формулы сложения", page: 36 },
+                { text: "Формулы двойного, тройного и половинного угла", page: 40 },
+                { text: "Преобразование суммы и разности в произведение", page: 45 },
+                { text: "Преобразование произведения в сумму", page: 48 },
+                { text: "Свойства и графики тригонометрических функций", page: 50 },
+                { text: "Обратные тригонометрические функции", page: 56 }
               ]
             },
             en: {
               title: "Trigonometric Functions",
               items: [
-                { text: "Trigonometric identities" },
-                { text: "Reduction formulas" },
-                { text: "Addition and multiple-angle formulas" },
-                { text: "Sum-to-product conversions" },
-                { text: "Graphs and properties" },
-                { text: "Inverse trigonometric functions" }
+                { text: "Trigonometric identities", page: 28 },
+                { text: "Reduction formulas", page: 33 },
+                { text: "Addition formulas", page: 36 },
+                { text: "Double, triple, and half-angle formulas", page: 40 },
+                { text: "Sum and difference to product formulas", page: 45 },
+                { text: "Product to sum formulas", page: 48 },
+                { text: "Graphs and properties of trigonometric functions", page: 50 },
+                { text: "Inverse trigonometric functions", page: 56 }
               ]
             }
           },
           {
             id: 3,
+            page: 60,
             category: "algebra",
             folder: "Triqonometrik tənliklər və bərabərsizliklər",
             az: {
               title: "Triqonometrik tənliklər və bərabərsizliklər",
               items: [
-                { text: "Sadə triqonometrik tənliklər", file: "Sadə triqonometrik tənliklər.html" },
-                { text: "Müxtəlif üsullarla həll olunan triqonometrik tənliklər", file: "Triqonometrik tənliklər.html" },
-                { text: "Triqonometrik bərabərsizliklər və sistemlər", file: "Triqonometrik bərabərsizliklər.html" }
+                { text: "Sadə triqonometrik tənliklər", page: 60, file: "Sadə triqonometrik tənliklər.html" },
+                { text: "Müxtəlif üsullarla həll olunan triqonometrik tənliklər", page: 63, file: "Triqonometrik tənliklər.html" },
+                { text: "Triqonometrik bərabərsizliklər və sistemlər", page: 69, file: "Triqonometrik bərabərsizliklər.html" }
               ]
             },
             ru: {
               title: "Тригонометрические уравнения и неравенства",
               items: [
-                { text: "Простейшие тригонометрические уравнения" },
-                { text: "Методы решения тригонометрических уравнений" },
-                { text: "Тригонометрические неравенства" }
+                { text: "Простейшие тригонометрические уравнения", page: 60 },
+                { text: "Методы решения тригонометрических уравнений", page: 63 },
+                { text: "Тригонометрические неравенства", page: 69 }
               ]
             },
             en: {
               title: "Trigonometric Equations and Inequalities",
               items: [
-                { text: "Basic trigonometric equations" },
-                { text: "Methods of solving equations" },
-                { text: "Trigonometric inequalities" }
+                { text: "Basic trigonometric equations", page: 60 },
+                { text: "Methods of solving equations", page: 63 },
+                { text: "Trigonometric inequalities", page: 69 }
               ]
             }
           },
           {
             id: 4,
+            page: 74,
             category: "algebra",
-            folder: "Üstlü və loqarifmik funksiyalar",
+            folder: "Kompleks ədədlər",
             az: {
-              title: "Üstlü və loqarifmik funksiyalar",
+              title: "Kompleks ədədlər",
               items: [
-                { text: "Üstlü funksiya, onun qrafiki və xassələri", file: "Üstlü funksiya.html" },
-                { text: "Ədədin loqarifmi və onun əsas xassələri", file: "Loqarifmin xassələri.html" },
-                { text: "Loqarifmik funksiya, onun qrafiki və xassələri", file: "Loqarifmik funksiya.html" }
+                { text: "Kompleks ədəd anlayışı. Cəbri şəkildə verilmiş kompleks ədədlər üzərində əməllər", page: 74, file: "Kompleks ədədlər cəbri şəkil.html" },
+                { text: "Kompleks ədədin həndəsi təsviri. Modul və arqument", page: 77, file: "Kompleks ədədin modulu və arqumenti.html" },
+                { text: "Kompleks ədədin triqonometrik şəkli. Müavr düsturu. Kök alma", page: 80, file: "Müavr düsturu.html" }
               ]
             },
             ru: {
-              title: "Показательные и логарифмические функции",
+              title: "Комплексные числа",
               items: [
-                { text: "Показательная функция и её свойства" },
-                { text: "Свойства логарифмов" },
-                { text: "Логарифмическая функция и её свойства" }
+                { text: "Понятие комплексного числа. Действия в алгебраической форме", page: 74 },
+                { text: "Геометрическое изображение. Модуль и аргумент", page: 77 },
+                { text: "Тригонометрическая форма. Формула Муавра", page: 80 }
               ]
             },
             en: {
-              title: "Exponential and Logarithmic Functions",
+              title: "Complex Numbers",
               items: [
-                { text: "Exponential functions and properties" },
-                { text: "Logarithmic identities" },
-                { text: "Logarithmic functions and properties" }
+                { text: "Concept of complex numbers. Algebraic operations", page: 74 },
+                { text: "Geometric representation. Modulus and argument", page: 77 },
+                { text: "Trigonometric form. De Moivre's formula. Roots", page: 80 }
               ]
             }
           },
           {
             id: 5,
+            page: 84,
             category: "algebra",
-            folder: "Üstlü və loqarifmik tənliklər",
+            folder: "Üstlü və loqarifmik funksiyalar",
             az: {
-              title: "Üstlü və loqarifmik tənliklər və bərabərsizliklər",
+              title: "Üstlü və loqarifmik funksiyalar",
               items: [
-                { text: "Üstlü tənliklər və tənliklər sistemi", file: "Üstlü tənliklər.html" },
-                { text: "Loqarifmik tənliklər və tənliklər sistemi", file: "Loqarifmik tənliklər.html" },
-                { text: "Üstlü və loqarifmik bərabərsizliklər", file: "Üstlü və loqarifmik bərabərsizliklər.html" }
+                { text: "Üstlü funksiya, onun qrafiki və xassələri", page: 84, file: "Üstlü funksiya.html" },
+                { text: "Ədədin loqarifmi və onun əsas xassələri", page: 87, file: "Loqarifmin xassələri.html" },
+                { text: "Loqarifmik funksiya, onun qrafiki və xassələri", page: 92, file: "Loqarifmik funksiya.html" }
               ]
             },
             ru: {
-              title: "Показательные и логарифмические уравнения",
+              title: "Показательные и логарифмические функции",
               items: [
-                { text: "Показательные уравнения и системы" },
-                { text: "Логарифмические уравнения и системы" },
-                { text: "Показательные и логарифмические неравенства" }
+                { text: "Показательная функция, её график и свойства", page: 84 },
+                { text: "Логарифм числа и его основные свойства", page: 87 },
+                { text: "Логарифмическая функция, её график и свойства", page: 92 }
               ]
             },
             en: {
-              title: "Exponential and Logarithmic Equations",
+              title: "Exponential and Logarithmic Functions",
               items: [
-                { text: "Exponential equations and systems" },
-                { text: "Logarithmic equations and systems" },
-                { text: "Exponential and logarithmic inequalities" }
+                { text: "Exponential function, its graph and properties", page: 84 },
+                { text: "Logarithm of a number and its properties", page: 87 },
+                { text: "Logarithmic function, its graph and properties", page: 92 }
               ]
             }
           },
           {
             id: 6,
+            page: 96,
             category: "algebra",
-            folder: "Törəmə və onun tətbiqləri",
+            folder: "Üstlü və loqarifmik tənliklər",
             az: {
-              title: "Törəmə və onun tətbiqləri",
+              title: "Üstlü və loqarifmik tənliklər və bərabərsizliklər",
               items: [
-                { text: "Törəmə anlayışı, həndəsi və fiziki mənası", file: "Törəmənin mənası.html" },
-                { text: "Diferensiallama qaydaları. Əsas funksiyaların törəmələri", file: "Diferensiallama qaydaları.html" },
-                { text: "Toxunanın tənliyi", file: "Toxunanın tənliyi.html" },
-                { text: "Funksiyanın monotonluq aralıqları və ekstremumları", file: "Ekstremumlar.html" },
-                { text: "Törəmənin köməyi ilə ən böyük və ən kiçik qiymətlərin tapılması", file: "Ən böyük və ən kiçik qiymət.html" }
+                { text: "Üstlü tənliklər və tənliklər sistemi", page: 96, file: "Üstlü tənliklər.html" },
+                { text: "Loqarifmik tənliklər və tənliklər sistemi", page: 101, file: "Loqarifmik tənliklər.html" },
+                { text: "Üstlü bərabərsizliklər", page: 107, file: "Üstlü bərabərsizliklər.html" },
+                { text: "Loqarifmik bərabərsizliklər", page: 110, file: "Loqarifmik bərabərsizliklər.html" }
               ]
             },
             ru: {
-              title: "Производная и её применение",
+              title: "Показательные и логарифмические уравнения и неравенства",
               items: [
-                { text: "Геометрический и физический смысл производной" },
-                { text: "Правила дифференцирования" },
-                { text: "Уравнение касательной" },
-                { text: "Исследование функций и экстремумы" },
-                { text: "Наибольшие и наименьшие значения" }
+                { text: "Показательные уравнения и системы уравнений", page: 96 },
+                { text: "Логарифмические уравнения и системы уравнений", page: 101 },
+                { text: "Показательные неравенства", page: 107 },
+                { text: "Логарифмические неравенства", page: 110 }
               ]
             },
             en: {
-              title: "Derivative and Applications",
+              title: "Exponential and Logarithmic Equations and Inequalities",
               items: [
-                { text: "Definition and physical/geometric meaning" },
-                { text: "Differentiation rules" },
-                { text: "Tangent line equation" },
-                { text: "Monotonicity and extrema" },
-                { text: "Optimization and extrema on intervals" }
+                { text: "Exponential equations and systems", page: 96 },
+                { text: "Logarithmic equations and systems", page: 101 },
+                { text: "Exponential inequalities", page: 107 },
+                { text: "Logarithmic inequalities", page: 110 }
               ]
             }
           },
           {
             id: 7,
+            page: 115,
             category: "algebra",
-            folder: "İbtidai funksiya və inteqral",
+            folder: "Limit",
             az: {
-              title: "İbtidai funksiya və inteqral",
+              title: "Limit (Funksiyanın və ardıcıllığın limiti)",
               items: [
-                { text: "İbtidai funksiya və qeyri-müəyyən inteqral", file: "İbtidai funksiya.html" },
-                { text: "Müəyyən inteqral və Nyuton-Leybnits düsturu", file: "Müəyyən inteqral.html" },
-                { text: "İnteqralın köməyi ilə fiqurların sahəsinin hesablanması", file: "Əyrixətli trapesiyanın sahəsi.html" }
+                { text: "Ardıcıllığın limiti və sonsuz azalan həndəsi silsilə", page: 115, file: "Ardıcıllığın limiti.html" },
+                { text: "Funksiyanın nöqtədə və sonsuzluqda limiti. Limitlər üzərində əməllər", page: 118, file: "Funksiyanın limiti.html" },
+                { text: "Görkəmli limitlər və qeyri-müəyyənliklərin açılması", page: 122, file: "Görkəmli limitlər.html" },
+                { text: "Funksiyanın kəsilməzliyi və kəsilmə nöqtələri", page: 125, file: "Funksiyanın kəsilməzliyi.html" }
               ]
             },
             ru: {
-              title: "Первообразная и интеграл",
+              title: "Предел (Предел последовательности и функции)",
               items: [
-                { text: "Первообразная и неопределенный интеграл" },
-                { text: "Определенный интеграл. Формула Ньютона-Лейбница" },
-                { text: "Вычисление площадей с помощью интеграла" }
+                { text: "Предел последовательности", page: 115 },
+                { text: "Предел функции в точке и на бесконечности", page: 118 },
+                { text: "Замечательные пределы и раскрытие неопределенностей", page: 122 },
+                { text: "Непрерывность функции и точки разрыва", page: 125 }
               ]
             },
             en: {
-              title: "Antiderivatives and Integrals",
+              title: "Limits (Limits of Sequences and Functions)",
               items: [
-                { text: "Antiderivatives and indefinite integrals" },
-                { text: "Definite integrals and Newton-Leibniz rule" },
-                { text: "Area of regions by integration" }
+                { text: "Limit of sequences", page: 115 },
+                { text: "Limit of functions at a point and infinity", page: 118 },
+                { text: "Special limits and indeterminate forms", page: 122 },
+                { text: "Continuity of functions", page: 125 }
               ]
             }
           },
           {
             id: 8,
+            page: 128,
             category: "algebra",
-            folder: "Birləşmələr nəzəriyyəsi və ehtimal",
+            folder: "Törəmə və onun tətbiqləri",
             az: {
-              title: "Birləşmələr nəzəriyyəsi. Ehtimal və statistika",
+              title: "Törəmə və onun tətbiqləri",
               items: [
-                { text: "Permutasiya, Qruplaşma (Kombinezon), Aranjeman", file: "Kombinatorika.html" },
-                { text: "Nyuton binomu", file: "Nyuton binomu.html" },
-                { text: "Hadisənin ehtimalı (Klassik və həndəsi ehtimal)", file: "Klassik ehtimal.html" },
-                { text: "Ehtimalın toplanması və vurulması. Bernoulli sınaqları", file: "Bernoulli düsturu.html" },
-                { text: "Statistikanın elementləri (Moda, median, dispersiya)", file: "Statistika.html" }
+                { text: "Törəmə anlayışı. Törəmənin həndəsi və fiziki mənası", page: 128, file: "Törəmənin mənası.html" },
+                { text: "Diferensiallama qaydaları. Mürəkkəb funksiyanın törəməsi", page: 131, file: "Diferensiallama qaydaları.html" },
+                { text: "Toxunanın tənliyi", page: 136, file: "Toxunanın tənliyi.html" },
+                { text: "Funksiyanın monotonluq aralıqları və ekstremumları", page: 139, file: "Ekstremumlar.html" },
+                { text: "Törəmənin köməyi ilə ən böyük və ən kiçik qiymətlərin tapılması", page: 144, file: "Ən böyük və ən kiçik qiymət.html" }
               ]
             },
             ru: {
-              title: "Комбинаторика, теория вероятностей и статистика",
+              title: "Производная и её применение",
               items: [
-                { text: "Перестановки, размещения, сочетания" },
-                { text: "Бином Ньютона" },
-                { text: "Классическая и геометрическая вероятность" },
-                { text: "Сложение и умножение вероятностей. Схема Бернулли" },
-                { text: "Элементы статистики" }
+                { text: "Понятие производной. Геометрический и физический смысл", page: 128 },
+                { text: "Правила дифференцирования", page: 131 },
+                { text: "Уравнение касательной", page: 136 },
+                { text: "Промежутки монотонности и экстремумы функций", page: 139 },
+                { text: "Нахождение наибольшего и наименьшего значений функции", page: 144 }
               ]
             },
             en: {
-              title: "Combinatorics, Probability and Statistics",
+              title: "Derivative and its Applications",
               items: [
-                { text: "Permutations and Combinations" },
-                { text: "Binomial theorem" },
-                { text: "Probability theory (Classical/Geometric)" },
-                { text: "Probability rules and Bernoulli trials" },
-                { text: "Statistical parameters" }
+                { text: "Concept of derivative. Geometric and physical meaning", page: 128 },
+                { text: "Differentiation rules", page: 131 },
+                { text: "Equation of tangent line", page: 136 },
+                { text: "Monotonicity intervals and extrema", page: 139 },
+                { text: "Finding maximum and minimum values", page: 144 }
               ]
             }
           },
           {
             id: 9,
-            category: "geometry",
-            folder: "Koordinatlar metodu və Vektorlar",
+            page: 148,
+            category: "algebra",
+            folder: "İbtidai funksiya və inteqral",
             az: {
-              title: "Müstəvidə koordinatlar metodu. Vektorlar",
+              title: "İbtidai funksiya və inteqral",
               items: [
-                { text: "Parçanın orta nöqtəsi. İki nöqtə arasındakı məsafə", file: "İki nöqtə arasındakı məsafə.html" },
-                { text: "Düz xəttin və çevrənin tənliyi", file: "Düz xətt və çevrə tənliyi.html" },
-                { text: "Vektorlar və onlar üzərində əməllər", file: "Vektorlar üzərində əməllər.html" },
-                { text: "Vektorların skalyar hasili və vektorlar arasındakı bucaq", file: "Skalyar hasil.html" }
+                { text: "İbtidai funksiya və qeyri-müəyyən inteqral", page: 148, file: "İbtidai funksiya.html" },
+                { text: "Müəyyən inteqral və Nyuton-Leybnits düsturu", page: 152, file: "Müəyyən inteqral.html" },
+                { text: "İnteqralın köməyi ilə fiqurların sahəsinin hesablanması", page: 156, file: "Əyrixətli trapesiyanın sahəsi.html" }
               ]
             },
             ru: {
-              title: "Метод координат на плоскости. Векторы",
+              title: "Первообразная и интеграл",
               items: [
-                { text: "Координаты точки и расстояние между точками" },
-                { text: "Уравнения прямой и окружности" },
-                { text: "Векторы и линейные операции" },
-                { text: "Скалярное произведение векторов" }
+                { text: "Первообразная и неопределенный интеграл", page: 148 },
+                { text: "Определенный интеграл. Формула Ньютона-Лейбница", page: 152 },
+                { text: "Вычисление площадей фигур с помощью интеграла", page: 156 }
               ]
             },
             en: {
-              title: "Coordinate Geometry and Vectors in 2D",
+              title: "Antiderivative and Integral",
               items: [
-                { text: "Distance and midpoint formulas" },
-                { text: "Equations of lines and circles" },
-                { text: "Vectors and vector arithmetic" },
-                { text: "Dot product and angle between vectors" }
+                { text: "Antiderivative and indefinite integral", page: 148 },
+                { text: "Definite integral and Newton-Leibniz formula", page: 152 },
+                { text: "Area calculation using integration", page: 156 }
               ]
             }
           },
           {
             id: 10,
-            category: "geometry",
-            folder: "Fiqurların sahəsi",
+            page: 160,
+            category: "algebra",
+            folder: "Birləşmələr nəzəriyyəsi və ehtimal",
             az: {
-              title: "Müstəvi fiqurlarının sahəsi",
+              title: "Birləşmələr nəzəriyyəsi. Ehtimal və statistika",
               items: [
-                { text: "Üçbucağın sahəsi (əsas düsturlar, Heron, radiuslarla)", file: "Üçbucağın sahəsi.html" },
-                { text: "Dördbucaqlıların sahəsi (Paraleloqram, Romb, Trapesiyanın sahəsi)", file: "Dördbucaqlıların sahəsi.html" },
-                { text: "Düzgün çoxbucaqlının sahəsi", file: "Düzgün çoxbucaqlının sahəsi.html" },
-                { text: "Dairənin, sektorun və seqmentin sahəsi", file: "Dairənin sahəsi.html" }
+                { text: "Permutasiya, Qruplaşma (Kombinezon), Aranjeman", page: 160, file: "Kombinatorika.html" },
+                { text: "Nyuton binomu", page: 164, file: "Nyuton binomu.html" },
+                { text: "Təsadüfi hadisə və onun ehtimalı (Klassik və həndəsi ehtimal)", page: 166, file: "Klassik ehtimal.html" },
+                { text: "Ehtimalın toplanması və vurulması teoreməri. Şərti ehtimal. Bernoulli sınaqları", page: 170, file: "Bernoulli düsturu.html" },
+                { text: "Statistikanın elementləri (Moda, median, ədədi orta, dispersiya, standart kənarlaşma)", page: 174, file: "Statistika.html" }
               ]
             },
             ru: {
-              title: "Площади плоских фигур",
+              title: "Комбинаторика, теория вероятностей и статистика",
               items: [
-                { text: "Площадь треугольника" },
-                { text: "Площади параллелограмма, ромба, трапеции" },
-                { text: "Площадь правильных многоугольников" },
-                { text: "Площадь круга и кругового сектора" }
+                { text: "Перестановки, размещения, сочетания", page: 160 },
+                { text: "Бином Ньютона", page: 164 },
+                { text: "Классическое и геометрическое определение вероятности", page: 166 },
+                { text: "Теоремы сложения и умножения вероятностей. Схема Бернулли", page: 170 },
+                { text: "Элементы статистики (мода, медиана, дисперсия)", page: 174 }
               ]
             },
             en: {
-              title: "Area of Plane Figures",
+              title: "Combinatorics, Probability and Statistics",
               items: [
-                { text: "Area of triangles" },
-                { text: "Area of quadrilaterals" },
-                { text: "Area of regular polygons" },
-                { text: "Area of circle, sector, and segment" }
+                { text: "Permutations, Combinations, Arrangements", page: 160 },
+                { text: "Binomial theorem", page: 164 },
+                { text: "Random events and probability (Classical/Geometric)", page: 166 },
+                { text: "Addition/multiplication of probabilities. Bernoulli trials", page: 170 },
+                { text: "Statistical parameters (Mean, median, variance)", page: 174 }
               ]
             }
           },
           {
             id: 11,
+            page: 178,
             category: "geometry",
-            folder: "Fəzada düz xətlər və müstəvilər",
+            folder: "Koordinatlar metodu və Vektorlar",
             az: {
-              title: "Fəzada düz xətlər və müstəvilər",
+              title: "Müstəvidə koordinatlar metodu. Vektorlar",
               items: [
-                { text: "Fəzada düz xətlərin və müstəvilərin qarşılıqlı vəziyyəti", file: "Fəzada düz xətlər.html" },
-                { text: "Düz xətt və müstəvinin paralelliyi və perpendikulyarlığı", file: "Düz xətt və müstəvi paralelliyi.html" },
-                { text: "Üç perpendikulyar teoremi. Mail və proyeksiyalar", file: "Üç perpendikulyar teoremi.html" },
-                { text: "İkiüzlü bucaqlar. Müstəvilərin perpendikulyarlığı", file: "İkiüzlü bucaqlar.html" }
+                { text: "Parçanın orta nöqtəsinin koordinatları. İki nöqtə arasındakı məsafə", page: 178, file: "İki nöqtə arasındakı məsafə.html" },
+                { text: "Düz xəttin və çevrənin tənliyi", page: 181, file: "Düz xətt və çevrə tənliyi.html" },
+                { text: "Vektor anlayışı. Vektorlar üzərində xətti əməllər", page: 184, file: "Vektorlar üzərində əməllər.html" },
+                { text: "Vektorların skalyar hasili. İki vektor arasındakı bucaq", page: 188, file: "Skalyar hasil.html" }
               ]
             },
             ru: {
-              title: "Прямые и плоскости в пространстве",
+              title: "Метод координат на плоскости. Векторы",
               items: [
-                { text: "Взаимное расположение прямых и плоскостей" },
-                { text: "Параллельность и перпендикулярность" },
-                { text: "Теорема о трех перпендикулярах" },
-                { text: "Двугранные углы" }
+                { text: "Координаты середины отрезка. Расстояние между точками", page: 178 },
+                { text: "Уравнение прямой и окружности", page: 181 },
+                { text: "Понятие вектора. Линейные операции над векторами", page: 184 },
+                { text: "Скалярное произведение векторов. Угол между векторами", page: 188 }
               ]
             },
             en: {
-              title: "Lines and Planes in 3D Space",
+              title: "Coordinate Geometry and Vectors in 2D",
               items: [
-                { text: "Relative positions in space" },
-                { text: "Parallelism and perpendicularity in 3D" },
-                { text: "Theorem of three perpendiculars" },
-                { text: "Dihedral angles" }
+                { text: "Midpoint coordinates. Distance between two points", page: 178 },
+                { text: "Equations of lines and circles", page: 181 },
+                { text: "Vectors. Linear operations on vectors", page: 184 },
+                { text: "Scalar (dot) product of vectors. Angle between vectors", page: 188 }
               ]
             }
           },
           {
             id: 12,
+            page: 192,
             category: "geometry",
-            folder: "Çoxüzlülər",
+            folder: "Fiqurların sahəsi",
             az: {
-              title: "Çoxüzlülər (Prizma və Piramida)",
+              title: "Müstəvi fiqurlarının sahəsi",
               items: [
-                { text: "Prizma (düz və düzgün prizma). Səthinin sahəsi və həcmi", file: "Prizma.html" },
-                { text: "Düzbucaqlı paralelepiped və kub", file: "Paralelepiped və kub.html" },
-                { text: "Piramida, düzgün piramida və kəsik piramida", file: "Piramida.html" }
+                { text: "Üçbucağın sahəsi (əsas düsturlar, Heron, daxilə və xaricə çəkilmiş çevrə radiusları ilə)", page: 192, file: "Üçbucağın sahəsi.html" },
+                { text: "Dördbucaqlıların sahəsi (Kvadrat, Düzbucaqlı, Paraleloqram, Romb, Trapesiyanın sahəsi)", page: 196, file: "Dördbucaqlıların sahəsi.html" },
+                { text: "Düzgün çoxbucaqlının sahəsi", page: 201, file: "Düzgün çoxbucaqlının sahəsi.html" },
+                { text: "Dairənin və onun hissələrinin sahəsi (sektor və seqment)", page: 203, file: "Dairənin sahəsi.html" }
               ]
             },
             ru: {
-              title: "Многогранники (Призма и Пирамида)",
+              title: "Площади плоских фигур",
               items: [
-                { text: "Призма: площадь поверхности и объем" },
-                { text: "Прямоугольный параллелепипед и куб" },
-                { text: "Пирамида и усеченная пирамида" }
+                { text: "Площадь треугольника (формула Герона, радиусы)", page: 192 },
+                { text: "Площади четырехугольников (параллелограмм, ромб, трапеция)", page: 196 },
+                { text: "Площадь правильного многоугольника", page: 201 },
+                { text: "Площадь круга, кругового сектора и сегмента", page: 203 }
               ]
             },
             en: {
-              title: "Polyhedra (Prisms and Pyramids)",
+              title: "Area of Plane Figures",
               items: [
-                { text: "Prisms: surface area and volume" },
-                { text: "Rectangular cuboids and cubes" },
-                { text: "Pyramids and frustums" }
+                { text: "Area of triangles (Heron's formula, inradius, circumradius)", page: 192 },
+                { text: "Area of quadrilaterals (Parallelogram, rhombus, trapezoid)", page: 196 },
+                { text: "Area of regular polygons", page: 201 },
+                { text: "Area of a circle, sector, and segment", page: 203 }
               ]
             }
           },
           {
             id: 13,
+            page: 207,
             category: "geometry",
-            folder: "Fırlanma cisimləri",
+            folder: "Fəzada düz xətlər və müstəvilər",
             az: {
-              title: "Fırlanma cisimləri (Silindr, Konus, Kürə)",
+              title: "Fəzada düz xətlər və müstəvilər. Fəzada bucaqlar və məsafələr",
               items: [
-                { text: "Silindr. Silindrin səthinin sahəsi və həcmi", file: "Silindr.html" },
-                { text: "Konus və kəsik konus. Konusun səthi və həcmi", file: "Konus.html" },
-                { text: "Kürə və sfera. Kürənin səthinin sahəsi və həcmi", file: "Kürə və sfera.html" },
-                { text: "Fəza cisimlərinin kombinasiyaları", file: "Fəza cisimlərinin kombinasiyaları.html" }
+                { text: "Fəzada düz xətlərin və müstəvilərin qarşılıqlı vəziyyəti", page: 207, file: "Fəzada düz xətlər.html" },
+                { text: "Düz xətt və müstəvinin paralelliyi və perpendikulyarlığı", page: 210, file: "Düz xətt və müstəvi paralelliyi.html" },
+                { text: "Üç perpendikulyar teoremi. Nöqtədən müstəviyə qədər məsafə", page: 213, file: "Üç perpendikulyar teoremi.html" },
+                { text: "Düz xətt ilə müstəvi arasındakı bucaq. İkiüzlü bucaqlar və müstəvilərin perpendikulyarlığı", page: 217, file: "İkiüzlü bucaqlar.html" }
               ]
             },
             ru: {
-              title: "Тела вращения (Цилиндр, Конус, Шар)",
+              title: "Прямые и плоскости в пространстве. Углы и расстояния",
               items: [
-                { text: "Цилиндр: поверхность и объем" },
-                { text: "Конус и усеченный конус" },
-                { text: "Шар и сфера" },
-                { text: "Комбинации тел вращения" }
+                { text: "Взаимное расположение прямых и плоскостей в пространстве", page: 207 },
+                { text: "Параллельность и перпендикулярность прямой и плоскости", page: 210 },
+                { text: "Теорема о трех перпендикулярах. Расстояние от точки до плоскости", page: 213 },
+                { text: "Угол между прямой и плоскостью. Двугранные углы", page: 217 }
               ]
             },
             en: {
-              title: "Solids of Revolution",
+              title: "Lines and Planes in 3D Space. Angles and Distances",
               items: [
-                { text: "Cylinder: area and volume" },
-                { text: "Cone and truncated cone" },
-                { text: "Sphere and ball" },
-                { text: "Combinations of solids" }
+                { text: "Relative positions of lines and planes in 3D space", page: 207 },
+                { text: "Parallelism and perpendicularity in 3D space", page: 210 },
+                { text: "Three perpendiculars theorem. Distance from point to plane", page: 213 },
+                { text: "Angle between line and plane. Dihedral angles", page: 217 }
               ]
             }
           },
           {
             id: 14,
+            page: 221,
             category: "geometry",
-            folder: "Fəzada koordinatlar və Vektorlar",
+            folder: "Çoxüzlülər",
             az: {
-              title: "Fəzada koordinatlar sistemi və vektorlar",
+              title: "Çoxüzlülər, onların səthi və həcmi",
               items: [
-                { text: "Fəzada düzbucaqlı koordinat sistemi. İki nöqtə arasındakı məsafə", file: "Fəzada koordinat sistemi.html" },
-                { text: "Fəzada vektorlar və xətti əməllər", file: "Fəzada vektorlar.html" },
-                { text: "Fəzada vektorların skalyar hasili", file: "Fəzada skalyar hasil.html" },
-                { text: "Sferanın tənliyi", file: "Sferanın tənliyi.html" }
+                { text: "Prizma (düz və düzgün prizma). Prizmanın səthinin sahəsi və həcmi", page: 221, file: "Prizma.html" },
+                { text: "Düzbucaqlı paralelepiped və kub", page: 225, file: "Paralelepiped və kub.html" },
+                { text: "Piramida və düzgün piramida. Piramidanın səthinin sahəsi və həcmi", page: 228, file: "Piramida.html" },
+                { text: "Kəsik piramida, onun səthi və həcmi", page: 233, file: "Kəsik piramida.html" }
               ]
             },
             ru: {
-              title: "Координаты и векторы в пространстве",
+              title: "Многогранники, их поверхность и объем",
               items: [
-                { text: "Прямоугольная система координат в пространстве" },
-                { text: "Векторы в 3D пространстве" },
-                { text: "Скалярное произведение в пространстве" },
-                { text: "Уравнение сферы" }
+                { text: "Призма (прямая и правильная). Площадь поверхности и объем призмы", page: 221 },
+                { text: "Прямоугольный параллелепипед и куб", page: 225 },
+                { text: "Пирамида и правильная пирамида. Площадь поверхности и объем", page: 228 },
+                { text: "Усеченная пирамида, её поверхность и объем", page: 233 }
               ]
             },
             en: {
-              title: "3D Coordinates and Vectors",
+              title: "Polyhedra, their Surface Area and Volume",
               items: [
-                { text: "3D Cartesian coordinate system" },
-                { text: "3D vectors and operations" },
-                { text: "Dot product in 3D" },
-                { text: "Equation of a sphere" }
+                { text: "Prisms (Right and regular prisms). Surface area and volume", page: 221 },
+                { text: "Rectangular cuboids and cubes", page: 225 },
+                { text: "Pyramids and regular pyramids. Surface area and volume", page: 228 },
+                { text: "Frustum of a pyramid, its surface area and volume", page: 233 }
               ]
             }
           },
           {
             id: 15,
-            category: "exams",
-            folder: "İsbat və Situasiya (II Hissə)",
+            page: 236,
+            category: "geometry",
+            folder: "Fırlanma cisimləri",
             az: {
-              title: "İsbat və Situasiya məsələləri (II Hissə)",
+              title: "Fırlanma cisimləri, onların səthi və həcmi",
               items: [
-                { text: "II Hissə üzrə isbat və əsaslandırma tələb edən açıq tipli tapşırıqlar", file: "İsbat məsələləri II hissə.html" },
-                { text: "II Hissə üzrə praktiki situasiya və kontekst əsaslı blok testlər", file: "Situasiya məsələləri II hissə.html" }
+                { text: "Silindr. Silindrin səthinin sahəsi və həcmi", page: 236, file: "Silindr.html" },
+                { text: "Konus və kəsik konus. Konusun səthi və həcmi", page: 240, file: "Konus.html" },
+                { text: "Kürə və sfera. Kürənin səthinin sahəsi və həcmi", page: 244, file: "Kürə və sfera.html" },
+                { text: "Fəza cisimlərinin kombinasiyaları (kombinə olunmuş cisimlər)", page: 248, file: "Fəza cisimlərinin kombinasiyaları.html" }
               ]
             },
             ru: {
-              title: "Задачи на доказательство и ситуации (Часть II)",
+              title: "Тела вращения, их поверхность и объем",
               items: [
-                { text: "Доказательства и контекстные блоки задач" }
+                { text: "Цилиндр. Площадь поверхности и объем цилиндра", page: 236 },
+                { text: "Конус и усеченный конус. Поверхность и объем", page: 240 },
+                { text: "Шар и сфера. Площадь сферы и объем шара", page: 244 },
+                { text: "Комбинации пространственных тел", page: 248 }
               ]
             },
             en: {
-              title: "Proof and Scenario Problems (Part II)",
+              title: "Solids of Revolution, their Surface Area and Volume",
               items: [
-                { text: "Proof problems and applied scenario tasks for Part II" }
+                { text: "Cylinder. Surface area and volume of a cylinder", page: 236 },
+                { text: "Cone and truncated cone. Surface area and volume", page: 240 },
+                { text: "Sphere and ball. Surface area of sphere and volume of ball", page: 244 },
+                { text: "Combinations of 3D geometric solids", page: 248 }
               ]
             }
           },
           {
             id: 16,
-            category: "exams",
-            folder: "2025 İmtahan Testləri II Hissə",
+            page: 252,
+            category: "geometry",
+            folder: "Fəzada koordinatlar və Vektorlar",
             az: {
-              title: "2025-ci il İmtahan Testləri (II Hissə)",
+              title: "Fəzada koordinatlar sistemi və vektorlar",
               items: [
-                { text: "2025-ci il Buraxılış və Qəbul imtahanlarında istifadə olunmuş testlər (II Hissə)", file: "2025 Qəbul Testləri II hissə.html" }
+                { text: "Fəzada düzbucaqlı koordinat sistemi. İki nöqtə arasındakı məsafə", page: 252, file: "Fəzada koordinat sistemi.html" },
+                { text: "Fəzada vektorlar və onlar üzərində xətti əməllər", page: 255, file: "Fəzada vektorlar.html" },
+                { text: "Fəzada vektorların skalyar hasili və vektorlar arasındakı bucaq", page: 258, file: "Fəzada skalyar hasil.html" },
+                { text: "Sferanın tənliyi", page: 261, file: "Sferanın tənliyi.html" }
               ]
             },
             ru: {
-              title: "Экзаменационные тесты 2025 года (Часть II)",
+              title: "Координаты и векторы в трехмерном пространстве",
               items: [
-                { text: "Официальные тесты вступительных экзаменов 2025" }
+                { text: "Прямоугольная система координат в пространстве. Расстояние", page: 252 },
+                { text: "Векторы в пространстве и линейные операции", page: 255 },
+                { text: "Скалярное произведение векторов в пространстве. Угол", page: 258 },
+                { text: "Уравнение сферы", page: 261 }
               ]
             },
             en: {
-              title: "2025 Examination Tests (Part II)",
+              title: "3D Coordinate System and Vectors in Space",
               items: [
-                { text: "Official Entrance Exam tasks for Part II topics" }
+                { text: "3D Cartesian coordinate system. Distance between points", page: 252 },
+                { text: "3D vectors and linear operations", page: 255 },
+                { text: "Dot product of 3D vectors and angle between vectors", page: 258 },
+                { text: "Equation of a sphere", page: 261 }
+              ]
+            }
+          },
+          {
+            id: 17,
+            page: 264,
+            category: "exams",
+            folder: "İsbat və Situasiya (II Hissə)",
+            az: {
+              title: "İsbat və Situasiya məsələləri (II Hissə)",
+              items: [
+                { text: "Cəbr və Həndəsə üzrə isbat və əsaslandırma tələb edən açıq tipli tapşırıqlar (II Hissə)", page: 264, file: "İsbat məsələləri II hissə.html" },
+                { text: "II Hissə üzrə praktiki situasiya və kontekst əsaslı blok testlər", page: 268, file: "Situasiya məsələləri II hissə.html" }
+              ]
+            },
+            ru: {
+              title: "Задачи на доказательство и ситуации (Часть II)",
+              items: [
+                { text: "Задания открытого типа на математическое доказательство", page: 264 },
+                { text: "Комплексные ситуационные задачи с практическим содержанием", page: 268 }
+              ]
+            },
+            en: {
+              title: "Proof and Scenario Problems (Part II)",
+              items: [
+                { text: "Open-ended proof problems in advanced algebra and solid geometry", page: 264 },
+                { text: "Context-based multi-step scenario assessment tasks", page: 268 }
+              ]
+            }
+          },
+          {
+            id: 18,
+            page: 275,
+            category: "exams",
+            folder: "2025 İmtahan Testləri II Hissə",
+            az: {
+              title: "2025-ci il Qəbul İmtahanı Testləri (II Hissə)",
+              items: [
+                { text: "2025-ci ildə ali məktəblərə qəbul imtahanında istifadə olunmuş rəsmi testlər (II Hissə)", page: 275, file: "2025 Qəbul Testləri II hissə.html" }
+              ]
+            },
+            ru: {
+              title: "Вступительные экзамены 2025 года (Часть II)",
+              items: [
+                { text: "Официальные тестовые задания вступительных экзаменов 2025 года", page: 275 }
+              ]
+            },
+            en: {
+              title: "2025 University Entrance Exam Tests (Part II)",
+              items: [
+                { text: "Official examination test tasks from the 2025 admission exams", page: 275 }
               ]
             }
           }
@@ -1376,7 +1567,23 @@
         ? "px-6 py-2.5 rounded-xl font-extrabold text-sm transition-all bg-sky-500 text-slate-950 shadow-md"
         : "px-6 py-2.5 rounded-xl font-extrabold text-sm transition-all text-slate-300 hover:text-white";
 
+      updateStats();
       renderPortal();
+    }
+
+    function updateStats() {
+      const activePart = partsData[currentPart];
+      const t = translations[currentLang];
+
+      const chapterCount = activePart.chapters.length;
+      let totalSubtopics = 0;
+      activePart.chapters.forEach(ch => {
+        totalSubtopics += ch.az.items.length;
+      });
+
+      document.getElementById('stat-val-chapters').innerHTML = `${chapterCount} <span class="text-xs font-normal text-sky-400">${t.statChaptersUnit}</span>`;
+      document.getElementById('stat-val-subtopics').innerHTML = `${totalSubtopics} <span class="text-xs font-normal text-slate-400">${t.statTopicsUnit}</span>`;
+      document.getElementById('stat-val-pages').innerHTML = `${activePart.totalPages} <span class="text-xs font-normal text-slate-400">${t.statPageUnit}</span>`;
     }
 
     function navigateToSubtopic(partKey, chapterId, itemIdx) {
@@ -1407,10 +1614,10 @@
 
         const langData = chapter[currentLang] || chapter.az;
         
-        const matchesChapter = langData.title.toLowerCase().includes(query);
+        const matchesChapter = langData.title.toLowerCase().includes(query) || String(chapter.page).includes(query);
         const matchedIndices = [];
         langData.items.forEach((it, idx) => {
-          if (it.text.toLowerCase().includes(query)) {
+          if (it.text.toLowerCase().includes(query) || String(it.page).includes(query)) {
             matchedIndices.push(idx);
           }
         });
@@ -1439,9 +1646,14 @@
           return `
             <div onclick="navigateToSubtopic('${currentPart}', ${chapter.id}, ${idx})" class="subtopic-item group pl-3 py-2 rounded-r-lg items-center justify-between gap-3 text-xs sm:text-sm text-slate-300 hover:text-white">
               <span class="leading-snug">${it.text}</span>
-              <span class="arrow-icon text-slate-500 group-hover:text-sky-400 text-sm font-bold transition-all px-2 flex-shrink-0">
-                →
-              </span>
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <span class="page-badge px-2 py-0.5 rounded text-[11px] font-bold whitespace-nowrap">
+                  ${t.pagePrefix} ${it.page}
+                </span>
+                <span class="arrow-icon text-slate-500 group-hover:text-sky-400 text-sm font-bold transition-all px-1">
+                  →
+                </span>
+              </div>
             </div>
           `;
         }).join("");
@@ -1457,6 +1669,7 @@
                 </span>
                 ${categoryBadge}
               </div>
+              <span class="text-xs text-slate-400 font-bold">${t.pagePrefix} ${chapter.page}</span>
             </div>
 
             <h3 class="text-base sm:text-lg font-bold text-white mb-4">
@@ -1491,6 +1704,11 @@
       document.getElementById("lbl-sub-title").textContent = t.subTitle;
       document.getElementById("lbl-part1-tab").textContent = t.part1Tab;
       document.getElementById("lbl-part2-tab").textContent = t.part2Tab;
+      document.getElementById("stat-lbl-chapters").textContent = t.statChapters;
+      document.getElementById("stat-lbl-subtopics").textContent = t.statSubtopics;
+      document.getElementById("stat-lbl-pages").textContent = t.statPages;
+      document.getElementById("stat-lbl-page-unit").textContent = t.statPageUnit;
+      document.getElementById("stat-lbl-edition").textContent = t.statEdition;
       document.getElementById("searchInput").placeholder = t.searchPh;
 
       document.getElementById("flt-all").textContent = t.fltAll;
@@ -1501,6 +1719,7 @@
       document.getElementById("lbl-not-found").textContent = t.notFound;
       document.getElementById("lbl-try-again").textContent = t.tryAgain;
 
+      updateStats();
       renderPortal();
     }
 
@@ -1533,5 +1752,4 @@
     });
   </script>
 </body>
-</html>#   T E S T _ B A N K _ 1 1  
- 
+</html>
