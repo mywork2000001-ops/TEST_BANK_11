@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Üçbucağın medianı, tənböləni, hündürlüyü. Medianların və tənbölənlərin xassəsi</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      padding: 12px 20px;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topic-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #f1f5f9;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary);
+    }
+
+    .topic-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .btn-group button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .btn-group button.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .score-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .grid-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .grid-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .q-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 6px;
+    }
+
+    .q-btn {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .q-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .q-btn.active {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .q-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .q-btn.incorrect {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .q-type-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .q-image-container {
+      margin: 16px 0;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .q-image-container img {
+      max-width: 100%;
+      max-height: 230px;
+      height: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .option-btn.selected-correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46 !important;
+      font-weight: 700;
+    }
+
+    .option-btn.selected-incorrect {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b !important;
+      font-weight: 700;
+    }
+
+    .open-input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      max-width: 440px;
+    }
+
+    .open-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .open-input:focus {
+      border-color: var(--primary);
+    }
+
+    .submit-btn {
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .explanation-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-body {
+      white-space: pre-line;
+      color: #334155;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="topic-title-box">
+        <a href="../../index.html" class="back-btn">← <span id="ui-back">Əsas Menyu</span></a>
+        <div class="topic-title" id="ui-topic">Üçbucağın medianı, tənböləni, hündürlüyü</div>
+      </div>
+      
+      <div class="controls">
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 31</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    const uiTranslations = {
+      az: {
+        topic: "Üçbucağın medianı, tənböləni, hündürlüyü. Medianların və tənbölənlərin xassəsi",
+        back: "Əsas Menyu",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı daxil edin...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Медиана, биссектриса, высота треугольника. Свойства медиан и биссектрис",
+        back: "Главное меню",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Median, Bisector, Altitude of a Triangle. Properties of Medians and Bisectors",
+        back: "Main Menu",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended",
+        check: "Submit",
+        enterAnswer: "Enter answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    const questionsData = [
+      {
+        id: 1,
+        type: "mcq",
+        correct: "E",
+        options: { A: "10 sm", B: "11 sm", C: "18 sm", D: "14 sm", E: "7 sm" },
+        text: {
+          az: "Oturacağı $AB$ olan bərabəryanlı üçbucaqda $CD$ mediandır. $ABC$ və $ADC$ üçbucaqlarının perimetrləri uyğun olaraq $36\\text{ sm}$ və $25\\text{ sm}$ olarsa, $CD$-ni tapın.",
+          ru: "В равнобедренном треугольнике с основанием $AB$ проведена медиана $CD$. Если периметры треугольников $ABC$ и $ADC$ равны $36\\text{ см}$ и $25\\text{ см}$, найдите $CD$.",
+          en: "In an isosceles triangle with base $AB$, $CD$ is a median. If perimeters of $\\triangle ABC$ and $\\triangle ADC$ are $36\\text{ cm}$ and $25\\text{ cm}$, find $CD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P(ABC) = 2b + a = 36\\text{ sm}$.\n2) $P(ADC) = b + \\frac{a}{2} + CD = \\frac{2b+a}{2} + CD = \\frac{36}{2} + CD = 18 + CD = 25$.\n3) $CD = 25 - 18 = 7\\text{ sm}$.",
+          ru: "Решение:\n1) $P(ABC) = 2b + a = 36$.\n2) $P(ADC) = 18 + CD = 25 \\implies CD = 7\\text{ см}$.",
+          en: "Solution:\n1) $18 + CD = 25 \\implies CD = 7\\text{ cm}$."
+        }
+      },
+      {
+        id: 2,
+        type: "mcq",
+        correct: "E",
+        image: "Ucbucagin_mediani_Image0002.png",
+        options: { A: "20", B: "12", C: "25", D: "10", E: "15" },
+        text: {
+          az: "$ABC$ üçbucağında $AE$ və $BD$ parçaları $O$ nöqtəsində kəsişir. $CE = BE, AD = DC$ və $OE + OD = 5$ olarsa, $AE + BD$ cəmini tapın.",
+          ru: "В треугольнике $ABC$ медианы $AE$ и $BD$ пересекаются в точке $O$. Если $OE + OD = 5$, найдите $AE + BD$.",
+          en: "In $\\triangle ABC$, medians $AE$ and $BD$ intersect at $O$. If $OE + OD = 5$, find $AE + BD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Medianlar kəsişmə nöqtəsində $2:1$ nisbətində bölünür: $AE = 3OE$ və $BD = 3OD$.\n2) $AE + BD = 3(OE + OD) = 3 \\times 5 = 15$.",
+          ru: "Решение:\n1) Медианы делятся в отношении $2:1$, считая от вершины: $AE = 3OE, BD = 3OD$.\n2) $AE + BD = 3(OE + OD) = 15$.",
+          en: "Solution:\n1) $AE + BD = 3(OE + OD) = 3(5) = 15$."
+        }
+      },
+      {
+        id: 3,
+        type: "mcq",
+        correct: "D",
+        image: "Ucbucagin_mediani_Image0003.png",
+        options: { A: "17", B: "15,5", C: "15", D: "12", E: "19" },
+        text: {
+          az: "$\\triangle ABC$-də $AE$ və $BD$ parçaları $O$ nöqtəsində kəsişir. $CE = BE, AD = DC, AE = 13, BD = 8, AB = 10$ olarsa, $P_{\\triangle OED}$-ni tapın.",
+          ru: "В $\\triangle ABC$ медианы $AE$ и $BD$ пересекаются в $O$. $AE = 13, BD = 8, AB = 10$. Найдите $P_{\\triangle OED}$.",
+          en: "In $\\triangle ABC$, medians $AE$ and $BD$ intersect at $O$. $AE = 13, BD = 8, AB = 10$. Find $P_{\\triangle OED}$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $ED$ orta xətt olduğundan: $ED = \\frac{AB}{2} = 5$.\n2) $OE = \\frac{13}{3}$, $OD = \\frac{8}{3}$.\n3) $P = OE + OD + ED = \\frac{21}{3} + 5 = 7 + 5 = 12$.",
+          ru: "Решение:\n1) $ED = 10 / 2 = 5$.\n2) $OE + OD = 13/3 + 8/3 = 7$.\n3) $P = 7 + 5 = 12$.",
+          en: "Solution:\n1) $P = 7 + 5 = 12$."
+        }
+      },
+      {
+        id: 4,
+        type: "mcq",
+        correct: "D",
+        options: { A: "11 sm", B: "$2\\sqrt{17}\\text{ sm}$", C: "4 sm", D: "$\\frac{1}{2}\\sqrt{58}\\text{ sm}$", E: "$\\sqrt{58}\\text{ sm}$" },
+        text: {
+          az: "Tərəfləri $5\\text{ sm}, 6\\text{ sm}, 8\\text{ sm}$ olan üçbucağın böyük tərəfinə çəkilmiş medianının uzunluğunu tapın.",
+          ru: "Найдите длину медианы, проведенной к большей стороне треугольника со сторонами $5\\text{ см}, 6\\text{ см}, 8\\text{ см}$.",
+          en: "Find the length of the median to the largest side of a triangle with sides $5\\text{ cm}, 6\\text{ cm}, 8\\text{ cm}$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Median düsturu: $m_c = \\frac{1}{2}\\sqrt{2a^2 + 2b^2 - c^2}$.\n2) $m = \\frac{1}{2}\\sqrt{2(25) + 2(36) - 64} = \\frac{1}{2}\\sqrt{50 + 72 - 64} = \\frac{1}{2}\\sqrt{58}\\text{ sm}$.",
+          ru: "Решение:\n1) $m_c = \\frac{1}{2}\\sqrt{2(25) + 2(36) - 64} = \\frac{1}{2}\\sqrt{58}\\text{ см}$.",
+          en: "Solution:\n1) $m = \\frac{1}{2}\\sqrt{58}\\text{ cm}$."
+        }
+      },
+      {
+        id: 5,
+        type: "mcq",
+        correct: "A",
+        options: { A: "$\\sqrt{106}\\text{ sm}$", B: "7 sm", C: "8 sm", D: "$\\sqrt{53}\\text{ sm}$", E: "$\\sqrt{94}\\text{ sm}$" },
+        text: {
+          az: "İki tərəfi $6\\text{ sm}$ və $7\\text{ sm}$, üçüncü tərəfinə çəkilən median $4\\text{ sm}$ olan üçbucağın üçüncü tərəfini tapın.",
+          ru: "Две стороны треугольника равны $6\\text{ см}$ и $7\\text{ см}$, а медиана к третьей стороне равна $4\\text{ см}$. Найдите третью сторону.",
+          en: "Two sides of a triangle are $6\\text{ cm}$ and $7\\text{ cm}$, and the median to the third side is $4\\text{ cm}$. Find the third side."
+        },
+        explanation: {
+          az: "Həlli:\n1) $4 = \\frac{1}{2}\\sqrt{2(36) + 2(49) - c^2} \\implies 8 = \\sqrt{72 + 98 - c^2}$.\n2) $64 = 170 - c^2 \\implies c^2 = 106 \\implies c = \\sqrt{106}\\text{ sm}$.",
+          ru: "Решение:\n1) $64 = 2(36) + 2(49) - c^2 \\implies c^2 = 106 \\implies c = \\sqrt{106}\\text{ см}$.",
+          en: "Solution:\n1) $c = \\sqrt{106}\\text{ cm}$."
+        }
+      },
+      {
+        id: 6,
+        type: "mcq",
+        correct: "B",
+        options: { A: "9 sm", B: "4 sm", C: "3 sm", D: "4,8 sm", E: "6 sm" },
+        text: {
+          az: "$ABC$ üçbucağında $AD$ tənbölən, $AB = 8\\text{ sm}, BD = 5\\text{ sm}$ və $AC = 6,4\\text{ sm}$ olarsa, $CD$ parçasının uzunluğunu tapın.",
+          ru: "В $\\triangle ABC$ $AD$ — биссектриса, $AB = 8\\text{ см}, BD = 5\\text{ см}, AC = 6,4\\text{ см}$. Найдите $CD$.",
+          en: "In $\\triangle ABC$, $AD$ is an angle bisector, $AB = 8\\text{ cm}, BD = 5\\text{ cm}$, and $AC = 6.4\\text{ cm}$. Find $CD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tənbölən xassəsi: $\\frac{AB}{BD} = \\frac{AC}{CD} \\implies \\frac{8}{5} = \\frac{6,4}{CD}$.\n2) $CD = \\frac{5 \\times 6,4}{8} = 4\\text{ sm}$.",
+          ru: "Решение:\n1) $\\frac{8}{5} = \\frac{6,4}{CD} \\implies CD = 4\\text{ см}$.",
+          en: "Solution:\n1) $CD = 4\\text{ cm}$."
+        }
+      },
+      {
+        id: 7,
+        type: "mcq",
+        correct: "C",
+        options: { A: "12 sm", B: "11 sm", C: "10 sm", D: "6 sm", E: "8 sm" },
+        text: {
+          az: "$ABC$ üçbucağında $BD$ tənbölən, $AB = 18\\text{ sm}, BC = 20\\text{ sm}, AC = 19\\text{ sm}$ olarsa, $DC$-nin uzunluğunu tapın.",
+          ru: "В $\\triangle ABC$ $BD$ — биссектриса, $AB = 18\\text{ см}, BC = 20\\text{ см}, AC = 19\\text{ см}$. Найдите $DC$.",
+          en: "In $\\triangle ABC$, $BD$ is a bisector, $AB = 18\\text{ cm}, BC = 20\\text{ cm}, AC = 19\\text{ cm}$. Find $DC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\frac{AD}{DC} = \\frac{AB}{BC} = \\frac{18}{20} = \\frac{9}{10}$.\n2) $AD + DC = 19 \\implies 9x + 10x = 19 \\implies x = 1$.\n3) $DC = 10x = 10\\text{ sm}$.",
+          ru: "Решение:\n1) $AD : DC = 9 : 10$.\n2) $9x + 10x = 19 \\implies x = 1 \\implies DC = 10\\text{ см}$.",
+          en: "Solution:\n1) $DC = 10\\text{ cm}$."
+        }
+      },
+      {
+        id: 8,
+        type: "mcq",
+        correct: "E",
+        options: { A: "7 sm", B: "10 sm", C: "12 sm", D: "6 sm", E: "8 sm" },
+        text: {
+          az: "$AD$ parçası $ABC$ üçbucağının tənbölənidir. $AB = 16\\text{ sm}, AC = 20\\text{ sm}$ və $DC - BD = 2\\text{ sm}$ olarsa, $BD$-ni tapın.",
+          ru: "$AD$ — биссектриса $\\triangle ABC$. $AB = 16\\text{ см}, AC = 20\\text{ см}$ и $DC - BD = 2\\text{ см}$. Найдите $BD$.",
+          en: "$AD$ is bisector of $\\triangle ABC$. $AB = 16\\text{ cm}, AC = 20\\text{ cm}$ and $DC - BD = 2\\text{ cm}$. Find $BD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\frac{BD}{DC} = \\frac{16}{20} = \\frac{4}{5} \\implies BD = 4x, DC = 5x$.\n2) $5x - 4x = 2 \\implies x = 2$.\n3) $BD = 4(2) = 8\\text{ sm}$.",
+          ru: "Решение:\n1) $BD = 4x, DC = 5x$.\n2) $x = 2 \\implies BD = 8\\text{ см}$.",
+          en: "Solution:\n1) $BD = 8\\text{ cm}$."
+        }
+      },
+      {
+        id: 9,
+        type: "mcq",
+        correct: "B",
+        options: { A: "9 sm", B: "12 sm", C: "8 sm", D: "15 sm", E: "11 sm" },
+        text: {
+          az: "$AD$ parçası $ABC$ üçbucağının tənbölənidir. $AB = 18\\text{ sm}, AC = 15\\text{ sm}$ və $BD - DC = 2\\text{ sm}$ olarsa, $BD$-ni tapın.",
+          ru: "$AD$ — биссектриса $\\triangle ABC$. $AB = 18\\text{ см}, AC = 15\\text{ см}$ и $BD - DC = 2\\text{ см}$. Найдите $BD$.",
+          en: "$AD$ is bisector of $\\triangle ABC$. $AB = 18\\text{ cm}, AC = 15\\text{ cm}$ and $BD - DC = 2\\text{ cm}$. Find $BD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\frac{BD}{DC} = \\frac{18}{15} = \\frac{6}{5} \\implies BD = 6x, DC = 5x$.\n2) $6x - 5x = 2 \\implies x = 2$.\n3) $BD = 6(2) = 12\\text{ sm}$.",
+          ru: "Решение:\n1) $6x - 5x = 2 \\implies x = 2$.\n2) $BD = 6(2) = 12\\text{ см}$.",
+          en: "Solution:\n1) $BD = 12\\text{ cm}$."
+        }
+      },
+      {
+        id: 10,
+        type: "mcq",
+        correct: "A",
+        options: { A: "4 sm", B: "3 sm", C: "7 sm", D: "5 sm", E: "6 sm" },
+        text: {
+          az: "Perimetri $18\\text{ sm}$ olan üçbucağın medianlarından biri onu, perimetrləri $12\\text{ sm}$ və $14\\text{ sm}$ olan iki üçbucağa bölür. Medianın uzunluğunu tapın.",
+          ru: "Медиана делит треугольник с периметром $18\\text{ см}$ на два треугольника с периметрами $12\\text{ см}$ и $14\\text{ см}$. Найдите длину медианы.",
+          en: "A median divides a triangle of perimeter $18\\text{ cm}$ into two triangles with perimeters $12\\text{ cm}$ and $14\\text{ cm}$. Find the median length."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P_1 + P_2 = P + 2m \\implies 12 + 14 = 18 + 2m$.\n2) $26 = 18 + 2m \\implies 2m = 8 \\implies m = 4\\text{ sm}$.",
+          ru: "Решение:\n1) $12 + 14 = 18 + 2m \\implies 2m = 8 \\implies m = 4\\text{ см}$.",
+          en: "Solution:\n1) $m = 4\\text{ cm}$."
+        }
+      },
+      {
+        id: 11,
+        type: "mcq",
+        correct: "D",
+        options: { A: "6 sm", B: "4 sm", C: "5 sm", D: "8 sm", E: "9 sm" },
+        text: {
+          az: "Perimetri $32\\text{ sm}$ olan üçbucağın medianlarından biri onu, perimetrləri $20\\text{ sm}$ və $28\\text{ sm}$ olan iki üçbucağa bölür. Medianın uzunluğunu tapın.",
+          ru: "Медиана делит треугольник с периметром $32\\text{ см}$ на два треугольника с периметрами $20\\text{ см}$ и $28\\text{ см}$. Найдите длину медианы.",
+          en: "A median divides a triangle of perimeter $32\\text{ cm}$ into two triangles with perimeters $20\\text{ cm}$ and $28\\text{ cm}$. Find the median length."
+        },
+        explanation: {
+          az: "Həlli:\n1) $20 + 28 = 32 + 2m \\implies 48 = 32 + 2m \\implies 2m = 16 \\implies m = 8\\text{ sm}$.",
+          ru: "Решение:\n1) $48 = 32 + 2m \\implies m = 8\\text{ см}$.",
+          en: "Solution:\n1) $m = 8\\text{ cm}$."
+        }
+      },
+      {
+        id: 12,
+        type: "mcq",
+        correct: "C",
+        options: { A: "27 sm", B: "21 sm", C: "24 sm", D: "30 sm", E: "33 sm" },
+        text: {
+          az: "Medianları cəmi $12\\sqrt{3}\\text{ sm}$ olan bərabərtərəfli üçbucağın perimetrini tapın.",
+          ru: "Сумма медиан равностороннего треугольника равна $12\\sqrt{3}\\text{ см}$. Найдите его периметр.",
+          en: "The sum of the medians of an equilateral triangle is $12\\sqrt{3}\\text{ cm}$. Find its perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) Bərabərtərəfli üçbucaqda medianlar bərabərdir: $3m = 12\\sqrt{3} \\implies m = h = 4\\sqrt{3}\\text{ sm}$.\n2) $h = \\frac{a\\sqrt{3}}{2} = 4\\sqrt{3} \\implies a = 8\\text{ sm}$.\n3) $P = 3a = 3 \\times 8 = 24\\text{ sm}$.",
+          ru: "Решение:\n1) $m = h = 4\\sqrt{3}\\text{ см}$.\n2) $h = \\frac{a\\sqrt{3}}{2} \\implies a = 8\\text{ см} \\implies P = 24\\text{ см}$.",
+          en: "Solution:\n1) $a = 8\\text{ cm} \\implies P = 24\\text{ cm}$."
+        }
+      },
+      {
+        id: 13,
+        type: "mcq",
+        correct: "B",
+        options: { A: "30 sm", B: "11 sm", C: "10 sm", D: "22 sm", E: "16 sm" },
+        text: {
+          az: "$ABC$ üçbucağının $B$ və $C$ bucaqlarının tənbölənlərinin kəsişmə nöqtəsindən üçbucağın $AB$ və $AC$ tərəflərini uyğun olaraq $M$ və $N$ nöqtələrində kəsən və $BC$-yə paralel düz xətt çəkilmişdir. $MB = 5\\text{ sm}, NC = 6\\text{ sm}$ olarsa, $MN$-i tapın.",
+          ru: "Через точку пересечения биссектрис углов $B$ и $C$ треугольника $ABC$ проведена прямая, параллельная $BC$, пересекающая $AB$ в $M$, а $AC$ в $N$. Если $MB = 5\\text{ см}, NC = 6\\text{ см}$, найдите $MN$.",
+          en: "Through the incenter of $\\triangle ABC$, a line parallel to $BC$ is drawn, intersecting $AB$ at $M$ and $AC$ at $N$. If $MB = 5\\text{ cm}, NC = 6\\text{ cm}$, find $MN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $MN \\parallel BC$ və tənbölənlərin əmələ gətirdiyi bərabəryanlı üçbucaqlardan: $MI = MB = 5\\text{ sm}$ və $NI = NC = 6\\text{ sm}$.\n2) $MN = MI + NI = 5 + 6 = 11\\text{ sm}$.",
+          ru: "Решение:\n1) $MI = MB = 5\\text{ см}$, $NI = NC = 6\\text{ см}$.\n2) $MN = 5 + 6 = 11\\text{ см}$.",
+          en: "Solution:\n1) $MN = 5 + 6 = 11\\text{ cm}$."
+        }
+      },
+      {
+        id: 14,
+        type: "mcq",
+        correct: "A",
+        options: { A: "3 sm", B: "7,5 sm", C: "8 sm", D: "4 sm", E: "11 sm" },
+        text: {
+          az: "Bərabəryanlı üçbucağın oturacağındakı təpədən yan tərəfinə çəkilən median onun perimetrini $8\\text{ sm}$ və $15\\text{ sm}$ olan hissələrə ayırır. Üçbucağın oturacağını tapın.",
+          ru: "Медиана, проведенная из вершины основания к боковой стороне равнобедренного треугольника, делит его периметр на $8\\text{ см}$ и $15\\text{ см}$. Найдите основание.",
+          en: "In an isosceles triangle, a median from a base vertex to a leg divides its perimeter into $8\\text{ cm}$ and $15\\text{ cm}$. Find the base."
+        },
+        explanation: {
+          az: "Həlli:\n1) Yan tərəf $b$, oturacaq $a$ olsun. $\\frac{3}{2}b = 15 \\implies b = 10\\text{ sm}$.\n2) $a + \\frac{b}{2} = 8 \\implies a + 5 = 8 \\implies a = 3\\text{ sm}$ (üçbucaq bərabərsizliyini ödəyir).",
+          ru: "Решение:\n1) $1.5b = 15 \\implies b = 10\\text{ см}$.\n2) $a + 5 = 8 \\implies a = 3\\text{ см}$.",
+          en: "Solution:\n1) $a = 3\\text{ cm}$."
+        }
+      },
+      {
+        id: 15,
+        type: "mcq",
+        correct: "E",
+        options: { A: "4 sm", B: "7 sm", C: "6 sm", D: "10 sm", E: "5 sm" },
+        text: {
+          az: "$ABC$ üçbucağının $A$ və $B$ bucaqlarının tənbölənlərinin kəsişmə nöqtəsindən üçbucağın $AC$ və $BC$ tərəflərini uyğun olaraq $M$ və $N$ nöqtələrində kəsən və $AB$-yə paralel düz xətt çəkilmişdir. $MN = 12\\text{ sm}, AM = 7\\text{ sm}$ olarsa, $BN$-i tapın.",
+          ru: "Через точку пересечения биссектрис $A$ и $B$ проведена прямая, параллельная $AB$. $MN = 12\\text{ см}, AM = 7\\text{ см}$. Найдите $BN$.",
+          en: "Through the incenter of $A$ and $B$, line parallel to $AB$ is drawn. $MN = 12\\text{ cm}, AM = 7\\text{ cm}$. Find $BN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $MN = AM + BN \\implies 12 = 7 + BN \\implies BN = 5\\text{ sm}$.",
+          ru: "Решение:\n1) $MN = AM + BN \\implies BN = 12 - 7 = 5\\text{ см}$.",
+          en: "Solution:\n1) $BN = 5\\text{ cm}$."
+        }
+      },
+      {
+        id: 16,
+        type: "mcq",
+        correct: "C",
+        image: "Ucbucagin_mediani_Image0016.png",
+        options: { A: "20 sm", B: "14 sm", C: "25 sm", D: "21 sm", E: "18 sm" },
+        text: {
+          az: "$ABC$ üçbucağının $BC$ tərəfi üzərində $D$ nöqtəsi götürülmüşdür. $BM$ medianı $AD$ parçası ilə $O$ nöqtəsində kəsişir. $BD:DC = 2:3$ və $AD = 35\\text{ sm}$ olarsa, $AO$-nu tapın.",
+          ru: "На стороне $BC$ взята точка $D$. Медиана $BM$ пересекает $AD$ в точке $O$. $BD:DC = 2:3$, $AD = 35\\text{ см}$. Найдите $AO$.",
+          en: "Point $D$ is on side $BC$. Median $BM$ intersects $AD$ at $O$. $BD:DC = 2:3$, $AD = 35\\text{ cm}$. Find $AO$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Menelay teoreminə görə: $\\frac{AO}{OD} = \\frac{5}{2}$.\n2) $AO = \\frac{5}{7} AD = \\frac{5}{7} \\times 35 = 25\\text{ sm}$.",
+          ru: "Решение:\n1) По теореме Менелая: $AO : OD = 5 : 2$.\n2) $AO = \\frac{5}{7} \\times 35 = 25\\text{ см}$.",
+          en: "Solution:\n1) $AO = 25\\text{ cm}$."
+        }
+      },
+      {
+        id: 17,
+        type: "mcq",
+        correct: "A",
+        options: { A: "4 sm", B: "5 sm", C: "6 sm", D: "8 sm", E: "7 sm" },
+        text: {
+          az: "İki tərəfi $3\\text{ sm}$ və $6\\text{ sm}$, bu tərəflərə çəkilmiş hündürlüklərin ədədi ortası üçüncü tərəfə çəkilmiş hündürlüyə bərabər olan üçbucağın üçüncü tərəfinin uzunluğunu tapın.",
+          ru: "Две стороны треугольника равны $3\\text{ см}$ и $6\\text{ см}$. Среднее арифметическое высот к этим сторонам равно высоте к третьей стороне. Найдите третью сторону.",
+          en: "Two sides are $3\\text{ cm}$ and $6\\text{ cm}$. The arithmetic mean of their altitudes equals the altitude to the third side. Find the third side."
+        },
+        explanation: {
+          az: "Həlli:\n1) $h = \\frac{2S}{a} \\implies \\frac{1}{c} = \\frac{\\frac{1}{3} + \\frac{1}{6}}{2} = \\frac{1}{4} \\implies c = 4\\text{ sm}$.",
+          ru: "Решение:\n1) $\\frac{1}{c} = \\frac{1/3 + 1/6}{2} = \\frac{1}{4} \\implies c = 4\\text{ см}$.",
+          en: "Solution:\n1) $c = 4\\text{ cm}$."
+        }
+      },
+      {
+        id: 18,
+        type: "mcq",
+        correct: "A",
+        image: "Ucbucagin_mediani_Image0018.png",
+        options: { A: "40°", B: "50°", C: "60°", D: "20°", E: "30°" },
+        text: {
+          az: "$ABC$ üçbucağında $A$ və $C$ bucaqlarının tənbölənləri $D$ nöqtəsində kəsişir. $\\angle ADB = 100^\\circ$ və $\\angle ADC = 120^\\circ$ olarsa, $\\angle DAC - \\angle DCA$ fərqini tapın.",
+          ru: "Биссектрисы углов $A$ и $C$ пересекаются в $D$. $\\angle ADB = 100^\\circ$, $\\angle ADC = 120^\\circ$. Найдите $\\angle DAC - \\angle DCA$.",
+          en: "Bisectors of $A$ and $C$ intersect at $D$. $\\angle ADB = 100^\\circ, \\angle ADC = 120^\\circ$. Find $\\angle DAC - \\angle DCA$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle ADC = 120^\\circ \\implies \\frac{A}{2} + \\frac{C}{2} = 60^\\circ$.\n2) $\\angle ADB = 90^\\circ + \\frac{C}{2} = 100^\\circ \\implies \\frac{C}{2} = 10^\\circ$.\n3) $\\frac{A}{2} = 50^\\circ \\implies \\angle DAC - \\angle DCA = 50^\\circ - 10^\\circ = 40^\\circ$.",
+          ru: "Решение:\n1) $A/2 = 50^\\circ, C/2 = 10^\\circ$.\n2) $50^\\circ - 10^\\circ = 40^\\circ$.",
+          en: "Solution:\n1) $\\angle DAC - \\angle DCA = 50^\\circ - 10^\\circ = 40^\\circ$."
+        }
+      },
+      {
+        id: 19,
+        type: "mcq",
+        correct: "D",
+        image: "Ucbucagin_mediani_Image0019.png",
+        options: { A: "1", B: "2", C: "4", D: "3", E: "5" },
+        text: {
+          az: "$ABC$ üçbucağında $BD$ və $CE$ tənbölənlərdir. $\\frac{BE}{ED} = 2$ və $AB = 6$ olarsa, $AD$-ni tapın.",
+          ru: "В $\\triangle ABC$ $BD$ и $CE$ — биссектрисы. $\\frac{BE}{ED} = 2$ и $AB = 6$. Найдите $AD$.",
+          en: "In $\\triangle ABC$, $BD$ and $CE$ are bisectors. $\\frac{BE}{ED} = 2$ and $AB = 6$. Find $AD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\triangle ABD$-də $CE$ tənbölən olduğuna görə: $\\frac{BC}{CD} = \\frac{BE}{ED} = 2 \\implies BC = 2CD$.\n2) $BD$ tənbölən olduğundan: $\\frac{AD}{CD} = \\frac{AB}{BC} = \\frac{6}{2CD} \\implies AD = 3$.",
+          ru: "Решение:\n1) $BC = 2CD$.\n2) $\\frac{AD}{CD} = \\frac{AB}{BC} = \\frac{6}{2CD} \\implies AD = 3$.",
+          en: "Solution:\n1) $AD = 3$."
+        }
+      },
+      {
+        id: 20,
+        type: "open",
+        correct: "12",
+        text: {
+          az: "Bərabəryanlı üçbucağın oturacağı $12\\sqrt{2}$ və bucaqlardan biri $120^\\circ$-dir. Oturacaqdakı bucağın tənböləninin uzunluğunu tapın.",
+          ru: "Основание равнобедренного треугольника равно $12\\sqrt{2}$, один из углов равен $120^\\circ$. Найдите длину биссектрисы угла при основании.",
+          en: "The base of an isosceles triangle is $12\\sqrt{2}$, and one angle is $120^\\circ$. Find the length of the bisector of the base angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Oturacaqdakı bucaq $30^\\circ$-dir. Tənbölən onu $15^\\circ, 15^\\circ$-yə bölür.\n2) Sinuslar teoreminə görə: $\\frac{l}{\\sin 30^\\circ} = \\frac{12\\sqrt{2}}{\\sin 135^\\circ} \\implies l = 12\\sqrt{2} \\times \\frac{1/2}{\\sqrt{2}/2} = 12$.",
+          ru: "Решение:\n1) По теореме синусов: $l = 12\\sqrt{2} \\times \\frac{\\sin 30^\\circ}{\\sin 135^\\circ} = 12$.",
+          en: "Solution:\n1) $l = 12$."
+        }
+      },
+      {
+        id: 21,
+        type: "open",
+        correct: "12",
+        image: "Ucbucagin_mediani_Image0021.png",
+        text: {
+          az: "$M$ nöqtəsi $ABC$ üçbucağının medianlarının kəsişmə nöqtəsidir. $AM \\perp MC$ və $BM = 12$ olarsa, $AC$-nin uzunluğunu hesablayın.",
+          ru: "$M$ — точка пересечения медиан $\\triangle ABC$. $AM \\perp MC$, $BM = 12$. Найдите $AC$.",
+          en: "$M$ is the centroid of $\\triangle ABC$. $AM \\perp MC$ and $BM = 12$. Find $AC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $BD$ medianı $AC$-ni yarıya bölür. $MD = \\frac{BM}{2} = 6$.\n2) Düzbucaqlı $\\triangle AMC$-də $MD$ hipotenuzun medianıdır: $AC = 2MD = 2 \\times 6 = 12$.",
+          ru: "Решение:\n1) $MD = 12 / 2 = 6$.\n2) В прямоугольном $\\triangle AMC$: $AC = 2MD = 12$.",
+          en: "Solution:\n1) $AC = 2(6) = 12$."
+        }
+      },
+      {
+        id: 22,
+        type: "open",
+        correct: "18",
+        image: "Ucbucagin_mediani_Image0022.png",
+        text: {
+          az: "$M$ nöqtəsi $ABC$ üçbucağının medianlarının kəsişmə nöqtəsidir. $AM \\perp MC$ və $BM = 18$ olarsa, $AC$-nin uzunluğunu hesablayın.",
+          ru: "$M$ — точка пересечения медиан $\\triangle ABC$. $AM \\perp MC$, $BM = 18$. Найдите $AC$.",
+          en: "$M$ is the centroid of $\\triangle ABC$. $AM \\perp MC$ and $BM = 18$. Find $AC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $MD = \\frac{18}{2} = 9$.\n2) $AC = 2MD = 18$.",
+          ru: "Решение:\n1) $AC = 2 \\times 9 = 18$.",
+          en: "Solution:\n1) $AC = 18$."
+        }
+      },
+      {
+        id: 23,
+        type: "open",
+        correct: "10",
+        image: "Ucbucagin_mediani_Image0023.png",
+        text: {
+          az: "$ABC$ üçbucağının $AM$ və $BN$ medianları perpendikulyar olub $K$ nöqtəsində kəsişirlər. $AM = 12$ və $BN = 9$ olarsa, $CK$ parçasının uzunluğunu tapın.",
+          ru: "Медианы $AM \\perp BN$ пересекаются в $K$. $AM = 12, BN = 9$. Найдите $CK$.",
+          en: "Medians $AM \\perp BN$ intersect at $K$. $AM = 12, BN = 9$. Find $CK$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AK = 8, BK = 6 \\implies AB = \\sqrt{8^2 + 6^2} = 10$.\n2) $KD = \\frac{AB}{2} = 5 \\implies CK = 2KD = 10$.",
+          ru: "Решение:\n1) $AK = 8, BK = 6 \\implies AB = 10$.\n2) $CK = AB = 10$.",
+          en: "Solution:\n1) $CK = 10$."
+        }
+      },
+      {
+        id: 24,
+        type: "open",
+        correct: "12",
+        image: "Ucbucagin_mediani_Image0024.png",
+        text: {
+          az: "$ABC$ üçbucağının $AM$ və $BN$ medianları perpendikulyar olub $K$ nöqtəsində kəsişirlər. $CK = 10$ və $BN = 9$ olarsa, $AM$ medianının uzunluğunu tapın.",
+          ru: "Медианы $AM \\perp BN$ пересекаются в $K$. $CK = 10, BN = 9$. Найдите $AM$.",
+          en: "Medians $AM \\perp BN$ intersect at $K$. $CK = 10, BN = 9$. Find $AM$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AB = CK = 10, BK = 6$.\n2) $AK = \\sqrt{10^2 - 6^2} = 8$.\n3) $AM = \\frac{3}{2} AK = \\frac{3}{2} \\times 8 = 12$.",
+          ru: "Решение:\n1) $AB = 10, BK = 6 \\implies AK = 8$.\n2) $AM = 1.5 \\times 8 = 12$.",
+          en: "Solution:\n1) $AM = 12$."
+        }
+      },
+      {
+        id: 25,
+        type: "open",
+        correct: "12",
+        text: {
+          az: "Üçbucağın $a, b$ və $c$ tərəfləri üçün $|a+b-17| + |b+c-25| + |a+c-18| = 0$ şərti ödənildikdə, bu üçbucağın böyük hündürlüyünü tapın.",
+          ru: "Стороны треугольника удовлетворяют $|a+b-17| + |b+c-25| + |a+c-18| = 0$. Найдите большую высоту.",
+          en: "Sides satisfy $|a+b-17| + |b+c-25| + |a+c-18| = 0$. Find the largest altitude."
+        },
+        explanation: {
+          az: "Həlli:\n1) $a+b=17, b+c=25, a+c=18 \\implies a=5, b=12, c=13$ (düzbucaqlı üçbucaq).\n2) Ən böyük hündürlük kiçik katetə çəkiləndir: $h_{\\max} = 12$.",
+          ru: "Решение:\n1) $a=5, b=12, c=13$ (прямоугольный треугольник).\n2) Большая высота равна большему катету: $h_{\\max} = 12$.",
+          en: "Solution:\n1) $h_{\\max} = 12$."
+        }
+      },
+      {
+        id: 26,
+        type: "open",
+        correct: "8",
+        image: "Ucbucagin_mediani_Image0026.png",
+        text: {
+          az: "$ABC$ üçbucağında $AC = 16, BC = 8$ və $O$ nöqtəsində kəsişən $AD, BE$ medianları perpendikulyardır. $AB$ tərəfinin uzunluğunu tapın.",
+          ru: "В $\\triangle ABC$ $AC = 16, BC = 8$, медианы $AD \\perp BE$. Найдите сторону $AB$.",
+          en: "In $\\triangle ABC$, $AC = 16, BC = 8$, medians $AD \\perp BE$. Find side $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Perpendikulyar medianlar üçün: $a^2 + b^2 = 5c^2$.\n2) $8^2 + 16^2 = 5AB^2 \\implies 64 + 256 = 320 = 5AB^2 \\implies AB^2 = 64 \\implies AB = 8$.",
+          ru: "Решение:\n1) $a^2 + b^2 = 5c^2 \\implies 64 + 256 = 5AB^2 \\implies AB = 8$.",
+          en: "Solution:\n1) $AB = 8$."
+        }
+      },
+      {
+        id: 27,
+        type: "open",
+        correct: "8",
+        image: "Ucbucagin_mediani_Image0027.png",
+        text: {
+          az: "$ABC$ üçbucağında $AB = 2\\sqrt{5}, BC = 6$ və $O$ nöqtəsində kəsişən $AD, BE$ medianları perpendikulyardır. $AC$ tərəfinin uzunluğunu tapın.",
+          ru: "В $\\triangle ABC$ $AB = 2\\sqrt{5}, BC = 6$, медианы $AD \\perp BE$. Найдите сторону $AC$.",
+          en: "In $\\triangle ABC$, $AB = 2\\sqrt{5}, BC = 6$, medians $AD \\perp BE$. Find side $AC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $BC^2 + AC^2 = 5AB^2 \\implies 36 + AC^2 = 5(20) = 100$.\n2) $AC^2 = 64 \\implies AC = 8$.",
+          ru: "Решение:\n1) $36 + AC^2 = 100 \\implies AC = 8$.",
+          en: "Solution:\n1) $AC = 8$."
+        }
+      },
+      {
+        id: 28,
+        type: "open",
+        correct: "10",
+        image: "Ucbucagin_mediani_Image0028.png",
+        text: {
+          az: "Tərəfləri $12, 15$ və $18$ olan üçbucaq verilmişdir. Kiçik tərəflərə toxunan və mərkəzi böyük tərəfin üzərində olan çevrənin mərkəzinin bu tərəfdən ayırdığı böyük parçanın uzunluğunu tapın.",
+          ru: "В треугольнике со сторонами $12, 15, 18$ центр окружности, касающейся двух меньших сторон, лежит на большей стороне. Найдите больший отрезок этой стороны.",
+          en: "In a triangle with sides $12, 15, 18$, a circle touches the smaller sides with center on the largest side. Find the length of the larger segment of this side."
+        },
+        explanation: {
+          az: "Həlli:\n1) Mərkəz tənbölən üzərindədir: $18$ tərəfi $12:15 = 4:5$ nisbətində bölünür.\n2) Böyük parça: $\\frac{5}{9} \\times 18 = 10$.",
+          ru: "Решение:\n1) Центр лежит на биссектрисе $\\implies$ отрезки относятся как $12:15 = 4:5$.\n2) Больший отрезок: $\\frac{5}{9} \\times 18 = 10$.",
+          en: "Solution:\n1) $\\frac{5}{9} \\times 18 = 10$."
+        }
+      },
+      {
+        id: 29,
+        type: "open",
+        correct: "3",
+        image: "Ucbucagin_mediani_Image0029.png",
+        text: {
+          az: "$ABC$ düzbucaqlı üçbucağında $AB \\perp BC$ və $BN \\perp AM$-dir. $MB = CM, AF = FK, CN = 2AE = 2EN$ və $BK = 12$ olarsa, $EP$-ni tapın.",
+          ru: "В прямоугольном $\\triangle ABC$ $AB \\perp BC, BN \\perp AM$. $MB = CM, AF = FK, CN = 2AE = 2EN, BK = 12$. Найдите $EP$.",
+          en: "In right $\\triangle ABC$, $AB \\perp BC, BN \\perp AM$. $MB = CM, AF = FK, CN = 2AE = 2EN, BK = 12$. Find $EP$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Oxşarlıq və median xassələrindən $EP = 3$.",
+          ru: "Решение:\n1) Из свойств медиан и подобия треугольников $EP = 3$.",
+          en: "Solution:\n1) $EP = 3$."
+        }
+      },
+      {
+        id: 30,
+        type: "open",
+        correct: "3",
+        image: "Ucbucagin_mediani_Image0030.png",
+        text: {
+          az: "$ABC$ üçbucağında $BD \\perp AE, AF = FE, EC = CD = 6$ və $AD = 2$ olarsa, $AB$-ni tapın.",
+          ru: "В $\\triangle ABC$ $BD \\perp AE, AF = FE, EC = CD = 6, AD = 2$. Найдите $AB$.",
+          en: "In $\\triangle ABC$, $BD \\perp AE, AF = FE, EC = CD = 6, AD = 2$. Find $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Həndəsi xassələrdən $AB = 3$ tapılır.",
+          ru: "Решение:\n1) $AB = 3$.",
+          en: "Solution:\n1) $AB = 3$."
+        }
+      },
+      {
+        id: 31,
+        type: "open",
+        correct: "36",
+        image: "Ucbucagin_mediani_Image0031.png",
+        text: {
+          az: "$ABC$ üçbucağında $M$ medianların kəsişmə nöqtəsidir. $DE \\parallel AC$ və $KM = 6$ olarsa, $BF$-i tapın.",
+          ru: "В $\\triangle ABC$ $M$ — центроид. $DE \\parallel AC$, $KM = 6$. Найдите $BF$.",
+          en: "In $\\triangle ABC$, $M$ is the centroid. $DE \\parallel AC$, $KM = 6$. Find $BF$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $DE$ orta xətt olduğundan $BK = KF = \\frac{1}{2}BF$.\n2) $M$ ağırlıq mərkəzidir: $BM = \\frac{2}{3}BF$.\n3) $KM = BM - BK = \\frac{2}{3}BF - \\frac{1}{2}BF = \\frac{1}{6}BF = 6 \\implies BF = 36$.",
+          ru: "Решение:\n1) $KM = \\frac{2}{3}BF - \\frac{1}{2}BF = \\frac{1}{6}BF$.\n2) $\\frac{1}{6}BF = 6 \\implies BF = 36$.",
+          en: "Solution:\n1) $\\frac{1}{6}BF = 6 \\implies BF = 36$."
+        }
+      }
+    ];
+
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    function init() {
+      renderApp();
+      updateScore();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `lang-${lang}`);
+      });
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) {
+        currentSlide = nextSlide;
+        renderApp();
+      }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        renderApp();
+      }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      const isCorrect = choice === q.correct;
+      userAnswers[qId] = { answer: choice, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+
+      const q = questionsData.find(item => item.id === qId);
+      
+      const cleanVal = val.toLowerCase().replace(/[\s°mм]/g, '').replace(/;/g, ',');
+      const cleanCorrect = q.correct.toLowerCase().replace(/[\s°mм]/g, '').replace(/;/g, ',');
+      const isCorrect = cleanVal === cleanCorrect || cleanVal.includes(cleanCorrect);
+
+      userAnswers[qId] = { answer: val, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-back').innerText = t.back;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+
+        if (userAnswers[q.id]) {
+          btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        }
+        if (currentMode === 'slide' && q.id === currentSlide) {
+          btn.classList.add('active');
+        }
+
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      const questionsToRender = currentMode === 'slide'
+        ? questionsData.filter(q => q.id === currentSlide)
+        : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang]}</div>
+        `;
+
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id}"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil tapılmadı: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}"
+                value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''}
+                onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang]}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>

@@ -2,9 +2,23 @@
 <html lang="az">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DİM Riyaziyyat Test Toplusu (I və II Hissə) — Rəsmi Tam Test Bankı</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>DİM Riyaziyyat Test Toplusu (I və II Hissə) — PWA & Offline Test Bankı</title>
   
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="theme-color" content="#0b1329">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="DİM Riyaziyyat">
+  <meta name="description" content="DİM Riyaziyyat Test Toplusu 2025 I və II Hissə — Tam Rəsmi Mündəricat və Offline Test Portalı">
+
+  <!-- Dynamic Inline PWA Manifest -->
+  <link rel="manifest" id="pwa-manifest">
+
+  <!-- Favicon (SVG Data URI) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%230284c7'/%3E%3Ctext x='50' y='64' font-size='42' font-weight='900' fill='white' text-anchor='middle' font-family='sans-serif'%3EDİM%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%230284c7'/%3E%3Ctext x='50' y='64' font-size='42' font-weight='900' fill='white' text-anchor='middle' font-family='sans-serif'%3EDİM%3C/text%3E%3C/svg%3E">
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
@@ -24,20 +38,24 @@
       --primary-hover: #0284c7;
       --accent: #818cf8;
       --success: #22c55e;
+      --danger: #ef4444;
     }
     body {
       background-color: var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
     .topic-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      transition: all 0.25s ease;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      contain: content;
     }
     .topic-card:hover {
       border-color: var(--primary);
-      box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.15);
+      box-shadow: 0 12px 30px -6px rgba(56, 189, 248, 0.18);
+      transform: translateY(-2px);
     }
     .subtopic-item {
       border-left: 2px solid var(--card-border);
@@ -62,15 +80,26 @@
     .search-input:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+    }
+    #offline-banner {
+      transition: transform 0.3s ease, opacity 0.3s ease;
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col selection:bg-sky-500/30 selection:text-white">
+
+  <!-- Offline Status Toast / Banner -->
+  <div id="offline-banner" class="hidden sticky top-0 z-50 bg-amber-600/95 text-white text-xs sm:text-sm font-bold px-4 py-2 text-center backdrop-blur-md shadow-lg flex items-center justify-center gap-2">
+    <span>⚡</span>
+    <span id="lbl-offline-text">Oflayn rejim aktivdir — Bütün keşlənmiş məlumatlar əlçatandır</span>
+  </div>
 
   <!-- Header -->
-  <header class="sticky top-0 z-50 bg-[#0b1329]/90 backdrop-blur-md border-b border-[#24345d] px-4 py-3 sm:px-8">
+  <header class="sticky top-0 z-40 bg-[#0b1329]/90 backdrop-blur-md border-b border-[#24345d] px-4 py-3 sm:px-8">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Title & Branding -->
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-sky-500/20">
           DİM
@@ -85,8 +114,15 @@
         </div>
       </div>
 
-      <!-- Controls -->
-      <div class="flex items-center gap-3">
+      <!-- Controls & PWA Install Button -->
+      <div class="flex items-center gap-2.5">
+        
+        <!-- PWA Install Prompt Button -->
+        <button id="pwa-install-btn" class="hidden px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md hover:brightness-110 transition flex items-center gap-1.5">
+          <span>📲</span> <span id="lbl-install-app">Tətbiqi Quraşdır</span>
+        </button>
+
+        <!-- Language Switcher -->
         <div class="bg-[#16223f] p-1 rounded-xl border border-[#24345d] flex gap-1">
           <button onclick="setLang('az')" id="btn-az" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-sky-500 text-slate-950">AZ</button>
           <button onclick="setLang('ru')" id="btn-ru" class="px-3 py-1.5 rounded-lg text-xs font-bold transition text-slate-300 hover:text-white">RU</button>
@@ -96,12 +132,12 @@
     </div>
   </header>
 
-  <!-- Main Section -->
+  <!-- Main Content -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-8">
     
     <!-- Part Switcher (I Hissə / II Hissə) -->
     <div class="flex justify-center mb-8">
-      <div class="bg-[#16223f] p-1.5 rounded-2xl border border-[#24345d] inline-flex gap-2 shadow-lg">
+      <div class="bg-[#16223f] p-1.5 rounded-2xl border border-[#24345d] inline-flex gap-2 shadow-xl">
         <button onclick="setPart('part1')" id="btn-part1" class="px-6 py-2.5 rounded-xl font-extrabold text-sm transition-all bg-sky-500 text-slate-950 shadow-md">
           📘 <span id="lbl-part1-tab">I Hissə (21 Bölmə)</span>
         </button>
@@ -169,11 +205,137 @@
 
   <!-- Footer -->
   <footer class="border-t border-[#24345d] py-6 text-center text-xs text-slate-500 mt-auto">
-    <p>© 2025 DİM — «Abituriyent» jurnalı redaksiyası · İnteraktiv Tədris Sistemi</p>
+    <p>© 2025 DİM — «Abituriyent» jurnalı redaksiyası · Oflayn PWA Tədris Portalı</p>
   </footer>
 
   <!-- Database & Logic -->
   <script>
+    // =========================================================================
+    // 1. PWA & SERVICE WORKER INITIALIZATION (INLINE BLOB SETUP)
+    // =========================================================================
+    (function initPWA() {
+      // Dynamic Web App Manifest
+      const manifest = {
+        name: "DİM Riyaziyyat Test Toplusu 2025",
+        short_name: "DİM Riyaziyyat",
+        description: "DİM Riyaziyyat I və II Hissə Test Bankı",
+        start_url: "./index.html",
+        scope: "./",
+        display: "standalone",
+        orientation: "portrait-primary",
+        background_color: "#0b1329",
+        theme_color: "#0b1329",
+        icons: [
+          {
+            src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='48' fill='%230284c7'/%3E%3Ctext x='96' y='118' font-size='72' font-weight='900' fill='white' text-anchor='middle' font-family='sans-serif'%3EDİM%3C/text%3E%3C/svg%3E",
+            sizes: "192x192",
+            type: "image/svg+xml",
+            purpose: "any maskable"
+          },
+          {
+            src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='128' fill='%230284c7'/%3E%3Ctext x='256' y='316' font-size='192' font-weight='900' fill='white' text-anchor='middle' font-family='sans-serif'%3EDİM%3C/text%3E%3C/svg%3E",
+            sizes: "512x512",
+            type: "image/svg+xml",
+            purpose: "any maskable"
+          }
+        ]
+      };
+
+      const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+      document.getElementById('pwa-manifest').setAttribute('href', URL.createObjectURL(manifestBlob));
+
+      // Inline Service Worker for Offline Caching
+      if ('serviceWorker' in navigator) {
+        const swCode = `
+          const CACHE_NAME = 'dim-math-v2025.1';
+          const ASSETS = [
+            './',
+            './index.html',
+            'https://cdn.tailwindcss.com',
+            'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css',
+            'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js',
+            'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js'
+          ];
+
+          self.addEventListener('install', event => {
+            event.waitUntil(
+              caches.open(CACHE_NAME).then(cache => {
+                return cache.addAll(ASSETS).catch(() => {});
+              })
+            );
+            self.skipWaiting();
+          });
+
+          self.addEventListener('activate', event => {
+            event.waitUntil(
+              caches.keys().then(keys => Promise.all(
+                keys.map(k => k !== CACHE_NAME ? caches.delete(k) : null)
+              ))
+            );
+            self.clients.claim();
+          });
+
+          self.addEventListener('fetch', event => {
+            if (event.request.method !== 'GET') return;
+            event.respondWith(
+              caches.match(event.request).then(cached => {
+                const networked = fetch(event.request).then(response => {
+                  if (response && response.status === 200 && response.type === 'basic') {
+                    const cacheCopy = response.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, cacheCopy));
+                  }
+                  return response;
+                }).catch(() => cached);
+                return cached || networked;
+              })
+            );
+          });
+        `;
+
+        const swBlob = new Blob([swCode], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(swBlob);
+
+        navigator.serviceWorker.register(swUrl, { scope: './' })
+          .catch(() => {});
+      }
+
+      // Online/Offline Detection
+      function updateOnlineStatus() {
+        const banner = document.getElementById('offline-banner');
+        if (!navigator.onLine) {
+          banner.classList.remove('hidden');
+        } else {
+          banner.classList.add('hidden');
+        }
+      }
+      window.addEventListener('online', updateOnlineStatus);
+      window.addEventListener('offline', updateOnlineStatus);
+      updateOnlineStatus();
+
+      // PWA Install Prompt Banner
+      let deferredPrompt;
+      const installBtn = document.getElementById('pwa-install-btn');
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.classList.remove('hidden');
+      });
+
+      installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') {
+            installBtn.classList.add('hidden');
+          }
+          deferredPrompt = null;
+        }
+      });
+    })();
+
+    // =========================================================================
+    // 2. STATE & MULTILINGUAL UI DICTIONARY
+    // =========================================================================
     let currentPart = 'part1';
     let currentLang = 'az';
     let currentFilter = 'all';
@@ -202,7 +364,9 @@
         catAlgebra: "Cəbr",
         catGeometry: "Həndəsə",
         catExam: "Buraxılış & Qəbul",
-        openTest: "Testə başla →"
+        openTest: "Testə başla →",
+        installApp: "Tətbiqi Quraşdır",
+        offlineText: "⚡ Oflayn rejim aktivdir — Keşlənmiş məlumatlar əlçatandır"
       },
       ru: {
         mainTitle: "Сборник тестов по математике 2025",
@@ -227,7 +391,9 @@
         catAlgebra: "Алгебра",
         catGeometry: "Геометрия",
         catExam: "Экзамены",
-        openTest: "Начать тест →"
+        openTest: "Начать тест →",
+        installApp: "Установить приложение",
+        offlineText: "⚡ Офлайн режим активен — Кэшированные данные доступны"
       },
       en: {
         mainTitle: "Mathematics Test Collection 2025",
@@ -252,15 +418,17 @@
         catAlgebra: "Algebra",
         catGeometry: "Geometry",
         catExam: "Exams",
-        openTest: "Start Test →"
+        openTest: "Start Test →",
+        installApp: "Install App",
+        offlineText: "⚡ Offline Mode Active — Cached resources accessible"
       }
     };
 
-    // DİM 2025 RƏSMİ MÜNDƏRİCAT BAZASI (I VƏ II HİSSƏ)
+    // =========================================================================
+    // 3. FULL CURRICULUM DATABASE (PART 1 & PART 2 WITH EXACT PAGES)
+    // =========================================================================
     const partsData = {
-      // ==========================================
-      // ============ I HİSSƏ (1 - 21) ============
-      // ==========================================
+      // ===== I HİSSƏ (1 - 21) =====
       part1: {
         folder: "1-ci_hissə",
         totalPages: 213,
@@ -276,7 +444,7 @@
                 { text: "Natural ədədlər. Natural ədədlərin onluq say sistemində yazılışı", page: 4, file: "Natural ədədlər. Natural ədədlərin onluq say sistemində yazılışı.html" },
                 { text: "Natural ədədlərin toplanması, çıxılması, vurulması və bölünməsi", page: 5, file: "Natural ədədlərin toplanması, çıxılması, vurulması və bölünməsi.html" },
                 { text: "Natural ədədlərin bölünmə əlamətləri. Qalıqlı bölmə", page: 6, file: "Natural ədədlərin bölünmə əlamətləri. Qalıqlı bölmə.html" },
-                { text: "Natural ədədlərin sadə vuruqlara ayrılışı. Ən böyük ortaq bölən (ƏBOB). Ən kiçik ortaq bölünən (ƏKOB)", page: 7, file: "Natural ədədlərin sadə vuruqlara ayrılışı. ƏBOB və ƏKOB.html" }
+                { text: "Natural ədədlərin sadə vuruqlara ayrılışı. ƏBOB və ƏKOB", page: 7, file: "Natural ədədlərin sadə vuruqlara ayrılışı. ƏBOB və ƏKOB.html" }
               ]
             },
             ru: {
@@ -285,7 +453,7 @@
                 { text: "Натуральные числа. Запись натуральных чисел в десятичной системе счисления", page: 4 },
                 { text: "Сложение, вычитание, умножение и деление натуральных чисел", page: 5 },
                 { text: "Признаки делимости натуральных чисел. Деление с остатком", page: 6 },
-                { text: "Разложение натуральных чисел на простые множители. Наибольший общий делитель (НОД). Наименьшее общее кратное (НОК)", page: 7 }
+                { text: "Разложение натуральных чисел на простые множители. НОД и НОК", page: 7 }
               ]
             },
             en: {
@@ -752,8 +920,7 @@
                 { text: "Üçbucağın daxili bucaqlarının cəmi. Üçbucağın xarici bucağının xassəsi", page: 147, file: "Üçbucağın daxili bucaqları.html" },
                 { text: "Üçbucaqların konqruyentlik əlaməti. Fales teoremi. Üçbucağın orta xətti", page: 150, file: "Fales teoremi. Üçbucağın orta xətti.html" },
                 { text: "Bərabəryanlı üçbucaqlar. Bərabərtərəfli üçbucaqlar", page: 150, file: "Bərabəryanlı və bərabərtərəfli üçbucaqlar.html" },
-                { text: "Düzbucaqlı üçbucaq. Pifaqor teoremi", page: 153, file: "Düzbucaqlı üçbucaq. Pifaqor teoremi.html" },
-                { text: "Düzbucaqlı üçbucağın tərəfləri və bucaqları arasındakı münasibətlər", page: 153, file: "Düzbucaqlı üçbucağın münasibətləri.html" },
+                { text: "Düzbucaqlı üçbucaq. Pifaqor teoremi,Düzbucaqlı üçbucağın tərəfləri və bucaqları arasındakı münasibətlər", page: 153, file: "Düzbucaqlı üçbucaq. Pifaqor teoremi.html" },
                 { text: "Sinuslar teoremi. Kosinuslar teoremi", page: 160, file: "Sinuslar və kosinuslar teoremi.html" }
               ]
             },
@@ -955,9 +1122,7 @@
         ]
       },
 
-      // ==========================================
-      // ============ II HİSSƏ (1 - 18) ===========
-      // ==========================================
+      // ===== II HİSSƏ (1 - 18) =====
       part2: {
         folder: "2-ci_hissə",
         totalPages: 280,
@@ -1557,6 +1722,9 @@
       }
     };
 
+    // =========================================================================
+    // 4. UI LOGIC & ROUTING
+    // =========================================================================
     function setPart(partKey) {
       currentPart = partKey;
       document.getElementById('btn-part1').className = partKey === 'part1'
@@ -1709,6 +1877,8 @@
       document.getElementById("stat-lbl-pages").textContent = t.statPages;
       document.getElementById("stat-lbl-page-unit").textContent = t.statPageUnit;
       document.getElementById("stat-lbl-edition").textContent = t.statEdition;
+      document.getElementById("lbl-install-app").textContent = t.installApp;
+      document.getElementById("lbl-offline-text").textContent = t.offlineText;
       document.getElementById("searchInput").placeholder = t.searchPh;
 
       document.getElementById("flt-all").textContent = t.fltAll;

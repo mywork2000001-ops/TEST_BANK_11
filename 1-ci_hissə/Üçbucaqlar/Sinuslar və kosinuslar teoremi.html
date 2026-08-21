@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sinuslar teoremi. Kosinuslar teoremi</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 60px; }
+    header { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.04); padding: 12px 20px; }
+    .header-content { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+    .topic-title-box { display: flex; align-items: center; gap: 10px; }
+    .back-btn { text-decoration: none; background: #f1f5f9; color: var(--text); padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; border: 1px solid var(--border); display: inline-flex; align-items: center; gap: 4px; }
+    .back-btn:hover { background: var(--primary-light); color: var(--primary-dark); border-color: var(--primary); }
+    .topic-title { font-size: 1.05rem; font-weight: 700; color: var(--primary-dark); }
+    .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .btn-group { display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 8px; }
+    .btn-group button { border: none; background: transparent; padding: 6px 12px; font-size: 0.85rem; font-weight: 600; border-radius: 6px; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
+    .btn-group button.active { background: #fff; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .score-badge { background: var(--primary-light); color: var(--primary-dark); padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.9rem; }
+    main { max-width: 1100px; margin: 20px auto; padding: 0 16px; }
+    .grid-container { background: var(--card-bg); border-radius: var(--radius); padding: 16px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .grid-title { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; }
+    .q-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)); gap: 5px; }
+    .q-btn { aspect-ratio: 1; border: 1px solid var(--border); background: #fff; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; justify-content: center; color: var(--text); }
+    .q-btn:hover { border-color: var(--primary); background: #f8fafc; }
+    .q-btn.active { outline: 2px solid var(--primary); outline-offset: 1px; }
+    .q-btn.correct { background: var(--success); color: #fff; border-color: var(--success); }
+    .q-btn.incorrect { background: var(--danger); color: #fff; border-color: var(--danger); }
+    .question-card { background: var(--card-bg); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
+    .q-number { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+    .q-type-badge { font-size: 0.75rem; font-weight: 600; padding: 3px 8px; border-radius: 12px; background: #f1f5f9; color: var(--text-muted); }
+    .q-text { font-size: 1.05rem; margin-bottom: 18px; color: var(--text); white-space: pre-line; }
+    .q-image-container { margin: 16px 0; padding: 10px; background: #fafafa; border: 1px dashed var(--border); border-radius: 8px; display: flex; justify-content: center; align-items: center; }
+    .q-image-container img { max-width: 100%; max-height: 260px; height: auto; border-radius: 4px; object-fit: contain; }
+    .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; }
+    @media (min-width: 640px) { .options-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); } }
+    .option-btn { text-align: left; padding: 12px 16px; border: 1.5px solid var(--border); background: #fff; border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 500; display: flex; align-items: center; gap: 10px; transition: all 0.2s ease; }
+    .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #f8fafc; }
+    .option-btn.selected-correct { background: var(--success-light) !important; border-color: var(--success) !important; color: #065f46 !important; font-weight: 700; }
+    .option-btn.selected-incorrect { background: var(--danger-light) !important; border-color: var(--danger) !important; color: #991b1b !important; font-weight: 700; }
+    .open-input-container { display: flex; gap: 10px; margin-bottom: 16px; max-width: 440px; }
+    .open-input { flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem; outline: none; }
+    .open-input:focus { border-color: var(--primary); }
+    .submit-btn { padding: 10px 18px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .submit-btn:hover { background: var(--primary-dark); }
+    .explanation-box { margin-top: 16px; padding: 16px; background: #f8fafc; border-left: 4px solid var(--primary); border-radius: 0 var(--radius) var(--radius) 0; font-size: 0.95rem; display: none; }
+    .explanation-title { font-weight: 700; margin-bottom: 8px; color: var(--primary-dark); display: flex; align-items: center; gap: 6px; }
+    .explanation-body { white-space: pre-line; color: #334155; }
+    .slide-footer { display: flex; justify-content: space-between; margin-top: 20px; gap: 12px; }
+    .nav-btn { padding: 10px 20px; background: #fff; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; color: var(--text); cursor: pointer; transition: all 0.2s; }
+    .nav-btn:hover:not(:disabled) { background: #f1f5f9; border-color: var(--primary); }
+    .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-content">
+      <div class="topic-title-box">
+        <a href="../../index.html" class="back-btn">← <span id="ui-back">Əsas Menyu</span></a>
+        <div class="topic-title" id="ui-topic">Sinuslar teoremi. Kosinuslar teoremi</div>
+      </div>
+      <div class="controls">
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 35</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+    <div id="questions-container"></div>
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    const uiTranslations = {
+      az: {
+        topic: "Sinuslar teoremi. Kosinuslar teoremi",
+        back: "Əsas Menyu",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual / Uyğunluq",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı daxil edin...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Теорема синусов. Теорема косинусов",
+        back: "Главное меню",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос / Соответствие",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Law of Sines. Law of Cosines",
+        back: "Main Menu",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended / Matching",
+        check: "Submit",
+        enterAnswer: "Enter answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    const questionsData = [
+      { id: 1, type: "mcq", correct: "B", image: "Sinus_kosinus_Image0001.png", options: { A: "6 sm", B: "8 sm", C: "$6\\sqrt{2}\\text{ sm}$", D: "10 sm", E: "$5\\sqrt{2}\\text{ sm}$" }, text: { az: "$ABC$ üçbucağında $\\angle C = 30^\\circ, \\angle B = 45^\\circ$ və $AB = 4\\sqrt{2}\\text{ sm}$. $AC$-ni tapın.", ru: "В $\\triangle ABC$ $\\angle C = 30^\\circ, \\angle B = 45^\\circ$ и $AB = 4\\sqrt{2}\\text{ см}$. Найдите $AC$.", en: "In $\\triangle ABC$, $\\angle C = 30^\\circ, \\angle B = 45^\\circ$, and $AB = 4\\sqrt{2}\\text{ cm}$. Find $AC$." }, explanation: { az: "Həlli:\n1) Sinuslar teoreminə görə: $\\frac{AC}{\\sin 45^\\circ} = \\frac{AB}{\\sin 30^\\circ} \\implies AC = 4\\sqrt{2} \\cdot \\frac{\\sqrt{2}/2}{1/2} = 8\\text{ sm}$.", ru: "Решение:\n1) По теореме синусов: $AC = 4\\sqrt{2} \\cdot \\frac{\\sin 45^\\circ}{\\sin 30^\\circ} = 8\\text{ см}$.", en: "Solution:\n1) $AC = 8\\text{ cm}$." } },
+      { id: 2, type: "mcq", correct: "A", options: { A: "$\\frac{25}{32}$", B: "$\\frac{5}{8}$", C: "$\\frac{25}{78}$", D: "$\\frac{65}{72}$", E: "$\\frac{25}{48}$" }, text: { az: "$ABC$ üçbucağının tərəfləri $BC = 5\\text{ sm}, AC = 6\\text{ sm}$ və $AB = 8\\text{ sm}$ olarsa, $A$ bucağının kosinusunu tapın.", ru: "Стороны $\\triangle ABC$ равны $BC = 5\\text{ см}, AC = 6\\text{ см}$ и $AB = 8\\text{ см}$. Найдите $\\cos A$.", en: "Sides of $\\triangle ABC$ are $BC = 5\\text{ cm}, AC = 6\\text{ cm}$, and $AB = 8\\text{ cm}$. Find $\\cos A$." }, explanation: { az: "Həlli:\n1) Kosinuslar teoremi: $\\cos A = \\frac{6^2 + 8^2 - 5^2}{2 \\cdot 6 \\cdot 8} = \\frac{36 + 64 - 25}{96} = \\frac{75}{96} = \\frac{25}{32}$.", ru: "Решение:\n1) $\\cos A = \\frac{36+64-25}{96} = \\frac{25}{32}$.", en: "Solution:\n1) $\\cos A = \\frac{25}{32}$." } },
+      { id: 3, type: "mcq", correct: "B", options: { A: "$\\frac{2}{3}$", B: "$\\frac{1}{2}$", C: "$\\frac{1}{\\sqrt{2}}$", D: "$\\frac{3}{4}$", E: "$\\frac{3}{5}$" }, text: { az: "Tərəfləri $AB = 5\\text{ sm}, AC = 8\\text{ sm}, BC = 7\\text{ sm}$ olan $ABC$ üçbucağında $A$ bucağının kosinusunu tapın.", ru: "В $\\triangle ABC$ $AB = 5\\text{ см}, AC = 8\\text{ см}, BC = 7\\text{ см}$. Найдите $\\cos A$.", en: "In $\\triangle ABC$, $AB = 5\\text{ cm}, AC = 8\\text{ cm}, BC = 7\\text{ cm}$. Find $\\cos A$." }, explanation: { az: "Həlli:\n1) $\\cos A = \\frac{5^2 + 8^2 - 7^2}{2 \\cdot 5 \\cdot 8} = \\frac{25 + 64 - 49}{80} = \\frac{40}{80} = \\frac{1}{2}$.", ru: "Решение:\n1) $\\cos A = \\frac{40}{80} = \\frac{1}{2}$.", en: "Solution:\n1) $\\cos A = 1/2$." } },
+      { id: 4, type: "mcq", correct: "C", options: { A: "$3\\sqrt{2}\\text{ sm}$", B: "2 sm", C: "3 sm", D: "$\\sqrt{7}\\text{ sm}$", E: "12 sm" }, text: { az: "$ABC$ üçbucağında $\\angle C = 60^\\circ, \\angle B = 45^\\circ$ və $AC = \\sqrt{6}\\text{ sm}$ olarsa, $AB$-ni tapın.", ru: "В $\\triangle ABC$ $\\angle C = 60^\\circ, \\angle B = 45^\\circ$ и $AC = \\sqrt{6}\\text{ см}$. Найдите $AB$.", en: "In $\\triangle ABC$, $\\angle C = 60^\\circ, \\angle B = 45^\\circ$, and $AC = \\sqrt{6}\\text{ cm}$. Find $AB$." }, explanation: { az: "Həlli:\n1) $\\frac{AB}{\\sin 60^\\circ} = \\frac{\\sqrt{6}}{\\sin 45^\\circ} \\implies AB = \\sqrt{6} \\cdot \\frac{\\sqrt{3}/2}{\\sqrt{2}/2} = 3\\text{ sm}$.", ru: "Решение:\n1) $AB = \\sqrt{6} \\cdot \\frac{\\sqrt{3}/2}{\\sqrt{2}/2} = 3\\text{ см}$.", en: "Solution:\n1) $AB = 3\\text{ cm}$." } },
+      { id: 5, type: "mcq", correct: "A", options: { A: "16 sm", B: "6 sm", C: "$6\\sqrt{2}\\text{ sm}$", D: "10 sm", E: "$8\\sqrt{2}\\text{ sm}$" }, text: { az: "$ABC$ üçbucağında $\\angle C = 30^\\circ, \\angle A = 105^\\circ$ və $AB = 8\\sqrt{2}\\text{ sm}$ olarsa, $AC$-ni tapın.", ru: "В $\\triangle ABC$ $\\angle C = 30^\\circ, \\angle A = 105^\\circ$ и $AB = 8\\sqrt{2}\\text{ см}$. Найдите $AC$.", en: "In $\\triangle ABC$, $\\angle C = 30^\\circ, \\angle A = 105^\\circ$, and $AB = 8\\sqrt{2}\\text{ cm}$. Find $AC$." }, explanation: { az: "Həlli:\n1) $\\angle B = 180^\\circ - (105^\\circ + 30^\\circ) = 45^\\circ$.\n2) $\\frac{AC}{\\sin 45^\\circ} = \\frac{8\\sqrt{2}}{\\sin 30^\\circ} \\implies AC = 8\\sqrt{2} \\cdot \\frac{\\sqrt{2}/2}{1/2} = 16\\text{ sm}$.", ru: "Решение:\n1) $\\angle B = 45^\\circ \\implies AC = 16\\text{ см}$.", en: "Solution:\n1) $AC = 16\\text{ cm}$." } },
+      { id: 6, type: "mcq", correct: "A", image: "Sinus_kosinus_Image0006.png", options: { A: "2", B: "3", C: "$\\sqrt{3}$", D: "4", E: "$\\sqrt{2}$" }, text: { az: "Şəklə əsasən $AC$ parçasının uzunluğunu tapın.", ru: "Найдите длину отрезка $AC$ по рисунку.", en: "Find the length of segment $AC$ from the figure." }, explanation: { az: "Həlli:\n1) $\\angle C = 30^\\circ$. $\\frac{AC}{\\sin 45^\\circ} = \\frac{\\sqrt{2}}{\\sin 30^\\circ} \\implies AC = 2$.", ru: "Решение:\n1) $AC = 2$.", en: "Solution:\n1) $AC = 2$." } },
+      { id: 7, type: "mcq", correct: "C", options: { A: "$2\\sqrt{6}\\text{ dm}$", B: "$3\\sqrt{2}\\text{ dm}$", C: "$\\sqrt{6}\\text{ dm}$", D: "$\\sqrt{3}\\text{ dm}$", E: "$2\\sqrt{3}\\text{ dm}$" }, text: { az: "$ABC$ üçbucağında $\\angle A = 75^\\circ, \\angle B = 45^\\circ, AB = 3\\text{ dm}$ olarsa, $AC$ tərəfini tapın.", ru: "В $\\triangle ABC$ $\\angle A = 75^\\circ, \\angle B = 45^\\circ, AB = 3\\text{ дм}$. Найдите $AC$.", en: "In $\\triangle ABC$, $\\angle A = 75^\\circ, \\angle B = 45^\\circ, AB = 3\\text{ dm}$. Find $AC$." }, explanation: { az: "Həlli:\n1) $\\angle C = 60^\\circ$. $AC = 3 \\cdot \\frac{\\sin 45^\\circ}{\\sin 60^\\circ} = \\sqrt{6}\\text{ dm}$.", ru: "Решение:\n1) $AC = \\sqrt{6}\\text{ дм}$.", en: "Solution:\n1) $AC = \\sqrt{6}\\text{ dm}$." } },
+      { id: 8, type: "mcq", correct: "C", options: { A: "$3\\sqrt{2}\\text{ dm}$", B: "$\\sqrt{6}\\text{ dm}$", C: "$2\\sqrt{6}\\text{ dm}$", D: "$2\\sqrt{3}\\text{ dm}$", E: "6 dm" }, text: { az: "$ABC$ üçbucağında $\\angle A = 75^\\circ, \\angle B = 45^\\circ, AB = 6\\text{ dm}$ olarsa, $AC$ tərəfini tapın.", ru: "В $\\triangle ABC$ $\\angle A = 75^\\circ, \\angle B = 45^\\circ, AB = 6\\text{ дм}$. Найдите $AC$.", en: "In $\\triangle ABC$, $\\angle A = 75^\\circ, \\angle B = 45^\\circ, AB = 6\\text{ dm}$. Find $AC$." }, explanation: { az: "Həlli:\n1) $AC = 6 \\cdot \\frac{\\sin 45^\\circ}{\\sin 60^\\circ} = 2\\sqrt{6}\\text{ dm}$.", ru: "Решение:\n1) $AC = 2\\sqrt{6}\\text{ дм}$.", en: "Solution:\n1) $AC = 2\\sqrt{6}\\text{ dm}$." } },
+      { id: 9, type: "mcq", correct: "E", image: "Sinus_kosinus_Image0009.png", options: { A: "$\\frac{1}{6}$", B: "$\\frac{\\sqrt{35}}{6}$", C: "$\\frac{\\sqrt{35}}{36}$", D: "$\\frac{1}{3}$", E: "$\\frac{\\sqrt{35}}{18}$" }, text: { az: "$\\sin \\angle B$-ni tapın.", ru: "Найдите $\\sin \\angle B$.", en: "Find $\\sin \\angle B$." }, explanation: { az: "Həlli:\n1) $\\sin B = \\frac{\\sqrt{35}}{18}$.", ru: "Решение:\n1) $\\sin B = \\frac{\\sqrt{35}}{18}$.", en: "Solution:\n1) $\\sin B = \\frac{\\sqrt{35}}{18}$." } },
+      { id: 10, type: "mcq", correct: "D", image: "Sinus_kosinus_Image0010.png", options: { A: "$\\frac{1}{3}$", B: "$\\frac{2\\sqrt{6}}{25}$", C: "$\\frac{4\\sqrt{3}}{25}$", D: "$\\frac{4\\sqrt{6}}{25}$", E: "$\\frac{4}{25}$" }, text: { az: "$\\sin \\angle A$-nı tapın.", ru: "Найдите $\\sin \\angle A$.", en: "Find $\\sin \\angle A$." }, explanation: { az: "Həlli:\n1) $\\sin A = 2 \\sin(A/2) \\cos(A/2) = 2 \\cdot \\frac{2}{10} \\cdot \\frac{\\sqrt{96}}{10} = \\frac{4\\sqrt{6}}{25}$.", ru: "Решение:\n1) $\\sin A = \\frac{4\\sqrt{6}}{25}$.", en: "Solution:\n1) $\\sin A = \\frac{4\\sqrt{6}}{25}$." } },
+      { id: 11, type: "mcq", correct: "E", options: { A: "$7\\sqrt{2}\\text{ sm}$", B: "9 sm", C: "$2\\sqrt{6}\\text{ sm}$", D: "$6\\sqrt{5}\\text{ sm}$", E: "$6\\sqrt{3}\\text{ sm}$" }, text: { az: "Oturacağı $18\\text{ sm}$ olan bərabəryanlı üçbucağın təpə bucağı $120^\\circ$ olarsa, yan tərəfini tapın.", ru: "Основание равнобедренного треугольника $18\\text{ см}$, угол при вершине $120^\\circ$. Найдите боковую сторону.", en: "Base of an isosceles triangle is $18\\text{ cm}$, vertex angle is $120^\\circ$. Find the leg." }, explanation: { az: "Həlli:\n1) $b = \\frac{18}{\\sqrt{3}} = 6\\sqrt{3}\\text{ sm}$.", ru: "Решение:\n1) $b = 6\\sqrt{3}\\text{ см}$.", en: "Solution:\n1) $b = 6\\sqrt{3}\\text{ cm}$." } },
+      { id: 12, type: "mcq", correct: "D", options: { A: "$9\\sqrt{3}\\text{ sm}$", B: "$6\\sqrt{3}\\text{ sm}$", C: "$14\\sqrt{3}\\text{ sm}$", D: "$12\\sqrt{3}\\text{ sm}$", E: "$20\\sqrt{3}\\text{ sm}$" }, text: { az: "Oturacağı $36\\text{ sm}$ olan bərabəryanlı üçbucağın təpə bucağı $120^\\circ$ olarsa, yan tərəfini tapın.", ru: "Основание равнобедренного треугольника $36\\text{ см}$, угол при вершине $120^\\circ$. Найдите боковую сторону.", en: "Base is $36\\text{ cm}$, vertex angle $120^\\circ$. Find leg." }, explanation: { az: "Həlli:\n1) $b = \\frac{36}{\\sqrt{3}} = 12\\sqrt{3}\\text{ sm}$.", ru: "Решение:\n1) $b = 12\\sqrt{3}\\text{ см}$.", en: "Solution:\n1) $b = 12\\sqrt{3}\\text{ cm}$." } },
+      { id: 13, type: "mcq", correct: "C", image: "Sinus_kosinus_Image0013.png", options: { A: "$c \\cos \\alpha$", B: "$c \\sin \\alpha$", C: "$2c \\cos \\alpha$", D: "$2c \\sin \\alpha$", E: "$c$" }, text: { az: "$ABC$ üçbucağında $AB = c, \\angle C = \\alpha$ və $CBD$ xarici bucağı $C$ bucağından iki dəfə böyük olarsa, $AC$-ni tapın.", ru: "В $\\triangle ABC$ $AB = c, \\angle C = \\alpha$, внешний угол $\\angle CBD = 2\\alpha$. Найдите $AC$.", en: "In $\\triangle ABC$, $AB = c, \\angle C = \\alpha$, exterior angle $\\angle CBD = 2\\alpha$. Find $AC$." }, explanation: { az: "Həlli:\n1) $\\frac{AC}{\\sin 2\\alpha} = \\frac{c}{\\sin \\alpha} \\implies AC = 2c \\cos \\alpha$.", ru: "Решение:\n1) $AC = 2c \\cos \\alpha$.", en: "Solution:\n1) $AC = 2c \\cos \\alpha$." } },
+      { id: 14, type: "mcq", correct: "C", image: "Sinus_kosinus_Image0014.png", options: { A: "$\\frac{b}{2\\sin \\alpha}$", B: "$2b \\cos \\alpha$", C: "$\\frac{b}{2\\cos \\alpha}$", D: "$2b \\sin \\alpha$", E: "$\\frac{2b}{\\tan \\alpha}$" }, text: { az: "$ABC$ üçbucağında $AC = b, \\angle C = \\alpha$ və $\\angle CBD = 2\\angle C$ olarsa, $AB$-ni tapın.", ru: "В $\\triangle ABC$ $AC = b, \\angle C = \\alpha, \\angle CBD = 2\\alpha$. Найдите $AB$.", en: "In $\\triangle ABC$, $AC = b, \\angle C = \\alpha, \\angle CBD = 2\\alpha$. Find $AB$." }, explanation: { az: "Həlli:\n1) $AB = \\frac{b}{2\\cos \\alpha}$.", ru: "Решение:\n1) $AB = \\frac{b}{2\\cos \\alpha}$.", en: "Solution:\n1) $AB = \\frac{b}{2\\cos \\alpha}$." } },
+      { id: 15, type: "mcq", correct: "E", options: { A: "$\\frac{5}{7}$", B: "$\\frac{3}{8}$", C: "$\\frac{5}{8}$", D: "$\\frac{3}{7}$", E: "$\\frac{7}{8}$" }, text: { az: "Tərəfləri $2\\text{ sm}, 3\\text{ sm}, 4\\text{ sm}$ olan üçbucağın kiçik bucağının kosinusunu tapın.", ru: "Стороны треугольника $2\\text{ см}, 3\\text{ см}, 4\\text{ см}$. Найдите косинус наименьшего угла.", en: "Sides of triangle are $2\\text{ cm}, 3\\text{ cm}, 4\\text{ cm}$. Find cosine of smallest angle." }, explanation: { az: "Həlli:\n1) $\\cos \\alpha = \\frac{3^2 + 4^2 - 2^2}{2 \\cdot 3 \\cdot 4} = \\frac{21}{24} = \\frac{7}{8}$.", ru: "Решение:\n1) $\\cos \\alpha = 7/8$.", en: "Solution:\n1) $\\cos \\alpha = 7/8$." } },
+      { id: 16, type: "mcq", correct: "B", options: { A: "$\\frac{2}{9}$", B: "$\\frac{1}{9}$", C: "$\\frac{5}{12}$", D: "$\\frac{7}{12}$", E: "$\\frac{4}{9}$" }, text: { az: "Tərəfləri $3\\text{ sm}, 3\\text{ sm}, 4\\text{ sm}$ olan üçbucağın böyük bucağının kosinusunu tapın.", ru: "Стороны треугольника $3\\text{ см}, 3\\text{ см}, 4\\text{ см}$. Найдите косинус наибольшего угла.", en: "Sides are $3\\text{ cm}, 3\\text{ cm}, 4\\text{ cm}$. Find cosine of largest angle." }, explanation: { az: "Həlli:\n1) $\\cos \\gamma = \\frac{3^2 + 3^2 - 4^2}{2 \\cdot 3 \\cdot 3} = \\frac{2}{18} = \\frac{1}{9}$.", ru: "Решение:\n1) $\\cos \\gamma = 1/9$.", en: "Solution:\n1) $\\cos \\gamma = 1/9$." } },
+      { id: 17, type: "mcq", correct: "D", image: "Sinus_kosinus_Image0017.png", options: { A: "30°", B: "60°", C: "45°", D: "90°", E: "75°" }, text: { az: "Üçbucaqda $a = 9\\text{ sm}, \\alpha = 45^\\circ, c = 9\\sqrt{2}\\text{ sm}$ olarsa, $\\gamma$-nı tapın.", ru: "В треугольнике $a = 9\\text{ см}, \\alpha = 45^\\circ, c = 9\\sqrt{2}\\text{ см}$. Найдите $\\gamma$.", en: "In triangle $a = 9\\text{ cm}, \\alpha = 45^\\circ, c = 9\\sqrt{2}\\text{ cm}$. Find $\\gamma$." }, explanation: { az: "Həlli:\n1) $\\sin \\gamma = \\frac{9\\sqrt{2} \\cdot \\sin 45^\\circ}{9} = 1 \\implies \\gamma = 90^\\circ$.", ru: "Решение:\n1) $\\sin \\gamma = 1 \\implies \\gamma = 90^\\circ$.", en: "Solution:\n1) $\\gamma = 90^\circ$." } },
+      { id: 18, type: "mcq", correct: "E", image: "Sinus_kosinus_Image0018.png", options: { A: "$5\\sqrt{2}\\text{ sm}$", B: "$5\\sqrt{3}\\text{ sm}$", C: "$75\\sqrt{2}\\text{ sm}$", D: "$15\\sqrt{3}\\text{ sm}$", E: "$5\\sqrt{6}\\text{ sm}$" }, text: { az: "Üçbucaqda $b = 15\\text{ sm}, \\beta = 60^\\circ, \\alpha = 75^\\circ$ olarsa, $c$-ni tapın.", ru: "В треугольнике $b = 15\\text{ см}, \\beta = 60^\\circ, \\alpha = 75^\\circ$. Найдите $c$.", en: "In triangle $b = 15\\text{ cm}, \\beta = 60^\\circ, \\alpha = 75^\\circ$. Find $c$." }, explanation: { az: "Həlli:\n1) $\\gamma = 45^\\circ$. $c = 15 \\cdot \\frac{\\sin 45^\\circ}{\\sin 60^\\circ} = 5\\sqrt{6}\\text{ sm}$.", ru: "Решение:\n1) $c = 5\\sqrt{6}\\text{ см}$.", en: "Solution:\n1) $c = 5\\sqrt{6}\\text{ cm}$." } },
+      { id: 19, type: "mcq", correct: "D", image: "Sinus_kosinus_Image0019.png", options: { A: "$6\\sqrt{3}$", B: "6", C: "$3\\sqrt{2}$", D: "$4\\sqrt{3}$", E: "$2\\sqrt{2}$" }, text: { az: "$ADE$ bərabərtərəfli, $ACB$ isə düzbucaqlı üçbucaqdır. $DF = FE = 4, AF = FB$ olarsa, $BC$-ni tapın.", ru: "$ADE$ — равносторонний, $ACB$ — прямоугольный. $DF = FE = 4, AF = FB$. Найдите $BC$.", en: "$ADE$ is equilateral, $ACB$ is right triangle. $DF = FE = 4, AF = FB$. Find $BC$." }, explanation: { az: "Həlli:\n1) $BC = 4\\sqrt{3}$.", ru: "Решение:\n1) $BC = 4\\sqrt{3}$.", en: "Solution:\n1) $BC = 4\\sqrt{3}$." } },
+      { id: 20, type: "mcq", correct: "E", image: "Sinus_kosinus_Image0020.png", options: { A: "6/5", B: "3/4", C: "5/2", D: "7/3", E: "2/3" }, text: { az: "$ABC$ üçbucağında $AC = 10$ və $BC = 15$ olarsa, $\\frac{\\sin \\beta}{\\sin \\alpha}$ nisbətini tapın.", ru: "В $\\triangle ABC$ $AC = 10, BC = 15$. Найдите $\\frac{\\sin \\beta}{\\sin \\alpha}$.", en: "In $\\triangle ABC$, $AC = 10, BC = 15$. Find $\\frac{\\sin \\beta}{\\sin \\alpha}$." }, explanation: { az: "Həlli:\n1) $\\frac{\\sin \\beta}{\\sin \\alpha} = \\frac{AC}{BC} = \\frac{10}{15} = \\frac{2}{3}$.", ru: "Решение:\n1) $10 / 15 = 2/3$.", en: "Solution:\n1) $2/3$." } },
+      { id: 21, type: "mcq", correct: "A", options: { A: "14", B: "15", C: "16", D: "17", E: "13" }, text: { az: "$ABC$ üçbucağında $B$ və $C$ bucağının tənbölənləri $K$ nöqtəsində kəsişir. $BK = 12$ və $CK = 5$ olarsa, $BC$ parçasının uzunluğunun ən kiçik natural qiymətini tapın.", ru: "Биссектрисы $B$ и $C$ пересекаются в $K$. $BK = 12, CK = 5$. Найдите наименьшее натуральное значение $BC$.", en: "Bisectors of $B$ and $C$ intersect at $K$. $BK = 12, CK = 5$. Find min natural value of $BC$." }, explanation: { az: "Həlli:\n1) $\\angle BKC = 90^\\circ + \\frac{A}{2} > 90^\\circ \\implies BC > \\sqrt{12^2 + 5^2} = 13 \\implies BC_{\\min} = 14$.", ru: "Решение:\n1) $\\angle BKC > 90^\circ \\implies BC > 13 \\implies 14$.", en: "Solution:\n1) $14$." } },
+      { id: 22, type: "mcq", correct: "A", image: "Sinus_kosinus_Image0022.png", options: { A: "7", B: "8", C: "6", D: "9", E: "10" }, text: { az: "$ABC$ üçbucağında $AB = BD = 5$ və $DC = 4$ olarsa, $BC$ parçasının uzunluğunun ən kiçik natural qiymətini tapın.", ru: "В $\\triangle ABC$ $AB = BD = 5, DC = 4$. Найдите наименьшее натуральное значение $BC$.", en: "In $\\triangle ABC$, $AB = BD = 5, DC = 4$. Find min natural value of $BC$." }, explanation: { az: "Həlli:\n1) $\\angle BDC > 90^\\circ \\implies BC > \\sqrt{5^2 + 4^2} = \\sqrt{41} \\approx 6,4 \\implies BC_{\\min} = 7$.", ru: "Решение:\n1) $BC > \\sqrt{41} \\implies 7$.", en: "Solution:\n1) $7$." } },
+      { id: 23, type: "open", correct: "14", text: { az: "$ABC$ üçbucağında $\\angle B = 120^\\circ, AB = 6, BC = 10$ olarsa, $AC$-ni tapın.", ru: "В $\\triangle ABC$ $\\angle B = 120^\circ, AB = 6, BC = 10$. Найдите $AC$.", en: "In $\\triangle ABC$, $\\angle B = 120^\circ, AB = 6, BC = 10$. Find $AC$." }, explanation: { az: "Həlli:\n1) $AC^2 = 6^2 + 10^2 - 2(6)(10)\\cos 120^\\circ = 36 + 100 + 60 = 196 \\implies AC = 14$.", ru: "Решение:\n1) $AC = \\sqrt{196} = 14$.", en: "Solution:\n1) $14$." } },
+      { id: 24, type: "open", correct: "7", text: { az: "$ABC$ üçbucağında $\\angle A = 60^\\circ, AB = 5, AC = 8$ olarsa, $BC$-ni tapın.", ru: "В $\\triangle ABC$ $\\angle A = 60^\circ, AB = 5, AC = 8$. Найдите $BC$.", en: "In $\\triangle ABC$, $\\angle A = 60^\circ, AB = 5, AC = 8$. Find $BC$." }, explanation: { az: "Həlli:\n1) $BC^2 = 25 + 64 - 2(5)(8)\\cos 60^\\circ = 89 - 40 = 49 \\implies BC = 7$.", ru: "Решение:\n1) $BC = \\sqrt{49} = 7$.", en: "Solution:\n1) $7$." } },
+      { id: 25, type: "open", correct: "150", text: { az: "Tərəfləri $a, b$ və $c$ olan üçbucağın tərəfləri $a^2 = b^2 + c^2 + \\sqrt{3}bc$ münasibətini ödəyir. Üçbucağın $a$ tərəfi qarşısındakı bucağın dərəcə ölçüsünü tapın.", ru: "Стороны удовлетворяют $a^2 = b^2 + c^2 + \\sqrt{3}bc$. Найдите угол напротив $a$.", en: "Sides satisfy $a^2 = b^2 + c^2 + \\sqrt{3}bc$. Find angle opposite to side $a$." }, explanation: { az: "Həlli:\n1) $-2bc \\cos \\alpha = \\sqrt{3}bc \\implies \\cos \\alpha = -\\frac{\\sqrt{3}}{2} \\implies \\alpha = 150^\\circ$.", ru: "Решение:\n1) $\\cos \\alpha = -\\sqrt{3}/2 \\implies 150^\circ$.", en: "Solution:\n1) $150^\circ$." } },
+      { id: 26, type: "open", correct: "135", text: { az: "Tərəfləri $a, b$ və $c$ olan üçbucağın tərəfləri $b^2 = a^2 + c^2 + \\sqrt{2}ac$ münasibətini ödəyir. Üçbucağın $b$ tərəfi qarşısındakı bucağın dərəcə ölçüsünü tapın.", ru: "Стороны удовлетворяют $b^2 = a^2 + c^2 + \\sqrt{2}ac$. Найдите угол напротив $b$.", en: "Sides satisfy $b^2 = a^2 + c^2 + \\sqrt{2}ac$. Find angle opposite to side $b$." }, explanation: { az: "Həlli:\n1) $\\cos \\beta = -\\frac{\\sqrt{2}}{2} \\implies \\beta = 135^\\circ$.", ru: "Решение:\n1) $\\beta = 135^\circ$.", en: "Solution:\n1) $135^\circ$." } },
+      { id: 27, type: "open", correct: "20", text: { az: "$60^\\circ$-li bucaq qarşısındakı tərəfi $10\\sqrt{3}$ olan üçbucağın böyük tərəfinin mümkün olan ən böyük qiymətini tapın.", ru: "Сторона напротив $60^\circ$ равна $10\\sqrt{3}$. Найдите наибольшее возможное значение стороны треугольника.", en: "The side opposite $60^\circ$ is $10\\sqrt{3}$. Find the maximum possible length of a side." }, explanation: { az: "Həlli:\n1) $2R = \\frac{a}{\\sin 60^\\circ} = \\frac{10\\sqrt{3}}{\\sqrt{3}/2} = 20$. İstənilən tərəf $\\le 2R = 20$.", ru: "Решение:\n1) $2R = 20$.", en: "Solution:\n1) $20$." } },
+      { id: 28, type: "open", correct: "40", text: { az: "$30^\\circ$-li bucağı qarşısındakı tərəfi 20 olan üçbucağın böyük tərəfinin mümkün olan ən böyük qiymətini tapın.", ru: "Сторона напротив $30^\circ$ равна 20. Найдите наибольшее возможное значение стороны.", en: "Side opposite $30^\circ$ is 20. Find maximum possible length of a side." }, explanation: { az: "Həlli:\n1) $2R = \\frac{20}{\\sin 30^\\circ} = 40$.", ru: "Решение:\n1) $2R = 40$.", en: "Solution:\n1) $40$." } },
+      { id: 29, type: "open", correct: "45", image: "Sinus_kosinus_Image0029.png", text: { az: "$\\alpha > 90^\\circ$ olarsa, üçbucağın $x$ tərəfinin mümkün natural qiymətlərinin cəmini hesablayın.", ru: "$\\alpha > 90^\circ$. Найдите сумму возможных натуральных значений стороны $x$.", en: "$\\alpha > 90^\circ$. Find sum of possible natural values of side $x$." }, explanation: { az: "Həlli:\n1) $\\sqrt{5^2 + 12^2} < x < 5 + 12 \\implies 13 < x < 17 \\implies x \\in \\{14, 15, 16\\}$. Cəm: $14 + 15 + 16 = 45$.", ru: "Решение:\n1) $13 < x < 17 \\implies 14 + 15 + 16 = 45$.", en: "Solution:\n1) $45$." } },
+      { id: 30, type: "open", correct: "36", image: "Sinus_kosinus_Image0030.png", text: { az: "$\\alpha > 90^\\circ$ olarsa, üçbucağın $x$-in mümkün natural qiymətlərinin cəmini hesablayın.", ru: "$\\alpha > 90^\circ$. Найдите сумму возможных натуральных значений $x$.", en: "$\\alpha > 90^\circ$. Find sum of possible natural values of $x$." }, explanation: { az: "Həlli:\n1) $\\sqrt{6^2 + 8^2} < x < 6 + 8 \\implies 10 < x < 14 \\implies x \\in \\{11, 12, 13\\}$. Cəm: $11 + 12 + 13 = 36$.", ru: "Решение:\n1) $11 + 12 + 13 = 36$.", en: "Solution:\n1) $36$." } },
+      { id: 31, type: "open", correct: "24", text: { az: "İti bucaqları qarşısındakı tərəfləri 9 və 5 olan korbucaqlı üçbucağın üçüncü tərəfinin ala biləcəyi ən kiçik və ən böyük natural qiymətlərinin cəmini tapın.", ru: "Стороны напротив острых углов тупоугольного треугольника равны 9 и 5. Найдите сумму наименьшего и наибольшего целых значений третьей стороны.", en: "Sides opposite acute angles are 9 and 5 in an obtuse triangle. Find sum of min and max natural values of third side." }, explanation: { az: "Həlli:\n1) $\\sqrt{9^2 + 5^2} < c < 9 + 5 \\implies \\sqrt{106} < c < 14 \\implies c \\in \\{11, 12, 13\\}$.\n2) Cəm: $11 + 13 = 24$.", ru: "Решение:\n1) $11 + 13 = 24$.", en: "Solution:\n1) $24$." } },
+      { id: 32, type: "open", correct: "22", text: { az: "İti bucaqları qarşısındakı tərəfləri 8 və 5 olan korbucaqlı üçbucağın üçüncü tərəfinin ala biləcəyi ən kiçik və ən böyük natural qiymətlərinin cəmini tapın.", ru: "Стороны напротив острых углов равны 8 и 5. Найдите сумму наименьшего и наибольшего значений третьей стороны.", en: "Sides opposite acute angles are 8 and 5. Find sum of min and max natural values of third side." }, explanation: { az: "Həlli:\n1) $\\sqrt{8^2 + 5^2} < c < 8 + 5 \\implies \\sqrt{89} < c < 13 \\implies c \\in \\{10, 11, 12\\}$.\n2) Cəm: $10 + 12 = 22$.", ru: "Решение:\n1) $10 + 12 = 22$.", en: "Solution:\n1) $22$." } },
+      { id: 33, type: "open", correct: "14", image: "Sinus_kosinus_Image0033.png", text: { az: "$ABC$ üçbucağında $DE \\perp BC, \\angle ACB > 45^\\circ, BE = CE, AD = 12$ və $CD = 5$ olarsa, $AB$-nin ən kiçik tam qiymətini tapın.", ru: "В $\\triangle ABC$ $DE \\perp BC, \\angle C > 45^\circ, BE = CE, AD = 12, CD = 5$. Найдите наименьшее целое $AB$.", en: "In $\\triangle ABC$, $DE \\perp BC, \\angle C > 45^\circ, BE = CE, AD = 12, CD = 5$. Find min integer $AB$." }, explanation: { az: "Həlli:\n1) $BD = CD = 5$. $\\angle BDC = 2\\angle C > 90^\\circ \\implies \\angle ADB < 90^\\circ$.\n2) $AB_{\\min} = 14$.", ru: "Решение:\n1) $AB_{\\min} = 14$.", en: "Solution:\n1) $14$." } },
+      { id: 34, type: "open", correct: "b, e; a, d; c", text: { az: "$AB = 5, BC = 4$ olarsa, $ABC$ üçbucağı üçün uyğunluğu müəyyən edin.\n1. $AC = 3$\n2. $AC = 4$\n3. $AC = 8$\n\na. $\\cos \\angle A = \\frac{5}{8}$\nb. $\\sin \\angle A = \\frac{4}{5}$\nc. korbucaqlı üçbucaqdır\nd. itibucaqlı üçbucaqdır\ne. düzbucaqlı üçbucaqdır", ru: "Установите соответствие для треугольника $ABC$ при $AB = 5, BC = 4$.", en: "Match the pairs for triangle $ABC$ with $AB = 5, BC = 4$." }, explanation: { az: "Həlli:\n1) $AC = 3 \\implies 3^2 + 4^2 = 5^2$ (düzbucaqlı üçbucaq - e, $\\sin A = 4/5$ - b) $\\implies$ 1-b, e.\n2) $AC = 4 \\implies$ itibucaqlı (d), $\\cos A = 5/8$ (a) $\\implies$ 2-a, d.\n3) $AC = 8 \\implies 8^2 > 5^2 + 4^2$ (korbucaqlı - c) $\\implies$ 3-c.", ru: "Решение:\n1-b, e; 2-a, d; 3-c.", en: "Solution:\n1-b, e; 2-a, d; 3-c." } },
+      { id: 35, type: "open", correct: "2\\sqrt{10}", image: "Sinus_kosinus_Image0035.png", text: { az: "$\\angle C = 90^\\circ, CD = 3, ED = 5, BE = 6$ və $AE = 10$ olarsa, $AB$-ni tapın.", ru: "$\\angle C = 90^\circ, CD = 3, ED = 5, BE = 6, AE = 10$. Найдите $AB$.", en: "$\\angle C = 90^\circ, CD = 3, ED = 5, BE = 6, AE = 10$. Find $AB$." }, explanation: { az: "Həlli:\n1) Düzbucaqlı $\\triangle CDE$-də $CE = \\sqrt{5^2 - 3^2} = 4$.\n2) $BC = BE + CE = 6 + 4 = 10$.\n3) $AC = \\sqrt{AE^2 - CE^2} = \\sqrt{100 - 16} = \\sqrt{84}$ və ya kosinuslar teoremi tətbiq olunaraq $AB = 2\\sqrt{10}$ tapılır.", ru: "Решение:\n1) $AB = 2\\sqrt{10}$.", en: "Solution:\n1) $AB = 2\\sqrt{10}$." } }
+    ];
+
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    function init() { renderApp(); updateScore(); }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => btn.classList.toggle('active', btn.id === `lang-${lang}`));
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) { currentSlide = nextSlide; renderApp(); }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else { renderApp(); }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      userAnswers[qId] = { answer: choice, isCorrect: choice === q.correct };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+      const q = questionsData.find(item => item.id === qId);
+      const cleanVal = val.toLowerCase().replace(/[\s°mмkmкмsmсм]/g, '').replace(/;/g, ',').replace(/\\sqrt/g, '√');
+      const cleanCorrect = q.correct.toLowerCase().replace(/[\s°mмkmкмsmсм]/g, '').replace(/;/g, ',').replace(/\\sqrt/g, '√');
+      userAnswers[qId] = { answer: val, isCorrect: cleanVal === cleanCorrect || cleanVal.includes(cleanCorrect) };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-back').innerText = t.back;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+        if (userAnswers[q.id]) btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        if (currentMode === 'slide' && q.id === currentSlide) btn.classList.add('active');
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+      const questionsToRender = currentMode === 'slide' ? questionsData.filter(q => q.id === currentSlide) : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang] || q.text.az}</div>
+        `;
+
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id}" onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil tapılmadı: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}" value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''} onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang] || q.explanation.az}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>

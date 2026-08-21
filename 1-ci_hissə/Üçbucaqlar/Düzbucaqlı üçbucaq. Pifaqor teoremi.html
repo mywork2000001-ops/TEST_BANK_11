@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Düzbucaqlı üçbucaq. Pifaqor teoremi. Münasibətlər</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 60px; }
+    header { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.04); padding: 12px 20px; }
+    .header-content { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+    .topic-title-box { display: flex; align-items: center; gap: 10px; }
+    .back-btn { text-decoration: none; background: #f1f5f9; color: var(--text); padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; border: 1px solid var(--border); display: inline-flex; align-items: center; gap: 4px; }
+    .back-btn:hover { background: var(--primary-light); color: var(--primary-dark); border-color: var(--primary); }
+    .topic-title { font-size: 1.05rem; font-weight: 700; color: var(--primary-dark); }
+    .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .btn-group { display: inline-flex; background: #f1f5f9; padding: 3px; border-radius: 8px; }
+    .btn-group button { border: none; background: transparent; padding: 6px 12px; font-size: 0.85rem; font-weight: 600; border-radius: 6px; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
+    .btn-group button.active { background: #fff; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .score-badge { background: var(--primary-light); color: var(--primary-dark); padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.9rem; }
+    main { max-width: 1100px; margin: 20px auto; padding: 0 16px; }
+    .grid-container { background: var(--card-bg); border-radius: var(--radius); padding: 16px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .grid-title { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; }
+    .q-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)); gap: 5px; }
+    .q-btn { aspect-ratio: 1; border: 1px solid var(--border); background: #fff; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; justify-content: center; color: var(--text); }
+    .q-btn:hover { border-color: var(--primary); background: #f8fafc; }
+    .q-btn.active { outline: 2px solid var(--primary); outline-offset: 1px; }
+    .q-btn.correct { background: var(--success); color: #fff; border-color: var(--success); }
+    .q-btn.incorrect { background: var(--danger); color: #fff; border-color: var(--danger); }
+    .question-card { background: var(--card-bg); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
+    .q-number { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+    .q-type-badge { font-size: 0.75rem; font-weight: 600; padding: 3px 8px; border-radius: 12px; background: #f1f5f9; color: var(--text-muted); }
+    .q-text { font-size: 1.05rem; margin-bottom: 18px; color: var(--text); white-space: pre-line; }
+    .q-image-container { margin: 16px 0; padding: 10px; background: #fafafa; border: 1px dashed var(--border); border-radius: 8px; display: flex; justify-content: center; align-items: center; }
+    .q-image-container img { max-width: 100%; max-height: 260px; height: auto; border-radius: 4px; object-fit: contain; }
+    .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; }
+    @media (min-width: 640px) { .options-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); } }
+    .option-btn { text-align: left; padding: 12px 16px; border: 1.5px solid var(--border); background: #fff; border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 500; display: flex; align-items: center; gap: 10px; transition: all 0.2s ease; }
+    .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #f8fafc; }
+    .option-btn.selected-correct { background: var(--success-light) !important; border-color: var(--success) !important; color: #065f46 !important; font-weight: 700; }
+    .option-btn.selected-incorrect { background: var(--danger-light) !important; border-color: var(--danger) !important; color: #991b1b !important; font-weight: 700; }
+    .open-input-container { display: flex; gap: 10px; margin-bottom: 16px; max-width: 440px; }
+    .open-input { flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem; outline: none; }
+    .open-input:focus { border-color: var(--primary); }
+    .submit-btn { padding: 10px 18px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .submit-btn:hover { background: var(--primary-dark); }
+    .explanation-box { margin-top: 16px; padding: 16px; background: #f8fafc; border-left: 4px solid var(--primary); border-radius: 0 var(--radius) var(--radius) 0; font-size: 0.95rem; display: none; }
+    .explanation-title { font-weight: 700; margin-bottom: 8px; color: var(--primary-dark); display: flex; align-items: center; gap: 6px; }
+    .explanation-body { white-space: pre-line; color: #334155; }
+    .slide-footer { display: flex; justify-content: space-between; margin-top: 20px; gap: 12px; }
+    .nav-btn { padding: 10px 20px; background: #fff; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; color: var(--text); cursor: pointer; transition: all 0.2s; }
+    .nav-btn:hover:not(:disabled) { background: #f1f5f9; border-color: var(--primary); }
+    .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-content">
+      <div class="topic-title-box">
+        <a href="../../index.html" class="back-btn">← <span id="ui-back">Əsas Menyu</span></a>
+        <div class="topic-title" id="ui-topic">Düzbucaqlı üçbucaq. Pifaqor teoremi</div>
+      </div>
+      <div class="controls">
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 93</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+    <div id="questions-container"></div>
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    const uiTranslations = {
+      az: {
+        topic: "Düzbucaqlı üçbucaq. Pifaqor teoremi. Tərəflər və bucaqlar arasındakı münasibətlər",
+        back: "Əsas Menyu",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual / Uyğunluq",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı daxil edin...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Прямоугольный треугольник. Теорема Пифагора. Соотношения сторон и углов",
+        back: "Главное меню",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос / Соответствие",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Right-Angled Triangle. Pythagorean Theorem. Relations between Sides and Angles",
+        back: "Main Menu",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended / Matching",
+        check: "Submit",
+        enterAnswer: "Enter answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    // 1-dən 93-ə qədər bütün sualların tam və ixtisarsız bazası
+    const questionsData = [
+      { id: 1, type: "mcq", correct: "C", options: { A: "30 sm", B: "15 sm", C: "20 sm", D: "$20\\sqrt{3}\\text{ sm}$", E: "$20\\sqrt{2}\\text{ sm}$" }, text: { az: "Uzunluğu $40\\text{ sm}$ olan düz xətt parçası hər hansı düz xətlə $60^\\circ$-li bucaq əmələ gətirir. Bu parçanın həmin düz xətt üzərindəki proyeksiyasını tapın.", ru: "Отрезок длиной $40\\text{ см}$ образует угол $60^\\circ$ с прямой. Найдите проекцию отрезка на эту прямую.", en: "A line segment of length $40\\text{ cm}$ forms a $60^\\circ$ angle with a line. Find its projection on the line." }, explanation: { az: "Həlli:\n1) Proyeksiya = $40 \\cdot \\cos 60^\\circ = 40 \\cdot 0,5 = 20\\text{ sm}$.", ru: "Решение:\n1) $40 \\cdot \\cos 60^\\circ = 20\\text{ см}$.", en: "Solution:\n1) $40 \\cdot \\cos 60^\\circ = 20\\text{ cm}$." } },
+      { id: 2, type: "mcq", correct: "C", image: "Duzbucaqli_ucbucaq_Image0002.png", options: { A: "14 sm", B: "13 sm", C: "$12\\sqrt{3}\\text{ sm}$", D: "16 sm", E: "$18\\sqrt{3}\\text{ sm}$" }, text: { az: "Üçbucaqda $a = 12\\text{ sm}, \\alpha = 30^\\circ, \\beta = 60^\\circ$ olarsa, $b$-ni tapın.", ru: "В треугольнике $a = 12\\text{ см}, \\alpha = 30^\\circ, \\beta = 60^\\circ$. Найдите $b$.", en: "In a triangle $a = 12\\text{ cm}, \\alpha = 30^\\circ, \\beta = 60^\\circ$. Find $b$." }, explanation: { az: "Həlli:\n1) $b = a \\cdot \\tan 60^\\circ = 12\\sqrt{3}\\text{ sm}$.", ru: "Решение:\n1) $b = 12\\sqrt{3}\\text{ см}$.", en: "Solution:\n1) $b = 12\\sqrt{3}\\text{ cm}$." } },
+      { id: 3, type: "mcq", correct: "E", options: { A: "$\\frac{\\sqrt{2}}{2}a$", B: "$3a$", C: "$\\frac{a}{2}$", D: "$a$", E: "$\\frac{\\sqrt{3}}{2}a$" }, text: { az: "Uzunluğu $a$-ya bərabər olan düz xətt parçasının uc nöqtələri paralel düz xətlər üzərindədir və onlarla $60^\\circ$-li bucaq əmələ gətirir. Paralel düz xətlər arasındakı məsafəni tapın.", ru: "Отрезок длины $a$ образует угол $60^\\circ$ с параллельными прямыми. Найдите расстояние между прямыми.", en: "A line segment of length $a$ forms a $60^\\circ$ angle with parallel lines. Find the distance between lines." }, explanation: { az: "Həlli:\n1) $d = a \\cdot \\sin 60^\\circ = \\frac{\\sqrt{3}}{2}a$.", ru: "Решение:\n1) $d = a \\sin 60^\\circ = \\frac{\\sqrt{3}}{2}a$.", en: "Solution:\n1) $d = \\frac{\\sqrt{3}}{2}a$." } },
+      { id: 4, type: "mcq", correct: "B", options: { A: "3,6 sm", B: "4,8 sm", C: "6,4 sm", D: "5 sm", E: "1,8 sm" }, text: { az: "Üçbucağın bucaqları $1:2:3$ nisbətindədir. Onun kiçik tərəfi ilə böyük tərəfinin cəmi $7,2\\text{ sm}$ olarsa, böyük tərəfi tapın.", ru: "Углы треугольника относятся как $1:2:3$. Сумма наименьшей и наибольшей сторон равна $7,2\\text{ см}$. Найдите наибольшую сторону.", en: "Angles of a triangle are in ratio $1:2:3$. The sum of shortest and longest sides is $7.2\\text{ cm}$. Find the longest side." }, explanation: { az: "Həlli:\n1) Bucaqlar: $30^\\circ, 60^\\circ, 90^\\circ$. $a = c/2 \\implies c + c/2 = 1,5c = 7,2 \\implies c = 4,8\\text{ sm}$.", ru: "Решение:\n1) $1,5c = 7,2 \\implies c = 4,8\\text{ см}$.", en: "Solution:\n1) $c = 4.8\\text{ cm}$." } },
+      { id: 5, type: "mcq", correct: "D", options: { A: "$3\\sqrt{3}\\text{ sm}$", B: "3 sm", C: "$2\\sqrt{3}\\text{ sm}$", D: "4 sm", E: "$4\\sqrt{2}\\text{ sm}$" }, text: { az: "Bərabəryanlı üçbucağın oturacağı $8\\text{ sm}$, təpə bucağı isə $90^\\circ$-dir. Oturacağa endirilmiş hündürlüyü tapın.", ru: "Основание равнобедренного прямоугольного треугольника равно $8\\text{ см}$. Найдите высоту к основанию.", en: "Base of an isosceles right triangle is $8\\text{ cm}$. Find altitude to the base." }, explanation: { az: "Həlli:\n1) $h = c/2 = 8/2 = 4\\text{ sm}$.", ru: "Решение:\n1) $h = 4\\text{ см}$.", en: "Solution:\n1) $h = 4\\text{ cm}$." } },
+      { id: 6, type: "mcq", correct: "B", options: { A: "9 sm", B: "12 sm", C: "10 sm", D: "6 sm", E: "10 sm" }, text: { az: "Bərabəryanlı düzbucaqlı üçbucaqda hipotenuza çəkilən hündürlük $6\\text{ sm}$-dir. Hipotenuzu tapın.", ru: "В равнобедренном прямоугольном треугольнике высота к гипотенузе равна $6\\text{ см}$. Найдите гипотенузу.", en: "In an isosceles right triangle, altitude to hypotenuse is $6\\text{ cm}$. Find the hypotenuse." }, explanation: { az: "Həlli:\n1) $c = 2h = 2 \\times 6 = 12\\text{ sm}$.", ru: "Решение:\n1) $c = 12\\text{ см}$.", en: "Solution:\n1) $c = 12\\text{ cm}$." } },
+      { id: 7, type: "mcq", correct: "D", options: { A: "4 sm", B: "3 sm", C: "8 sm", D: "5 sm", E: "2 sm" }, text: { az: "Bərabəryanlı düzbucaqlı üçbucağın hipotenuzu $10\\text{ sm}$-dir. Düz bucaq təpəsindən çəkilən hündürlüyü tapın.", ru: "Гипотенуза равнобедренного прямоугольного треугольника равна $10\\text{ см}$. Найдите высоту из прямого угла.", en: "Hypotenuse of an isosceles right triangle is $10\\text{ cm}$. Find the altitude from the right angle." }, explanation: { az: "Həlli:\n1) $h = c/2 = 10/2 = 5\\text{ sm}$.", ru: "Решение:\n1) $h = 5\\text{ см}$.", en: "Solution:\n1) $h = 5\\text{ cm}$." } },
+      { id: 8, type: "mcq", correct: "D", image: "Duzbucaqli_ucbucaq_Image0008.png", options: { A: "$\\sqrt{2}$", B: "2", C: "3", D: "$\\sqrt{6}$", E: "$\\sqrt{5}$" }, text: { az: "$x$ parçasının uzunluğunu tapın.", ru: "Найдите длину отрезка $x$.", en: "Find the length of segment $x$." }, explanation: { az: "Həlli:\n1) Pifaqor teoreminə görə $x = \\sqrt{6}$.", ru: "Решение:\n1) По теореме Пифагора $x = \\sqrt{6}$.", en: "Solution:\n1) $x = \\sqrt{6}$." } },
+      { id: 9, type: "mcq", correct: "B", image: "Duzbucaqli_ucbucaq_Image0009.png", options: { A: "1", B: "0,25", C: "$\\frac{1}{2}$", D: "2,5", E: "$\\sqrt{5}$" }, text: { az: "$x$ parçasının uzunluğunu tapın.", ru: "Найдите длину отрезка $x$.", en: "Find the length of segment $x$." }, explanation: { az: "Həlli:\n1) $x = 0,25$.", ru: "Решение:\n1) $x = 0,25$.", en: "Solution:\n1) $x = 0.25$." } },
+      { id: 10, type: "mcq", correct: "E", options: { A: "$24\\sqrt{2}$", B: "13", C: "$13\\sqrt{2}$", D: "26", E: "$26\\sqrt{2}$" }, text: { az: "Düzbucaqlı üçbucaqda hipotenuza çəkilən medianla hipotenuzun cəmi $39\\sqrt{2}\\text{ sm}$ olarsa, hipotenuzun uzunluğunu tapın.", ru: "Сумма медианы к гипотенузе и самой гипотенузы равна $39\\sqrt{2}\\text{ см}$. Найдите гипотенузу.", en: "Sum of median to hypotenuse and hypotenuse is $39\\sqrt{2}\\text{ cm}$. Find the hypotenuse." }, explanation: { az: "Həlli:\n1) $m = c/2 \\implies 1,5c = 39\\sqrt{2} \\implies c = 26\\sqrt{2}$.", ru: "Решение:\n1) $1,5c = 39\\sqrt{2} \\implies c = 26\\sqrt{2}$.", en: "Solution:\n1) $c = 26\\sqrt{2}$." } },
+      { id: 11, type: "mcq", correct: "B", options: { A: "$8\\sqrt{3}\\text{ sm}$", B: "$16\\sqrt{3}\\text{ sm}$", C: "$12\\sqrt{3}\\text{ sm}$", D: "$10\\sqrt{3}\\text{ sm}$", E: "$18\\sqrt{3}\\text{ sm}$" }, text: { az: "Bərabəryanlı düzbucaqlı üçbucaqda hipotenuza endirilən hündürlüklə hipotenuzun cəmi $24\\sqrt{3}\\text{ sm}$ olarsa, hipotenuzu tapın.", ru: "Сумма высоты к гипотенузе и гипотенузы равна $24\\sqrt{3}\\text{ см}$. Найдите гипотенузу.", en: "Sum of altitude to hypotenuse and hypotenuse is $24\\sqrt{3}\\text{ cm}$. Find hypotenuse." }, explanation: { az: "Həlli:\n1) $h = c/2 \\implies 1,5c = 24\\sqrt{3} \\implies c = 16\\sqrt{3}\\text{ sm}$.", ru: "Решение:\n1) $c = 16\\sqrt{3}\\text{ см}$.", en: "Solution:\n1) $c = 16\\sqrt{3}\\text{ cm}$." } },
+      { id: 12, type: "mcq", correct: "B", options: { A: "16 sm", B: "10 sm", C: "9 sm", D: "8 sm", E: "14 sm" }, text: { az: "Katetləri $12\\text{ sm}$ və $16\\text{ sm}$ olan düzbucaqlı üçbucağın hipotenuza çəkilmiş medianının uzunluğunu tapın.", ru: "Катеты равны $12\\text{ см}$ и $16\\text{ см}$. Найдите медиану к гипотенузе.", en: "Legs are $12\\text{ cm}$ and $16\\text{ cm}$. Find median to hypotenuse." }, explanation: { az: "Həlli:\n1) $c = \\sqrt{12^2 + 16^2} = 20\\text{ sm} \\implies m = c/2 = 10\\text{ sm}$.", ru: "Решение:\n1) $c = 20\\text{ см} \\implies m = 10\\text{ см}$.", en: "Solution:\n1) $m = 10\\text{ cm}$." } },
+      { id: 13, type: "mcq", correct: "E", options: { A: "13,5 sm", B: "11,5 sm", C: "12 sm", D: "18 sm", E: "12,5 sm" }, text: { az: "Katetləri $15\\text{ sm}$ və $20\\text{ sm}$ olan düzbucaqlı üçbucağın hipotenuza çəkilmiş medianının uzunluğunu tapın.", ru: "Катеты равны $15\\text{ см}$ и $20\\text{ см}$. Найдите медиану к гипотенузе.", en: "Legs are $15\\text{ cm}$ and $20\\text{ cm}$. Find median to hypotenuse." }, explanation: { az: "Həlli:\n1) $c = \\sqrt{15^2 + 20^2} = 25\\text{ sm} \\implies m = 12,5\\text{ sm}$.", ru: "Решение:\n1) $m = 12,5\\text{ см}$.", en: "Solution:\n1) $m = 12.5\\text{ cm}$." } },
+      { id: 14, type: "mcq", correct: "B", options: { A: "22 sm", B: "30 sm", C: "29 sm", D: "36 sm", E: "17 sm" }, text: { az: "Katetləri $5\\text{ sm}$ və $12\\text{ sm}$ olan düzbucaqlı üçbucağın perimetrini tapın.", ru: "Катеты равны $5\\text{ см}$ и $12\\text{ см}$. Найдите периметр.", en: "Legs are $5\\text{ cm}$ and $12\\text{ cm}$. Find the perimeter." }, explanation: { az: "Həlli:\n1) $c = 13\\text{ sm} \\implies P = 5 + 12 + 13 = 30\\text{ sm}$.", ru: "Решение:\n1) $P = 30\\text{ см}$.", en: "Solution:\n1) $P = 30\\text{ cm}$." } },
+      { id: 15, type: "mcq", correct: "C", options: { A: "30 sm", B: "36 sm", C: "40 sm", D: "44 sm", E: "48 sm" }, text: { az: "Katetləri $8\\text{ sm}$ və $15\\text{ sm}$ olan düzbucaqlı üçbucağın perimetrini tapın.", ru: "Катеты равны $8\\text{ см}$ и $15\\text{ см}$. Найдите периметр.", en: "Legs are $8\\text{ cm}$ and $15\\text{ cm}$. Find the perimeter." }, explanation: { az: "Həlli:\n1) $c = 17\\text{ sm} \\implies P = 8 + 15 + 17 = 40\\text{ sm}$.", ru: "Решение:\n1) $P = 40\\text{ см}$.", en: "Solution:\n1) $P = 40\\text{ cm}$." } },
+      { id: 16, type: "mcq", correct: "A", options: { A: "36 sm", B: "24 sm", C: "18 sm", D: "30 sm", E: "28 sm" }, text: { az: "Düzbucaqlı üçbucağın katetlərinin hipotenuz üzərindəki proyeksiyalarının uzunluqları $24\\text{ sm}$ və $54\\text{ sm}$-ə bərabərdir. Düz bucaq təpəsindən hipotenuza çəkilmiş hündürlüyü tapın.", ru: "Проекции катетов на гипотенузу равны $24\\text{ см}$ и $54\\text{ см}$. Найдите высоту к гипотенузе.", en: "Projections of legs on hypotenuse are $24\\text{ cm}$ and $54\\text{ cm}$. Find the altitude." }, explanation: { az: "Həlli:\n1) $h = \\sqrt{24 \\cdot 54} = \\sqrt{1296} = 36\\text{ sm}$.", ru: "Решение:\n1) $h = 36\\text{ см}$.", en: "Solution:\n1) $h = 36\\text{ cm}$." } },
+      { id: 17, type: "mcq", correct: "A", options: { A: "24 sm", B: "16 sm", C: "28 sm", D: "32 sm", E: "20 sm" }, text: { az: "Düzbucaqlı üçbucağın katetlərinin hipotenuz üzərindəki proyeksiyalarının uzunluqları $12\\text{ sm}$ və $48\\text{ sm}$-ə bərabərdir. Düz bucaq təpəsindən hipotenuza çəkilmiş hündürlüyü tapın.", ru: "Проекции катетов на гипотенузу равны $12\\text{ см}$ и $48\\text{ см}$. Найдите высоту.", en: "Projections of legs are $12\\text{ cm}$ and $48\\text{ cm}$. Find altitude." }, explanation: { az: "Həlli:\n1) $h = \\sqrt{12 \\cdot 48} = 24\\text{ sm}$.", ru: "Решение:\n1) $h = 24\\text{ см}$.", en: "Solution:\n1) $h = 24\\text{ cm}$." } },
+      { id: 18, type: "mcq", correct: "E", options: { A: "18 sm", B: "26 sm", C: "20 sm", D: "32 sm", E: "24 sm" }, text: { az: "Düzbucaqlı üçbucağın katetlərinin hipotenuz üzərindəki proyeksiyaları $16\\text{ sm}$ və $36\\text{ sm}$-ə bərabərdir. Düz bucaq təpəsindən çəkilmiş hündürlüyü tapın.", ru: "Проекции катетов равны $16\\text{ см}$ и $36\\text{ см}$. Найдите высоту.", en: "Projections of legs are $16\\text{ cm}$ and $36\\text{ cm}$. Find altitude." }, explanation: { az: "Həlli:\n1) $h = \\sqrt{16 \\cdot 36} = 24\\text{ sm}$.", ru: "Решение:\n1) $h = 24\\text{ см}$.", en: "Solution:\n1) $h = 24\\text{ cm}$." } },
+      { id: 19, type: "mcq", correct: "B", options: { A: "18 sm", B: "36 sm", C: "42 sm", D: "24 sm", E: "32 sm" }, text: { az: "Düzbucaqlı üçbucağın katetlərinin hipotenuz üzərindəki proyeksiyalarının uzunluqları $18\\text{ sm}$ və $72\\text{ sm}$-ə bərabərdir. Hipotenuza çəkilmiş hündürlüyü tapın.", ru: "Проекции катетов равны $18\\text{ см}$ и $72\\text{ см}$. Найдите высоту.", en: "Projections of legs are $18\\text{ cm}$ and $72\\text{ cm}$. Find altitude." }, explanation: { az: "Həlli:\n1) $h = \\sqrt{18 \\cdot 72} = 36\\text{ sm}$.", ru: "Решение:\n1) $h = 36\\text{ см}$.", en: "Solution:\n1) $h = 36\\text{ cm}$." } },
+      { id: 20, type: "mcq", correct: "E", options: { A: "80°", B: "30°", C: "45°", D: "70°", E: "50°" }, text: { az: "Düzbucaqlı üçbucağın iti bucaq təpəsindən çəkilən tənbölən qarşıdakı tərəflə $70^\\circ$-li bucaq əmələ gətirir. Üçbucağın böyük iti bucağını tapın.", ru: "Биссектриса острого угла образует угол $70^\\circ$ с противоположным катетом. Найдите больший острый угол.", en: "Bisector of an acute angle makes a $70^\\circ$ angle with the opposite leg. Find the larger acute angle." }, explanation: { az: "Həlli:\n1) Yarım bucaq $20^\\circ \\implies \\alpha = 40^\\circ \\implies$ böyük bucaq $50^\\circ$.", ru: "Решение:\n1) Больший острый угол = $50^\\circ$.", en: "Solution:\n1) $50^\circ$." } },
+      { id: 21, type: "mcq", correct: "C", options: { A: "40°", B: "15°", C: "70°", D: "50°", E: "45°" }, text: { az: "Düzbucaqlı üçbucağın iti bucaq təpəsindən çəkilən tənböləni qarşıdakı tərəflə $80^\\circ$-li bucaq əmələ gətirir. Üçbucağın böyük iti bucağını tapın.", ru: "Биссектриса образует угол $80^\\circ$ с катетом. Найдите больший острый угол.", en: "Bisector makes an $80^\\circ$ angle with the leg. Find the larger acute angle." }, explanation: { az: "Həlli:\n1) $\\alpha = 20^\\circ \\implies$ böyük bucaq $70^\\circ$.", ru: "Решение:\n1) $70^\\circ$.", en: "Solution:\n1) $70^\circ$." } },
+      { id: 22, type: "mcq", correct: "A", options: { A: "30°; 60°", B: "45°; 45°", C: "15°; 75°", D: "40°; 50°", E: "20°; 70°" }, text: { az: "Düzbucaqlı üçbucaqda hipotenuza çəkilmiş hündürlük $1\\text{ sm}$-ə, katetlərdən biri isə $2\\text{ sm}$-ə bərabərdir. Bu üçbucağın iti bucaqlarını tapın.", ru: "Высота к гипотенузе $1\\text{ см}$, один из катетов $2\\text{ см}$. Найдите острые углы.", en: "Altitude to hypotenuse is $1\\text{ cm}$, one leg is $2\\text{ cm}$. Find acute angles." }, explanation: { az: "Həlli:\n1) $\\sin \\alpha = 1/2 \\implies 30^\\circ, 60^\\circ$.", ru: "Решение:\n1) $30^\\circ, 60^\\circ$.", en: "Solution:\n1) $30^\circ, 60^\circ$." } },
+      { id: 23, type: "mcq", correct: "C", options: { A: "15°; 75°", B: "40°; 50°", C: "30°; 60°", D: "45°; 45°", E: "20°; 70°" }, text: { az: "Düzbucaqlı üçbucaqda hipotenuza çəkilmiş hündürlük $3\\text{ sm}$, katetlərdən biri isə $6\\text{ sm}$ olarsa, bu üçbucağın iti bucaqlarını tapın.", ru: "Высота к гипотенузе $3\\text{ см}$, катет $6\\text{ см}$. Найдите острые углы.", en: "Altitude is $3\\text{ cm}$, one leg is $6\\text{ cm}$. Find acute angles." }, explanation: { az: "Həlli:\n1) $30^\\circ, 60^\\circ$.", ru: "Решение:\n1) $30^\\circ, 60^\\circ$.", en: "Solution:\n1) $30^\circ, 60^\circ$." } },
+      { id: 24, type: "mcq", correct: "D", options: { A: "6,5 sm", B: "6 sm", C: "7 sm", D: "8 sm", E: "7,5 sm" }, text: { az: "Üçbucağın bucaqlarının nisbəti $1:2:3$ kimidir. Böyük tərəfin uzunluğu $8\\text{ sm}$-dir. Böyük tərəfə çəkilmiş medianla kiçik tərəfin uzunluqları cəmini tapın.", ru: "Углы в отношении $1:2:3$, гипотенуза $8\\text{ см}$. Найдите сумму медианы к гипотенузе и меньшего катета.", en: "Angles in ratio $1:2:3$, hypotenuse $8\\text{ cm}$. Find sum of median to hypotenuse and short leg." }, explanation: { az: "Həlli:\n1) $m = 4\\text{ sm}, a = 4\\text{ sm} \\implies 4+4=8\\text{ sm}$.", ru: "Решение:\n1) $4 + 4 = 8\\text{ см}$.", en: "Solution:\n1) $4 + 4 = 8\\text{ cm}$." } },
+      { id: 25, type: "mcq", correct: "A", options: { A: "$\\sqrt{3}\\text{ sm}$", B: "1 sm", C: "$\\sqrt{2}\\text{ sm}$", D: "$2\\sqrt{2}\\text{ sm}$", E: "$2\\sqrt{3}\\text{ sm}$" }, text: { az: "Düzbucaqlı üçbucağın iti bucaqlarından biri $30^\\circ$, ona bitişik katet $3\\text{ sm}$-dir. Hipotenuza çəkilmiş medianın uzunluğunu tapın.", ru: "Один острый угол $30^\circ$, прилежащий катет $3\\text{ см}$. Найдите медиану к гипотенузе.", en: "One acute angle is $30^\circ$, adjacent leg is $3\\text{ cm}$. Find median to hypotenuse." }, explanation: { az: "Həlli:\n1) $c = 2\\sqrt{3} \\implies m = \\sqrt{3}\\text{ sm}$.", ru: "Решение:\n1) $m = \\sqrt{3}\\text{ см}$.", en: "Solution:\n1) $m = \\sqrt{3}\\text{ cm}$." } },
+      { id: 26, type: "mcq", correct: "A", options: { A: "60°", B: "15°", C: "30°", D: "25°", E: "45°" }, text: { az: "Düzbucaqlı üçbucağın iti bucağı $75^\\circ$-yə bərabərdir. Bu üçbucağın düz bucaq təpəsindən çəkilmiş hündürlüyü və medianı arasındakı bucağı tapın.", ru: "Острый угол $75^\circ$. Найдите угол между высотой и медианой из прямого угла.", en: "Acute angle is $75^\circ$. Find angle between altitude and median from right angle." }, explanation: { az: "Həlli:\n1) $75^\\circ - 15^\\circ = 60^\\circ$.", ru: "Решение:\n1) $60^\\circ$.", en: "Solution:\n1) $60^\circ$." } },
+      { id: 27, type: "mcq", correct: "C", options: { A: "25°", B: "15°", C: "30°", D: "45°", E: "60°" }, text: { az: "Düzbucaqlı üçbucağın iti bucağı $75^\\circ$-yə bərabərdir. Bu üçbucağın düz bucaq təpəsindən çəkilmiş tənböləni və medianı arasındakı bucağı tapın.", ru: "Найдите угол между биссектрисой и медианой из прямого угла.", en: "Find angle between bisector and median from right angle." }, explanation: { az: "Həlli:\n1) $30^\\circ$.", ru: "Решение:\n1) $30^\\circ$.", en: "Solution:\n1) $30^\circ$." } },
+      { id: 28, type: "mcq", correct: "A", options: { A: "5,4 sm", B: "3,6 sm", C: "6,4 sm", D: "4,8 sm", E: "4,5 sm" }, text: { az: "Katetləri $a=9\\text{ sm}, b=12\\text{ sm}$ olan düzbucaqlı üçbucaqda $a$ katetinin hipotenuz üzərindəki proyeksiyasını tapın.", ru: "Катеты $9\\text{ см}$ и $12\\text{ см}$. Найдите проекцию катета $a$ на гипотенузу.", en: "Legs are $9\\text{ cm}$ and $12\\text{ cm}$. Find projection of leg $a$ on hypotenuse." }, explanation: { az: "Həlli:\n1) $a_c = 9^2 / 15 = 5,4\\text{ sm}$.", ru: "Решение:\n1) $5,4\\text{ см}$.", en: "Solution:\n1) $5.4\\text{ cm}$." } },
+      { id: 29, type: "mcq", correct: "B", options: { A: "10,2 sm", B: "12,8 sm", C: "12,4 sm", D: "12,2 sm", E: "10,8 sm" }, text: { az: "Katetləri $a=12\\text{ sm}, b=16\\text{ sm}$ olan düzbucaqlı üçbucaqda $b$ katetinin hipotenuz üzərindəki proyeksiyasını tapın.", ru: "Катеты $12\\text{ см}$ и $16\\text{ см}$. Найдите проекцию катета $b$ на гипотенузу.", en: "Legs are $12\\text{ cm}$ and $16\\text{ cm}$. Find projection of leg $b$ on hypotenuse." }, explanation: { az: "Həlli:\n1) $b_c = 16^2 / 20 = 12,8\\text{ sm}$.", ru: "Решение:\n1) $12,8\\text{ см}$.", en: "Solution:\n1) $12.8\\text{ cm}$." } },
+      { id: 30, type: "mcq", correct: "D", options: { A: "17 sm", B: "15 sm", C: "23 sm", D: "18 sm", E: "24 sm" }, text: { az: "$ABC$ üçbucağında $AB = BC, ED \\perp AB, AD = DB, P_{\\triangle AEC} = 32\\text{ sm}$ və $AC = 14\\text{ sm}$ olarsa, $BC$-ni tapın.", ru: "В $\\triangle ABC$ $AB = BC, ED \\perp AB, AD = DB, P = 32\\text{ см}, AC = 14\\text{ см}$. Найдите $BC$.", en: "In $\\triangle ABC$, $AB = BC, ED \\perp AB, AD = DB, P = 32\\text{ cm}, AC = 14\\text{ cm}$. Find $BC$." }, explanation: { az: "Həlli:\n1) $BC = 32 - 14 = 18\\text{ sm}$.", ru: "Решение:\n1) $BC = 18\\text{ см}$.", en: "Solution:\n1) $BC = 18\\text{ cm}$." } },
+      { id: 31, type: "mcq", correct: "D", options: { A: "12 sm", B: "20 sm", C: "24 sm", D: "18 sm", E: "14 sm" }, text: { az: "Düzbucaqlı üçbucağın iti bucaqlarından biri $60^\\circ$, hipotenuzu ilə kiçik katetin cəmi $27\\text{ sm}$-dir. Hipotenuzun uzunluğunu tapın.", ru: "Один острый угол равен $60^\circ$, сумма гипотенузы и меньшего катета $27\\text{ см}$. Найдите гипотенузу.", en: "One acute angle is $60^\circ$, sum of hypotenuse and short leg is $27\\text{ cm}$. Find hypotenuse." }, explanation: { az: "Həlli:\n1) $c + c/2 = 1,5c = 27 \\implies c = 18\\text{ sm}$.", ru: "Решение:\n1) $c = 18\\text{ см}$.", en: "Solution:\n1) $c = 18\\text{ cm}$." } },
+      { id: 32, type: "mcq", correct: "C", options: { A: "24 sm", B: "30 sm", C: "36 sm", D: "42 sm", E: "48 sm" }, text: { az: "$ABC$ düzbucaqlı üçbucağında $\\angle C = 90^\\circ, \\angle A = 60^\\circ, CM$-hündürlükdür. $AM = 12\\text{ sm}$ olarsa, $MB$-ni tapın.", ru: "В прямоугольном $\\triangle ABC$ $\\angle C = 90^\circ, \\angle A = 60^\circ, CM \\perp AB, AM = 12\\text{ см}$. Найдите $MB$.", en: "In right $\\triangle ABC$, $\\angle C = 90^\circ, \\angle A = 60^\circ, CM \\perp AB, AM = 12\\text{ cm}$. Find $MB$." }, explanation: { az: "Həlli:\n1) $MB = 12 \\cdot \\tan^2 60^\\circ = 12 \\cdot 3 = 36\\text{ sm}$.", ru: "Решение:\n1) $MB = 36\\text{ см}$.", en: "Solution:\n1) $MB = 36\\text{ cm}$." } },
+      { id: 33, type: "mcq", correct: "C", options: { A: "48 sm", B: "36 sm", C: "54 sm", D: "60 sm", E: "42 sm" }, text: { az: "$ABC$ düzbucaqlı üçbucağında $\\angle C = 90^\\circ, \\angle B = 30^\\circ, CN$-hündürlükdür. $AN = 18\\text{ sm}$ olarsa, $NB$-ni tapın.", ru: "В прямоугольном $\\triangle ABC$ $\\angle C = 90^\circ, \\angle B = 30^\circ, CN \\perp AB, AN = 18\\text{ см}$. Найдите $NB$.", en: "In right $\\triangle ABC$, $\\angle C = 90^\circ, \\angle B = 30^\circ, CN \\perp AB, AN = 18\\text{ cm}$. Find $NB$." }, explanation: { az: "Həlli:\n1) $NB = 18 \\cdot 3 = 54\\text{ sm}$.", ru: "Решение:\n1) $NB = 54\\text{ см}$.", en: "Solution:\n1) $NB = 54\\text{ cm}$." } },
+      { id: 34, type: "mcq", correct: "E", image: "Duzbucaqli_ucbucaq_Image0034.png", options: { A: "3", B: "5", C: "$6\\sqrt{2}$", D: "$5\\sqrt{2}$", E: "6" }, text: { az: "Şəkildə verilənlərə əsasən $x$-i tapın.", ru: "Найдите $x$ по рисунку.", en: "Find $x$ based on the figure." }, explanation: { az: "Həlli:\n1) $x = 6$.", ru: "Решение:\n1) $x = 6$.", en: "Solution:\n1) $x = 6$." } },
+      { id: 35, type: "mcq", correct: "D", image: "Duzbucaqli_ucbucaq_Image0035.png", options: { A: "$6\\sqrt{2}$", B: "$4\\sqrt{3}$", C: "$5\\sqrt{3}$", D: "$6\\sqrt{3}$", E: "$5\\sqrt{2}$" }, text: { az: "Şəkildə verilənlərə əsasən $x$-i tapın.", ru: "Найдите $x$ по рисунку.", en: "Find $x$ based on the figure." }, explanation: { az: "Həlli:\n1) $x = 6\\sqrt{3}$.", ru: "Решение:\n1) $x = 6\\sqrt{3}$.", en: "Solution:\n1) $x = 6\\sqrt{3}$." } },
+      { id: 36, type: "mcq", correct: "C", image: "Duzbucaqli_ucbucaq_Image0036.png", options: { A: "$4\\sqrt{3}$", B: "$3\\sqrt{3}$", C: "$2\\sqrt{3}$", D: "3", E: "4" }, text: { az: "Şəkildə verilənlərə əsasən $AD$ parçasının uzunluğunu tapın.", ru: "Найдите длину отрезка $AD$ по рисунку.", en: "Find length of segment $AD$." }, explanation: { az: "Həlli:\n1) $AD = 2\\sqrt{3}$.", ru: "Решение:\n1) $AD = 2\\sqrt{3}$.", en: "Solution:\n1) $AD = 2\\sqrt{3}$." } },
+      { id: 37, type: "mcq", correct: "D", image: "Duzbucaqli_ucbucaq_Image0037.png", options: { A: "4", B: "$2\\sqrt{3}$", C: "5", D: "$4\\sqrt{3}$", E: "$3\\sqrt{3}$" }, text: { az: "Şəkildə verilənlərə əsasən $x$-i tapın.", ru: "Найдите $x$ по рисунку.", en: "Find $x$ based on the figure." }, explanation: { az: "Həlli:\n1) $x = 4\\sqrt{3}$.", ru: "Решение:\n1) $x = 4\\sqrt{3}$.", en: "Solution:\n1) $x = 4\\sqrt{3}$." } },
+      { id: 38, type: "mcq", correct: "D", options: { A: "$6\\sqrt{2}\\text{ sm}$", B: "$6\\sqrt{3}\\text{ sm}$", C: "$8\\sqrt{3}\\text{ sm}$", D: "$18\\sqrt{2}\\text{ sm}$", E: "$7\\sqrt{2}\\text{ sm}$" }, text: { az: "Oturacağı $36\\text{ sm}$ olan bərabəryanlı üçbucağın təpə bucağı $90^\\circ$ olarsa, yan tərəfini tapın.", ru: "Основание равнобедренного прямоугольного треугольника равно $36\\text{ см}$. Найдите боковую сторону.", en: "Base of an isosceles triangle with right vertex angle is $36\\text{ cm}$. Find leg." }, explanation: { az: "Həlli:\n1) $a = 36 / \\sqrt{2} = 18\\sqrt{2}\\text{ sm}$.", ru: "Решение:\n1) $a = 18\\sqrt{2}\\text{ см}$.", en: "Solution:\n1) $a = 18\\sqrt{2}\\text{ cm}$." } },
+      { id: 39, type: "mcq", correct: "E", image: "Duzbucaqli_ucbucaq_Image0039.png", options: { A: "5", B: "6", C: "3", D: "2", E: "4" }, text: { az: "Şəkildə verilənlərə əsasən $x$ parçasının uzunluğunu tapın.", ru: "Найдите длину отрезка $x$.", en: "Find length of segment $x$." }, explanation: { az: "Həlli:\n1) $x = 4$.", ru: "Решение:\n1) $x = 4$.", en: "Solution:\n1) $x = 4$." } },
+      { id: 40, type: "mcq", correct: "D", image: "Duzbucaqli_ucbucaq_Image0040.png", options: { A: "14", B: "10", C: "5", D: "9", E: "8" }, text: { az: "Şəkildə verilənlərə əsasən $x$ parçasının uzunluğunu tapın.", ru: "Найдите длину отрезка $x$.", en: "Find length of segment $x$." }, explanation: { az: "Həlli:\n1) $x = 9$.", ru: "Решение:\n1) $x = 9$.", en: "Solution:\n1) $x = 9$." } },
+      { id: 41, type: "mcq", correct: "A", image: "Duzbucaqli_ucbucaq_Image0041.png", options: { A: "5 sm", B: "10 sm", C: "8 sm", D: "6 sm", E: "9 sm" }, text: { az: "Düzbucaqlı $ABC$ üçbucağında $C$ düz bucaq təpəsindən $CD$ hündürlüyü çəkilmişdir. $DM \\perp AC, DN \\perp BC, DM = 2\\text{ sm}, DN = 4\\text{ sm}$ olarsa, $AC$ katetini tapın.", ru: "В прямоугольном $\\triangle ABC$ высота $CD$. $DM \\perp AC, DN \\perp BC, DM = 2\\text{ см}, DN = 4\\text{ см}$. Найдите $AC$.", en: "In right $\\triangle ABC$, altitude $CD$. $DM \\perp AC, DN \\perp BC, DM = 2\\text{ cm}, DN = 4\\text{ cm}$. Find $AC$." }, explanation: { az: "Həlli:\n1) $AC = 5\\text{ sm}$.", ru: "Решение:\n1) $AC = 5\\text{ см}$.", en: "Solution:\n1) $AC = 5\\text{ cm}$." } },
+      { id: 42, type: "mcq", correct: "C", image: "Duzbucaqli_ucbucaq_Image0042.png", options: { A: "8 sm", B: "9 sm", C: "15 sm", D: "10 sm", E: "5 sm" }, text: { az: "Düzbucaqlı $ABC$ üçbucağında $C$ düz bucaq təpəsindən $CD$ hündürlüyü çəkilmişdir. $DM \\perp AC, DN \\perp BC, DM = 3\\text{ sm}, DN = 6\\text{ sm}$ olarsa, $BC$ katetinin uzunluğunu tapın.", ru: "В прямоугольном $\\triangle ABC$ $CD$ — высота. $DM = 3\\text{ см}, DN = 6\\text{ см}$. Найдите $BC$.", en: "In right $\\triangle ABC$, altitude $CD$. $DM = 3\\text{ cm}, DN = 6\\text{ cm}$. Find $BC$." }, explanation: { az: "Həlli:\n1) $BC = 15\\text{ sm}$.", ru: "Решение:\n1) $BC = 15\\text{ см}$.", en: "Solution:\n1) $BC = 15\\text{ cm}$." } },
+      { id: 43, type: "mcq", correct: "A", options: { A: "10°", B: "15°", C: "20°", D: "12°", E: "5°" }, text: { az: "Düzbucaqlı üçbucaqda iti bucaqların nisbəti $4:5$ kimidir. Düz bucaq təpəsindən çəkilmiş median və hündürlük arasındakı bucağı tapın.", ru: "Отношение острых углов $4:5$. Найдите угол между медианой и высотой из прямого угла.", en: "Acute angles ratio $4:5$. Find angle between median and altitude from right angle." }, explanation: { az: "Həlli:\n1) $50^\\circ - 40^\\circ = 10^\\circ$.", ru: "Решение:\n1) $10^\\circ$.", en: "Solution:\n1) $10^\circ$." } },
+      { id: 44, type: "mcq", correct: "E", options: { A: "16°", B: "15°", C: "27°", D: "36°", E: "18°" }, text: { az: "Düzbucaqlı üçbucaqda iti bucaqların nisbəti $2:3$ kimidir. Düz bucaq təpəsindən çəkilmiş median və hündürlük arasındakı bucağı tapın.", ru: "Отношение острых углов $2:3$. Найдите угол между медианой и высотой.", en: "Acute angles ratio $2:3$. Find angle between median and altitude." }, explanation: { az: "Həlli:\n1) $54^\\circ - 36^\\circ = 18^\\circ$.", ru: "Решение:\n1) $18^\\circ$.", en: "Solution:\n1) $18^\circ$." } },
+      { id: 45, type: "mcq", correct: "C", image: "Duzbucaqli_ucbucaq_Image0045.png", options: { A: "5/2", B: "4/5", C: "4/25", D: "25/4", E: "2/5" }, text: { az: "$ABC$ düzbucaqlı üçbucağında $\\angle C = 90^\\circ, CD \\perp AB$. $AC = 5, BC = 2$ olarsa, $\\frac{BD}{AD}$ nisbətini tapın.", ru: "В $\\triangle ABC$ $\\angle C = 90^\circ, CD \\perp AB, AC = 5, BC = 2$. Найдите $\\frac{BD}{AD}$.", en: "In right $\\triangle ABC$, $\\angle C = 90^\circ, CD \\perp AB, AC = 5, BC = 2$. Find $\\frac{BD}{AD}$." }, explanation: { az: "Həlli:\n1) $\\frac{BD}{AD} = \\left(\\frac{BC}{AC}\\right)^2 = \\frac{4}{25}$.", ru: "Решение:\n1) $4/25$.", en: "Solution:\n1) $4/25$." } },
+      { id: 46, type: "mcq", correct: "B", image: "Duzbucaqli_ucbucaq_Image0046.png", options: { A: "2/3", B: "3/2", C: "9/4", D: "4/9", E: "1/5" }, text: { az: "$ABC$ düzbucaqlı üçbucağında $\\angle C = 90^\\circ, CD \\perp AB$. $AD = 9, DB = 4$ olarsa, $\\frac{AC}{CB}$ nisbətini tapın.", ru: "В $\\triangle ABC$ $AD = 9, DB = 4$. Найдите $\\frac{AC}{CB}$.", en: "In right $\\triangle ABC$, $AD = 9, DB = 4$. Find $\\frac{AC}{CB}$." }, explanation: { az: "Həlli:\n1) $\\frac{AC}{CB} = \\sqrt{\\frac{9}{4}} = \\frac{3}{2}$.", ru: "Решение:\n1) $3/2$.", en: "Solution:\n1) $3/2$." } },
+      { id: 47, type: "mcq", correct: "A", options: { A: "40°", B: "15°", C: "20°", D: "30°", E: "35°" }, text: { az: "Düzbucaqlı üçbucağın düz bucağının tənböləni ilə bir iti bucağının tənböləni $70^\\circ$-li bucaq altında kəsişir. Bu üçbucağın kiçik iti bucağını tapın.", ru: "Биссектриса прямого угла и биссектриса острого угла пересекаются под углом $70^\circ$. Найдите меньший острый угол.", en: "Bisector of the right angle and of an acute angle intersect at $70^\circ$. Find smaller acute angle." }, explanation: { az: "Həlli:\n1) Kiçik iti bucaq $40^\\circ$.", ru: "Решение:\n1) $40^\\circ$.", en: "Solution:\n1) $40^\circ$." } },
+      { id: 48, type: "mcq", correct: "A", options: { A: "20°", B: "40°", C: "30°", D: "65°", E: "55°" }, text: { az: "Düzbucaqlı üçbucağın düz bucağının tənböləni ilə bir iti bucağının tənböləni $80^\\circ$-li bucaq altında kəsişir. Bu üçbucağın kiçik iti bucağını tapın.", ru: "Биссектрисы пересекаются под углом $80^\circ$. Найдите меньший острый угол.", en: "Bisectors intersect at $80^\circ$. Find smaller acute angle." }, explanation: { az: "Həlli:\n1) $20^\\circ$.", ru: "Решение:\n1) $20^\\circ$.", en: "Solution:\n1) $20^\circ$." } },
+      { id: 49, type: "mcq", correct: "E", image: "Duzbucaqli_ucbucaq_Image0049.png", options: { A: "9", B: "10", C: "5", D: "8", E: "15" }, text: { az: "$ABC$ üçbucağında $\\angle C = 90^\\circ, CD \\perp AB, \\angle DAC = 60^\\circ, AC = 10$ olarsa, $BD$-ni tapın.", ru: "В $\\triangle ABC$ $\\angle C = 90^\circ, CD \\perp AB, \\angle DAC = 60^\circ, AC = 10$. Найдите $BD$.", en: "In $\\triangle ABC$, $\\angle C = 90^\circ, CD \\perp AB, \\angle DAC = 60^\circ, AC = 10$. Find $BD$." }, explanation: { az: "Həlli:\n1) $BD = 15$.", ru: "Решение:\n1) $BD = 15$.", en: "Solution:\n1) $BD = 15$." } },
+      { id: 50, type: "mcq", correct: "B", image: "Duzbucaqli_ucbucaq_Image0050.png", options: { A: "10", B: "12", C: "16", D: "6", E: "8" }, text: { az: "$ABC$ üçbucağında $\\angle C = 90^\\circ, CD \\perp AB, \\angle DAC = 60^\\circ, AC = 8$ olarsa, $BD$-ni tapın.", ru: "В $\\triangle ABC$ $\\angle C = 90^\circ, CD \\perp AB, \\angle DAC = 60^\circ, AC = 8$. Найдите $BD$.", en: "In $\\triangle ABC$, $\\angle C = 90^\circ, CD \\perp AB, \\angle DAC = 60^\circ, AC = 8$. Find $BD$." }, explanation: { az: "Həlli:\n1) $BD = 12$.", ru: "Решение:\n1) $BD = 12$.", en: "Solution:\n1) $BD = 12$." } },
+      { id: 51, type: "mcq", correct: "E", image: "Duzbucaqli_ucbucaq_Image0051.png", options: { A: "4", B: "3", C: "6", D: "5", E: "8" }, text: { az: "$AD$ və $BC$ parçaları $E$ nöqtəsində kəsişir. $\\angle B = \\angle C = 90^\\circ, CD = 2AB, BC = 9, AD = 15$ olarsa, $CD$-ni tapın.", ru: "$AD$ и $BC$ пересекаются в $E$. $\\angle B = \\angle C = 90^\circ, CD = 2AB, BC = 9, AD = 15$. Найдите $CD$.", en: "Segments $AD$ and $BC$ intersect at $E$. $\\angle B = \\angle C = 90^\circ, CD = 2AB, BC = 9, AD = 15$. Find $CD$." }, explanation: { az: "Həlli:\n1) $CD = 8$.", ru: "Решение:\n1) $CD = 8$.", en: "Solution:\n1) $CD = 8$." } },
+      { id: 52, type: "mcq", correct: "C", image: "Duzbucaqli_ucbucaq_Image0052.png", options: { A: "1", B: "2", C: "3", D: "4", E: "5" }, text: { az: "$PK$ və $MN$ parçaları $O$ nöqtəsində kəsişir. $\\angle P = \\angle K = 90^\\circ, MP = 3KN, PK = 16, MN = 20$ olarsa, $KN$-i tapın.", ru: "$PK$ и $MN$ пересекаются в $O$. $\\angle P = \\angle K = 90^\circ, MP = 3KN, PK = 16, MN = 20$. Найдите $KN$.", en: "$PK$ and $MN$ intersect at $O$. $\\angle P = \\angle K = 90^\circ, MP = 3KN, PK = 16, MN = 20$. Find $KN$." }, explanation: { az: "Həlli:\n1) $KN = 3$.", ru: "Решение:\n1) $KN = 3$.", en: "Solution:\n1) $KN = 3$." } },
+      { id: 53, type: "mcq", correct: "C", image: "Duzbucaqli_ucbucaq_Image0053.png", options: { A: "$3\\sqrt{3}\\text{ sm}$", B: "$4\\sqrt{3}\\text{ sm}$", C: "$6\\sqrt{3}\\text{ sm}$", D: "$12\\sqrt{3}\\text{ sm}$", E: "18 sm" }, text: { az: "$ABC$ üçbucağında $\\angle A = 30^\\circ, M, N, E$ nöqtələri uyğun olaraq $AC, CB$ və $AB$ tərəflərinin orta nöqtələridir. $\\angle MEN = 90^\\circ, MN + BC = 12\\text{ sm}$ olarsa, $AC$-ni tapın.", ru: "В $\\triangle ABC$ $\\angle A = 30^\circ, \\angle MEN = 90^\circ, MN + BC = 12\\text{ см}$. Найдите $AC$.", en: "In $\\triangle ABC$, $\\angle A = 30^\circ, \\angle MEN = 90^\circ, MN + BC = 12\\text{ cm}$. Find $AC$." }, explanation: { az: "Həlli:\n1) $AC = 6\\sqrt{3}\\text{ sm}$.", ru: "Решение:\n1) $AC = 6\\sqrt{3}\\text{ см}$.", en: "Solution:\n1) $AC = 6\\sqrt{3}\\text{ cm}$." } },
+      { id: 54, type: "mcq", correct: "C", image: "Duzbucaqli_ucbucaq_Image0054.png", options: { A: "$3\\sqrt{3}\\text{ sm}$", B: "$6\\sqrt{3}\\text{ sm}$", C: "$9\\sqrt{3}\\text{ sm}$", D: "$18\\sqrt{3}\\text{ sm}$", E: "12 sm" }, text: { az: "$ABC$ üçbucağında $\\angle A = 30^\\circ, M, N, E$ orta nöqtələrdir. $\\angle MEN = 90^\\circ, MN + BC = 18\\text{ sm}$ olarsa, $AC$-ni tapın.", ru: "В $\\triangle ABC$ $\\angle A = 30^\circ, MN + BC = 18\\text{ см}$. Найдите $AC$.", en: "In $\\triangle ABC$, $\\angle A = 30^\circ, MN + BC = 18\\text{ cm}$. Find $AC$." }, explanation: { az: "Həlli:\n1) $AC = 9\\sqrt{3}\\text{ sm}$.", ru: "Решение:\n1) $AC = 9\\sqrt{3}\\text{ см}$.", en: "Solution:\n1) $AC = 9\\sqrt{3}\\text{ cm}$." } },
+      { id: 55, type: "mcq", correct: "D", image: "Duzbucaqli_ucbucaq_Image0055.png", options: { A: "25/16", B: "4/5", C: "5/4", D: "16/25", E: "4/9" }, text: { az: "Düzbucaqlı $ABC$ üçbucağında $\\angle C = 90^\\circ, CD \\perp AB, AC = 5, BC = 4$ olarsa, $\\frac{BD}{AD}$ nisbətini tapın.", ru: "В прямоугольном $\\triangle ABC$ $AC = 5, BC = 4$. Найдите $\\frac{BD}{AD}$.", en: "In right $\\triangle ABC$, $AC = 5, BC = 4$. Find $\\frac{BD}{AD}$." }, explanation: { az: "Həlli:\n1) $\\frac{BD}{AD} = \\left(\\frac{4}{5}\\right)^2 = \\frac{16}{25}$.", ru: "Решение:\n1) $16/25$.", en: "Solution:\n1) $16/25$." } },
+      { id: 56, type: "mcq", correct: "A", image: "Duzbucaqli_ucbucaq_Image0056.png", options: { A: "10 sm", B: "5 sm", C: "$10\\sqrt{3}\\text{ sm}$", D: "$5\\sqrt{3}\\text{ sm}$", E: "$10\\sqrt{2}\\text{ sm}$" }, text: { az: "$AM$ parçası $ABC$ üçbucağının $A$ bucağının tənbölənidir. $DN = \\frac{5\\sqrt{3}}{3}\\text{ sm}, \\angle A = 60^\\circ, BN \\perp AC$ və $AN = NC$ olarsa, $BC$ tərəfinin uzunluğunu tapın.", ru: "В $\\triangle ABC$ $AM$ — биссектриса, $\\angle A = 60^\circ, BN \\perp AC, AN = NC, DN = \\frac{5\\sqrt{3}}{3}\\text{ см}$. Найдите $BC$.", en: "$AM$ bisects $\\angle A$. $DN = \\frac{5\\sqrt{3}}{3}\\text{ cm}, \\angle A = 60^\circ, BN \\perp AC, AN = NC$. Find $BC$." }, explanation: { az: "Həlli:\n1) $BC = 10\\text{ sm}$.", ru: "Решение:\n1) $BC = 10\\text{ см}$.", en: "Solution:\n1) $BC = 10\\text{ cm}$." } },
+      { id: 57, type: "mcq", correct: "A", image: "Duzbucaqli_ucbucaq_Image0057.png", options: { A: "5 sm", B: "$5\\sqrt{2}\\text{ sm}$", C: "$5\\sqrt{3}\\text{ sm}$", D: "10 sm", E: "$10\\sqrt{3}\\text{ sm}$" }, text: { az: "$AM$ parçası $ABC$ üçbucağının $A$ bucağının tənbölənidir. $\\angle B = 60^\\circ, MC = \\frac{5\\sqrt{3}}{3}\\text{ sm}, BN \\perp AC$ və $AN = NC$ olarsa, $AM$-in uzunluğunu tapın.", ru: "В $\\triangle ABC$ $AM$ — биссектриса, $\\angle B = 60^\circ, MC = \\frac{5\\sqrt{3}}{3}\\text{ см}, BN \\perp AC, AN = NC$. Найдите $AM$.", en: "$AM$ bisects $\\angle A$. $\\angle B = 60^\circ, MC = \\frac{5\\sqrt{3}}{3}\\text{ cm}, BN \\perp AC, AN = NC$. Find $AM$." }, explanation: { az: "Həlli:\n1) $AM = 5\\text{ sm}$.", ru: "Решение:\n1) $AM = 5\\text{ см}$.", en: "Solution:\n1) $AM = 5\\text{ cm}$." } },
+      { id: 58, type: "mcq", correct: "A", image: "Duzbucaqli_ucbucaq_Image0058.png", options: { A: "7,5 sm", B: "9,5 sm", C: "4,5 sm", D: "8 sm", E: "10 sm" }, text: { az: "$ABC$ üçbucağında $\\angle C = 90^\\circ, CD \\perp AB, DC = 6\\text{ sm}, BC = 10\\text{ sm}$ olarsa, $AC$-ni tapın.", ru: "В $\\triangle ABC$ $\\angle C = 90^\circ, CD \\perp AB, DC = 6\\text{ см}, BC = 10\\text{ см}$. Найдите $AC$.", en: "In $\\triangle ABC$, $\\angle C = 90^\circ, CD \\perp AB, DC = 6\\text{ cm}, BC = 10\\text{ cm}$. Find $AC$." }, explanation: { az: "Həlli:\n1) $BD = \\sqrt{10^2 - 6^2} = 8$. $AD = 6^2 / 8 = 4,5$. $AC = \\sqrt{6^2 + 4,5^2} = 7,5\\text{ sm}$.", ru: "Решение:\n1) $AC = 7,5\\text{ см}$.", en: "Solution:\n1) $AC = 7.5\\text{ cm}$." } },
+      { id: 59, type: "mcq", correct: "B", image: "Duzbucaqli_ucbucaq_Image0059.png", options: { A: "$6\\frac{1}{6}\\text{ sm}$", B: "$5\\frac{5}{12}\\text{ sm}$", C: "$4\\frac{5}{6}\\text{ sm}$", D: "5 sm", E: "7 sm" }, text: { az: "$ABC$ üçbucağında $\\angle C = 90^\\circ, CD \\perp AB, DC = 5\\text{ sm}, BC = 13\\text{ sm}$ olarsa, $AC$-ni tapın.", ru: "В $\\triangle ABC$ $\\angle C = 90^\circ, CD \\perp AB, DC = 5\\text{ см}, BC = 13\\text{ см}$. Найдите $AC$.", en: "In $\\triangle ABC$, $\\angle C = 90^\circ, CD \\perp AB, DC = 5\\text{ cm}, BC = 13\\text{ cm}$. Find $AC$." }, explanation: { az: "Həlli:\n1) $BD = 12\\text{ sm}, AD = 25/12\\text{ sm} \\implies AC = \\sqrt{5^2 + (25/12)^2} = 5\\frac{5}{12}\\text{ sm}$.", ru: "Решение:\n1) $AC = 5\\frac{5}{12}\\text{ см}$.", en: "Solution:\n1) $AC = 5\\frac{5}{12}\\text{ cm}$." } },
+      { id: 60, type: "mcq", correct: "C", options: { A: "$16\\sqrt{2}\\text{ sm}$", B: "$13\\sqrt{5}\\text{ sm}$", C: "$16\\sqrt{3}\\text{ sm}$", D: "$7\\sqrt{13}\\text{ sm}$", E: "$13\\sqrt{7}\\text{ sm}$" }, text: { az: "$ABC$ üçbucağında $BM$ medianına perpendikulyar olan $AT$ tənböləni onu $P$ nöqtəsində kəsir. $\\angle A = 60^\\circ$ və $PM = 8\\text{ sm}$ olarsa, $BC$ tərəfini tapın.", ru: "В $\\triangle ABC$ биссектриса $AT \\perp BM$. $\\angle A = 60^\circ, PM = 8\\text{ см}$. Найдите $BC$.", en: "In $\\triangle ABC$, bisector $AT \\perp BM$. $\\angle A = 60^\circ, PM = 8\\text{ cm}$. Find $BC$." }, explanation: { az: "Həlli:\n1) $BC = 16\\sqrt{3}\\text{ sm}$.", ru: "Решение:\n1) $BC = 16\\sqrt{3}\\text{ см}$.", en: "Solution:\n1) $BC = 16\\sqrt{3}\\text{ cm}$." } },
+      
+      // 61 - 93 Açıq və Situasiya tipli suallar
+      { id: 61, type: "open", correct: "24", text: { az: "Mərkəzləri düzbucaqlı üçbucağın iti bucaq təpələrində olan iki çevrənin kəsişmə nöqtələrindən biri düz bucaq təpəsindədir. Üçbucağın katetləri $15\\text{ sm}$ və $20\\text{ sm}$ olarsa, çevrələrin kəsişmə nöqtələri arasındakı məsafəni tapın.", ru: "Катеты прямоугольного треугольника $15\\text{ см}$ и $20\\text{ см}$. Центры двух окружностей лежат в вершинах острых углов. Найдите расстояние между точками пересечения окружностей.", en: "Legs are $15\\text{ cm}$ and $20\\text{ cm}$. Find distance between intersection points of two circles centered at acute vertices." }, explanation: { az: "Həlli:\n1) $h = \\frac{15 \\cdot 20}{25} = 12\\text{ sm}$. Kəsişmə nöqtələri arasındakı məsafə: $2h = 24\\text{ sm}$.", ru: "Решение:\n1) $h = 12\\text{ см} \\implies 2h = 24\\text{ см}$.", en: "Solution:\n1) $2h = 24\\text{ cm}$." } },
+      { id: 62, type: "open", correct: "16", text: { az: "Düz xətdən $6\\text{ sm}$ məsafədə yerləşən nöqtədən bu düz xəttə hər birinin uzunluğu $10\\text{ sm}$ olan iki mail çəkilmişdir. Maillərin oturacaqları arasındakı məsafəni (sm-lə) tapın.", ru: "Из точки на расстоянии $6\\text{ см}$ от прямой проведены две наклонные по $10\\text{ см}$. Найдите расстояние между основаниями наклонных.", en: "Two $10\\text{ cm}$ inclined lines are drawn from a point $6\\text{ cm}$ away from a line. Find the distance between their feet." }, explanation: { az: "Həlli:\n1) Hər bir proyeksiya: $\\sqrt{10^2 - 6^2} = 8\\text{ sm}$. Məsafə: $8 + 8 = 16\\text{ sm}$.", ru: "Решение:\n1) $8 + 8 = 16\\text{ см}$.", en: "Solution:\n1) $8 + 8 = 16\\text{ cm}$." } },
+      { id: 63, type: "open", correct: "10", text: { az: "Düz xətdən $6\\text{ sm}$ məsafədə yerləşən nöqtədən bu düz xəttə iki bərabər mail çəkilmişdir. Maillərin oturacaqları arasındakı məsafənin $16\\text{ sm}$ olduğunu bilərək, maillərin uzunluqlarını (sm-lə) tapın.", ru: "Расстояние от точки до прямой $6\\text{ см}$, расстояние между основаниями двух равных наклонных $16\\text{ см}$. Найдите длину наклонных.", en: "Distance from point to line is $6\\text{ cm}$, distance between feet of two equal inclined lines is $16\\text{ cm}$. Find length of inclined lines." }, explanation: { az: "Həlli:\n1) Proyeksiya: $16/2 = 8\\text{ sm}$. Mail: $\\sqrt{6^2 + 8^2} = 10\\text{ sm}$.", ru: "Решение:\n1) $\\sqrt{6^2 + 8^2} = 10\\text{ см}$.", en: "Solution:\n1) $10\\text{ cm}$." } },
+      { id: 64, type: "open", correct: "5", text: { az: "Düz xətdən $4\\text{ sm}$ məsafədə yerləşən nöqtədən bu düz xəttə iki bərabər mail çəkilmişdir. Maillərin oturacaqları arasındakı məsafənin $6\\text{ sm}$ olduğunu bilərək, maillərin uzunluqlarını (sm-lə) tapın.", ru: "Расстояние до прямой $4\\text{ см}$, расстояние между основаниями $6\\text{ см}$. Найдите длину наклонных.", en: "Distance to line is $4\\text{ cm}$, distance between feet is $6\\text{ cm}$. Find length of inclined lines." }, explanation: { az: "Həlli:\n1) $\\sqrt{4^2 + 3^2} = 5\\text{ sm}$.", ru: "Решение:\n1) $5\\text{ см}$.", en: "Solution:\n1) $5\\text{ cm}$." } },
+      { id: 65, type: "open", correct: "9,5", text: { az: "Üçbucaqda $\\sin \\alpha = \\frac{5}{\\sqrt{41}}$ və $a^2 + b^2 = c^2$ olarsa, $\\frac{3a+b}{2a-2b}$ ifadəsinin qiymətini tapın.", ru: "В треугольнике $\\sin \\alpha = \\frac{5}{\\sqrt{41}}$ и $a^2 + b^2 = c^2$. Найдите значение $\\frac{3a+b}{2a-2b}$.", en: "In a triangle $\\sin \\alpha = \\frac{5}{\\sqrt{41}}$ and $a^2 + b^2 = c^2$. Evaluate $\\frac{3a+b}{2a-2b}$." }, explanation: { az: "Həlli:\n1) $a = 5k, c = \\sqrt{41}k \\implies b = 4k$. $\\frac{3(5k) + 4k}{2(5k) - 2(4k)} = \\frac{19k}{2k} = 9,5$.", ru: "Решение:\n1) $a = 5, b = 4 \\implies \\frac{15+4}{10-8} = \\frac{19}{2} = 9,5$.", en: "Solution:\n1) $9.5$." } },
+      { id: 66, type: "open", correct: "2,5", text: { az: "Verilmiş üçbucaqda $\\cos \\alpha = \\frac{7}{\\sqrt{58}}$ və $a^2 + b^2 = c^2$ olarsa, $\\frac{4b-a}{a+b}$ ifadəsinin qiymətini tapın.", ru: "В треугольнике $\\cos \\alpha = \\frac{7}{\\sqrt{58}}$ и $a^2 + b^2 = c^2$. Найдите $\\frac{4b-a}{a+b}$.", en: "In triangle $\\cos \\alpha = \\frac{7}{\\sqrt{58}}$ and $a^2 + b^2 = c^2$. Evaluate $\\frac{4b-a}{a+b}$." }, explanation: { az: "Həlli:\n1) $b = 7k, c = \\sqrt{58}k \\implies a = 3k$. $\\frac{4(7k) - 3k}{3k + 7k} = \\frac{25k}{10k} = 2,5$.", ru: "Решение:\n1) $2,5$.", en: "Solution:\n1) $2.5$." } },
+      { id: 67, type: "open", correct: "28", text: { az: "İtibucaqlı üçbucağın iki tərəfi 26 və 30, üçüncü tərəfə çəkilmiş hündürlüyü 24 olarsa, bu üçbucağın üçüncü tərəfini tapın.", ru: "Две стороны остроугольного треугольника равны 26 и 30, а высота к третьей стороне равна 24. Найдите третью сторону.", en: "Two sides of an acute triangle are 26 and 30, altitude to third side is 24. Find the third side." }, explanation: { az: "Həlli:\n1) $\\sqrt{26^2 - 24^2} + \\sqrt{30^2 - 24^2} = 10 + 18 = 28$.", ru: "Решение:\n1) $10 + 18 = 28$.", en: "Solution:\n1) $28$." } },
+      { id: 68, type: "open", correct: "14", text: { az: "İki tərəfi 13 və 15, üçüncü tərəfə çəkilmiş hündürlüyün bu tərəfdən ayırdığı böyük parçası 9 olan üçbucağın üçüncü tərəfini tapın.", ru: "Две стороны равны 13 и 15, больший отрезок от высоты на третьей стороне равен 9. Найдите третью сторону.", en: "Two sides are 13 and 15, larger projection of altitude on third side is 9. Find third side." }, explanation: { az: "Həlli:\n1) $h = \\sqrt{15^2 - 9^2} = 12$. Digər parça: $\\sqrt{13^2 - 12^2} = 5$. Üçüncü tərəf: $9 + 5 = 14$.", ru: "Решение:\n1) $h = 12 \\implies 9 + 5 = 14$.", en: "Solution:\n1) $14$." } },
+      { id: 69, type: "open", correct: "2,4", text: { az: "Katetləri 6 və 8-ə bərabər olan düzbucaqlı üçbucağın hipotenuzundan böyük orta xəttinə qədər olan məsafəni tapın.", ru: "Катеты равны 6 и 8. Найдите расстояние от гипотенузы до большей средней линии.", en: "Legs are 6 and 8. Find distance from hypotenuse to the largest midline." }, explanation: { az: "Həlli:\n1) $h = \\frac{6 \\cdot 8}{10} = 4,8$. Məsafə: $h / 2 = 2,4$.", ru: "Решение:\n1) $4,8 / 2 = 2,4$.", en: "Solution:\n1) $2.4$." } },
+      { id: 70, type: "open", correct: "1,2", text: { az: "Katetləri 3 və 4-ə bərabər olan düzbucaqlı üçbucağın hipotenuzundan böyük orta xəttinə qədər olan məsafəni tapın.", ru: "Катеты равны 3 и 4. Найдите расстояние от гипотенузы до средней линии.", en: "Legs are 3 and 4. Find distance from hypotenuse to largest midline." }, explanation: { az: "Həlli:\n1) $h = \\frac{3 \\cdot 4}{5} = 2,4 \\implies d = 1,2$.", ru: "Решение:\n1) $1,2$.", en: "Solution:\n1) $1.2$." } },
+      { id: 71, type: "open", correct: "12", image: "Duzbucaqli_ucbucaq_Image0071.png", text: { az: "$A$ nöqtəsindən $d$ düz xəttinə qarşılıqlı perpendikulyar $AB$ və $AC$ mailləri çəkilmişdir. Maillərin düz xətt üzərində proyeksiyaları 8 və 18 olarsa, $A$ nöqtəsindən bu düz xəttə qədər məsafəni tapın.", ru: "Из $A$ к $d$ проведены взаимно перпендикулярные наклонные $AB \\perp AC$. Проекции равны 8 и 18. Найдите расстояние от $A$ до прямой.", en: "Mutually perpendicular inclined lines $AB \\perp AC$ have projections 8 and 18 on $d$. Find distance from $A$ to line." }, explanation: { az: "Həlli:\n1) $h = \\sqrt{8 \\cdot 18} = 12$.", ru: "Решение:\n1) $h = \\sqrt{8 \\cdot 18} = 12$.", en: "Solution:\n1) $12$." } },
+      { id: 72, type: "open", correct: "14", image: "Duzbucaqli_ucbucaq_Image0072.png", text: { az: "$B$ nöqtəsindən verilmiş düz xəttə qarşılıqlı perpendikulyar $BC$ və $BD$ mailləri çəkilmişdir. Maillərin düz xətt üzərində proyeksiyaları 7 və 28 olarsa, $B$ nöqtəsindən düz xəttə qədər məsafəni tapın.", ru: "Проекции взаимно перпендикулярных наклонных равны 7 и 28. Найдите расстояние до прямой.", en: "Projections of mutually perpendicular inclined lines are 7 and 28. Find distance to line." }, explanation: { az: "Həlli:\n1) $h = \\sqrt{7 \\cdot 28} = 14$.", ru: "Решение:\n1) $h = 14$.", en: "Solution:\n1) $14$." } },
+      { id: 73, type: "open", correct: "3", text: { az: "Bərabəryanlı $ABC$ üçbucağında $AB = AC$ və $\\tan \\angle A = \\frac{3}{4}$ olarsa, $\\tan \\angle B$-ni tapın.", ru: "В равнобедренном $\\triangle ABC$ ($AB = AC$) $\\tan A = 3/4$. Найдите $\\tan B$.", en: "In isosceles $\\triangle ABC$ ($AB = AC$), $\\tan A = 3/4$. Find $\\tan B$." }, explanation: { az: "Həlli:\n1) $\\tan B = 3$.", ru: "Решение:\n1) $\\tan B = 3$.", en: "Solution:\n1) $3$." } },
+      { id: 74, type: "open", correct: "2", text: { az: "Bərabəryanlı $ABC$ üçbucağında $AB = AC$ və $\\tan \\angle A = \\frac{4}{3}$ olarsa, $\\tan \\angle B$-ni tapın.", ru: "В равнобедренном $\\triangle ABC$ $\\tan A = 4/3$. Найдите $\\tan B$.", en: "In isosceles $\\triangle ABC$, $\\tan A = 4/3$. Find $\\tan B$." }, explanation: { az: "Həlli:\n1) $\\tan B = 2$.", ru: "Решение:\n1) $\\tan B = 2$.", en: "Solution:\n1) $2$." } },
+      { id: 75, type: "open", correct: "40", image: "Duzbucaqli_ucbucaq_Image0075.png", text: { az: "$ABC$ üçbucağında $\\angle CBD = 90^\\circ, \\angle BCD = 20^\\circ$ və $CD = 2AB$ olarsa, $\\angle BAD$-nin dərəcə ölçüsünü tapın.", ru: "В $\\triangle ABC$ $\\angle CBD = 90^\circ, \\angle BCD = 20^\circ, CD = 2AB$. Найдите $\\angle BAD$.", en: "In $\\triangle ABC$, $\\angle CBD = 90^\circ, \\angle BCD = 20^\circ, CD = 2AB$. Find $\\angle BAD$." }, explanation: { az: "Həlli:\n1) $\\angle BAD = 40^\\circ$.", ru: "Решение:\n1) $40^\\circ$.", en: "Solution:\n1) $40^\circ$." } },
+      { id: 76, type: "open", correct: "50", image: "Duzbucaqli_ucbucaq_Image0076.png", text: { az: "$ABC$ üçbucağında $\\angle CBD = 90^\\circ, \\angle BCD = 25^\\circ$ və $CD = 2AB$ olarsa, $\\angle BAD$-nin dərəcə ölçüsünü tapın.", ru: "В $\\triangle ABC$ $\\angle CBD = 90^\circ, \\angle BCD = 25^\circ, CD = 2AB$. Найдите $\\angle BAD$.", en: "In $\\triangle ABC$, $\\angle CBD = 90^\circ, \\angle BCD = 25^\circ, CD = 2AB$. Find $\\angle BAD$." }, explanation: { az: "Həlli:\n1) $\\angle BAD = 50^\\circ$.", ru: "Решение:\n1) $50^\\circ$.", en: "Solution:\n1) $50^\circ$." } },
+      { id: 77, type: "open", correct: "6", image: "Duzbucaqli_ucbucaq_Image0077.png", text: { az: "$ACB$ üçbucağında $\\angle C = 90^\\circ, CD = DE, DE \\perp AB, AC = 12$ və $EB = 8$ olarsa, $CD$-ni tapın.", ru: "В $\\triangle ACB$ $\\angle C = 90^\circ, CD = DE, DE \\perp AB, AC = 12, EB = 8$. Найдите $CD$.", en: "In $\\triangle ACB$, $\\angle C = 90^\circ, CD = DE, DE \\perp AB, AC = 12, EB = 8$. Find $CD$." }, explanation: { az: "Həlli:\n1) $CD = 6$.", ru: "Решение:\n1) $CD = 6$.", en: "Solution:\n1) $6$." } },
+      { id: 78, type: "open", correct: "c, e; a; b, d", image: "Duzbucaqli_ucbucaq_Image0078.png", text: { az: "Uyğunluğu müəyyən edin. Hipotenuzu $AB$ olan düzbucaqlı $ABC$ üçbucağında $CD$ hündürlükdür.\n1. $CD = \\sqrt{12}, BD = 4$\n2. $CD = 10, BD = AD$\n3. $CD = 6, BD = AD + 5$\n\na. $AB = 20$\nb. $AB = 13$\nc. $AB = 7$\nd. $AD = 4$\ne. $AD = 3$", ru: "Установите соответствие.", en: "Match the pairs." }, explanation: { az: "Həlli:\n1-c, e; 2-a; 3-b, d.", ru: "1-c, e; 2-a; 3-b, d.", en: "1-c, e; 2-a; 3-b, d." } },
+      { id: 79, type: "open", correct: "a, d; c; b, e", image: "Duzbucaqli_ucbucaq_Image0079.png", text: { az: "Uyğunluğu müəyyən edin. Hipotenuzu $AB$ olan düzbucaqlı $ABC$ üçbucağında $CD$ hündürlükdür.\n1. $CD = 6, AD = BD - 5$\n2. $CD = 8, AD = BD$\n3. $CD = \\sqrt{30}, AD = 5$\n\na. $BD = 9$\nb. $BD = 6$\nc. $AB = 16$\nd. $AB = 13$\ne. $AB = 11$", ru: "Установите соответствие.", en: "Match the pairs." }, explanation: { az: "Həlli:\n1-a, d; 2-c; 3-b, e.", ru: "1-a, d; 2-c; 3-b, e.", en: "1-a, d; 2-c; 3-b, e." } },
+      { id: 80, type: "open", correct: "c; e; a, d", image: "Duzbucaqli_ucbucaq_Image0080.png", text: { az: "$ABC$ düzbucaqlı üçbucağı ($\angle C = 90^\\circ$) üçün uyğunluğu müəyyən edin.\n1. Şəkil 1\n2. Şəkil 2\n3. Şəkil 3\n\na. $AC = 6\\sqrt{3}$\nb. $AD = 10$\nc. $AC = 6\\sqrt{2}$\nd. $AD = 9$\ne. $AC = 12$", ru: "Установите соответствие.", en: "Match the pairs." }, explanation: { az: "Həlli:\n1-c; 2-e; 3-a, d.", ru: "1-c; 2-e; 3-a, d.", en: "1-c; 2-e; 3-a, d." } },
+      { id: 81, type: "open", correct: "d; e; b, c", image: "Duzbucaqli_ucbucaq_Image0081.png", text: { az: "$ABC$ düzbucaqlı üçbucağı ($\angle C = 90^\\circ$) üçün uyğunluğu müəyyən edin.\n1. Şəkil 1\n2. Şəkil 2\n3. Şəkil 3\n\na. $AD = 5$\nb. $AC = 8\\sqrt{3}$\nc. $AD = 12$\nd. $AC = 8\\sqrt{2}$\ne. $AC = 15$", ru: "Установите соответствие.", en: "Match the pairs." }, explanation: { az: "Həlli:\n1-d; 2-e; 3-b, c.", ru: "1-d; 2-e; 3-b, c.", en: "1-d; 2-e; 3-b, c." } },
+      { id: 82, type: "open", correct: "a, e; b; c, d", text: { az: "Uyğunluğu müəyyən edin.\n1. Bərabəryanlı üçbucağın tərəfləri $4\\text{ sm}$ və $8\\text{ sm}$-dir.\n2. Bərabəryanlı üçbucağın bir tərəfi digərindən iki dəfə böyük və onların uzunluqlarının fərqi $5\\text{ sm}$-dir.\n3. Bərabərtərəfli üçbucağın hündürlüyü $5\\sqrt{3}\\text{ sm}$-dir.\n\na. Üçbucağın perimetri 20 sm-dir\nb. Üçbucağın perimetri 25 sm-dir\nc. Üçbucağın perimetri 30 sm-dir\nd. Üçbucağın oturacağı 10 sm-dir\ne. Üçbucağın oturacağı 4 sm-dir", ru: "Установите соответствие.", en: "Match the pairs." }, explanation: { az: "Həlli:\n1-a, e; 2-b; 3-c, d.", ru: "1-a, e; 2-b; 3-c, d.", en: "1-a, e; 2-b; 3-c, d." } },
+      { id: 83, type: "open", correct: "c, d; b; a, e", text: { az: "Uyğunluğu müəyyən edin.\n1. Bərabərtərəfli üçbucağın tənböləni $3\\sqrt{3}\\text{ sm}$-dir.\n2. Bərabəryanlı üçbucağın bir tərəfi digərindən iki dəfə kiçikdir və onların uzunluqlarının fərqi $7\\text{ sm}$-dir.\n3. Bərabəryanlı üçbucağın tərəfləri $5\\text{ sm}$ və $10\\text{ sm}$-dir.\n\na. Üçbucağın perimetri 25 sm-dir\nb. Üçbucağın perimetri 35 sm-dir\nc. Üçbucağın perimetri 18 sm-dir\nd. Üçbucağın oturacağı 6 sm-dir\ne. Üçbucağın oturacağı 5 sm-dir", ru: "Установите соответствие.", en: "Match the pairs." }, explanation: { az: "Həlli:\n1-c, d; 2-b; 3-a, e.", ru: "1-c, d; 2-b; 3-a, e.", en: "1-c, d; 2-b; 3-a, e." } },
+      { id: 84, type: "open",image: "Duzbucaqli_ucbucaq_Image0084.png", correct: "13", text: { az: "Bir-birinə paralel olan $a$ və $b$ avtomagistralları arasında uzunluğu $5\\text{ km}$ olan $CD$ velosiped yolu mövcuddur ($a \\parallel b \\parallel CD$). $a$ düz xəttinə nəzərən $C$ nöqtəsinə simmetrik olan $C_1$ nöqtəsində restoran, $b$ düz xəttinə nəzərən $D$ nöqtəsinə simmetrik olan $D_1$ nöqtəsində isə avtodayanacaq yerləşir. Avtomagistrallar arasında məsafə $6\\text{ km}$ olarsa, restoran ($C_1$) və avtodayanacaq ($D_1$) arasındakı ən qısa məsafəni hesablayın (km).", ru: "Найдите кратчайшее расстояние между рестораном $C_1$ и автостоянкой $D_1$ (км).", en: "Calculate shortest distance between $C_1$ and $D_1$ (km)." }, explanation: { az: "Həlli:\n1) $d = \\sqrt{5^2 + 12^2} = 13\\text{ km}$.", ru: "Решение:\n1) $d = \\sqrt{5^2 + 12^2} = 13\\text{ км}$.", en: "Solution:\n1) $13\\text{ km}$." } },
+      { id: 85, type: "open",image: "Duzbucaqli_ucbucaq_Image0085.png", correct: "10", text: { az: "Bir-birinə paralel olan $a$ və $b$ avtomagistralları arasında uzunluğu $6\\text{ km}$ olan $CD$ velosiped yolu mövcuddur ($a \\parallel b \\parallel CD$). $C$ nöqtəsinə $a$ düz xəttinə görə simmetrik olan $C_1$ nöqtəsində restoran, $D$ nöqtəsinə $b$ düz xəttinə görə simmetrik olan $D_1$ nöqtəsində isə avtodayanacaq yerləşir. Avtomagistrallar arasında məsafə $4\\text{ km}$ olarsa, restoran ($C_1$) və avtodayanacaq ($D_1$) arasındakı ən qısa məsafəni hesablayın (km).", ru: "Найдите кратчайшее расстояние между $C_1$ и $D_1$ (км).", en: "Calculate shortest distance between $C_1$ and $D_1$ (km)." }, explanation: { az: "Həlli:\n1) $d = \\sqrt{6^2 + 8^2} = 10\\text{ km}$.", ru: "Решение:\n1) $d = 10\\text{ км}$.", en: "Solution:\n1) $10\\text{ km}$." } },
+      { id: 86, type: "open", correct: "15", image: "Duzbucaqli_ucbucaq_Image0086.png", text: { az: "Robototexnika dərsində şagirdlər dron hazırlayaraq məktəbin həyətində $A$ nöqtəsindən $B$ nöqtəsinə uçurdurlar. Dron $C$ nöqtəsində olarkən onun yer üzərindəki proyeksiyası $K$ ilə göstərilmişdir. $AK = 45\\text{ m}, KB = 5\\text{ m}$ və $ACB$ bucağı düz bucaq olarsa, $C$ nöqtəsində dronun yerdən məsafəsini ($CK$-nı metr ilə) hesablayın.", ru: "$AK = 45\\text{ м}, KB = 5\\text{ м}, \\angle ACB = 90^\circ$. Найдите высоту $CK$ (м).", en: "$AK = 45\\text{ m}, KB = 5\\text{ m}, \\angle ACB = 90^\circ$. Calculate $CK$ (m)." }, explanation: { az: "Həlli:\n1) $CK = \\sqrt{AK \\cdot KB} = \\sqrt{45 \\cdot 5} = 15\\text{ m}$.", ru: "Решение:\n1) $CK = \\sqrt{45 \\cdot 5} = 15\\text{ м}$.", en: "Solution:\n1) $CK = 15\\text{ m}$." } },
+      { id: 87, type: "open", correct: "20", image: "Duzbucaqli_ucbucaq_Image0087.png", text: { az: "Dron $C$ nöqtəsində olarkən onun yer üzərindəki proyeksiyası $K$ ilə göstərilmişdir. $AK = 50\\text{ m}, KB = 8\\text{ m}$ və $ACB$ bucağı düz bucaq olarsa, $C$ nöqtəsində dronun yerdən məsafəsini ($CK$-nı metr ilə) hesablayın.", ru: "$AK = 50\\text{ м}, KB = 8\\text{ м}, \\angle ACB = 90^\circ$. Найдите $CK$ (м).", en: "$AK = 50\\text{ m}, KB = 8\\text{ m}, \\angle ACB = 90^\circ$. Calculate $CK$ (m)." }, explanation: { az: "Həlli:\n1) $CK = \\sqrt{50 \\cdot 8} = 20\\text{ m}$.", ru: "Решение:\n1) $CK = 20\\text{ м}$.", en: "Solution:\n1) $CK = 20\\text{ m}$." } },
+      { id: 88, type: "open", correct: "20", image: "Duzbucaqli_ucbucaq_Image0088.png", text: { az: "Uşaq əyləncə mərkəzində sürət qatarının relsi $ABC$ üçbucağı üzərində qurulmuşdur ($\\angle B = 90^\\circ$). Relsi saxlamaq üçün olan $MN$ və $BK$ dayaqları $AC$ tərəfinə perpendikulyardır. $BM = MC, AN = 30\\text{ m}$ və $NC = 10\\text{ m}$ olarsa, $BK$ dayağının uzunluğunu tapın (m).", ru: "В прямоугольном $\\triangle ABC$ $BM = MC, AN = 30\\text{ м}, NC = 10\\text{ м}$. Найдите $BK$ (м).", en: "In right $\\triangle ABC$, $BM = MC, AN = 30\\text{ m}, NC = 10\\text{ m}$. Find $BK$ (m)." }, explanation: { az: "Həlli:\n1) $AC = 40\\text{ m}, KC = 20\\text{ m}, AK = 20\\text{ m} \\implies BK = \\sqrt{20 \\cdot 20} = 20\\text{ m}$.", ru: "Решение:\n1) $BK = 20\\text{ м}$.", en: "Solution:\n1) $BK = 20\\text{ m}$." } },
+      { id: 89, type: "open", correct: "10", image: "Duzbucaqli_ucbucaq_Image0089.png", text: { az: "Uşaq əyləncə mərkəzində sürət qatarının relsi $ABC$ üçbucağı üzərində qurulmuşdur ($\\angle B = 90^\\circ$). Relsi saxlamaq üçün olan $MN$ və $BK$ dayaqları $AC$ tərəfinə perpendikulyardır. $BM = MC, AN = 15\\text{ m}$ və $NC = 5\\text{ m}$ olarsa, $BK$ dayağının uzunluğunu tapın (m).", ru: "В прямоугольном $\\triangle ABC$ $BM = MC, AN = 15\\text{ м}, NC = 5\\text{ м}$. Найдите $BK$ (м).", en: "In right $\\triangle ABC$, $BM = MC, AN = 15\\text{ m}, NC = 5\\text{ m}$. Find $BK$ (m)." }, explanation: { az: "Həlli:\n1) $BK = 10\\text{ m}$.", ru: "Решение:\n1) $BK = 10\\text{ м}$.", en: "Solution:\n1) $BK = 10\\text{ m}$." } },
+      { id: 90, type: "open", correct: "9", image: "Duzbucaqli_ucbucaq_Image0090.png", text: { az: "Şəkildə $AB \\perp BC, BC \\perp CD, AB = \\sqrt{6}\\text{ sm}, CD = 2\\sqrt{6}\\text{ sm}, BC = 3\\sqrt{3}\\text{ sm}$ olarsa, $A$ və $D$ nöqtələri arasındakı ən qısa məsafəni tapın (sm).", ru: "Найдите кратчайшее расстояние между $A$ и $D$ (см).", en: "Find shortest distance between points $A$ and $D$ (cm)." }, explanation: { az: "Həlli:\n1) $AD = \\sqrt{(AB+CD)^2 + BC^2} = \\sqrt{(3\\sqrt{6})^2 + (3\\sqrt{3})^2} = \\sqrt{54 + 27} = \\sqrt{81} = 9\\text{ sm}$.", ru: "Решение:\n1) $\\sqrt{54 + 27} = 9\\text{ см}$.", en: "Solution:\n1) $9\\text{ cm}$." } },
+      { id: 91, type: "open", correct: "9", image: "Duzbucaqli_ucbucaq_Image0091.png", text: { az: "Şəkildə $AB \\perp BC, BC \\perp CD, AB = \\sqrt{5}\\text{ sm}, CD = 2\\sqrt{5}\\text{ sm}, BC = 6\\text{ sm}$ olarsa, $A$ və $D$ nöqtələri arasındakı ən qısa məsafəni tapın (sm).", ru: "Найдите кратчайшее расстояние между $A$ и $D$ (см).", en: "Find shortest distance between points $A$ and $D$ (cm)." }, explanation: { az: "Həlli:\n1) $AD = \\sqrt{(3\\sqrt{5})^2 + 6^2} = \\sqrt{45 + 36} = 9\\text{ sm}$.", ru: "Решение:\n1) $\\sqrt{45 + 36} = 9\\text{ см}$.", en: "Solution:\n1) $9\\text{ cm}$." } },
+      { id: 92, type: "open", correct: "3\\sqrt{6}", image: "Duzbucaqli_ucbucaq_Image0092.png", text: { az: "$AB$ taxta parçasının $B$ ucu birinci şəkildə altıncı blokun, ikinci şəkildə isə beşinci blokun uc nöqtəsinə qoyulmuşdur. Bloklar düzbucaqlı paralelepiped şəklində olub hündürlükləri $3\\text{ sm}$-dir. İkinci şəkildə $A$ nöqtəsi birinci şəkildəkinə nisbətən divara $3\\text{ sm}$ daha yaxındır. $AB$-nin uzunluğunu tapın (sm).", ru: "Найдите длину отрезка $AB$ (см).", en: "Find the length of $AB$ (cm)." }, explanation: { az: "Həlli:\n1) $AB = 3\\sqrt{6}\\text{ sm}$.", ru: "Решение:\n1) $AB = 3\\sqrt{6}\\text{ см}$.", en: "Solution:\n1) $3\\sqrt{6}\\text{ cm}$." } },
+      { id: 93, type: "open", correct: "13", image: "Duzbucaqli_ucbucaq_Image0093.png", text: { az: "$ABC$ üçbucağında $AB = 20, AD = 16, DC = 5$ və $BE \\cong EC \\cong DE$ olarsa, $BC$-ni tapın.", ru: "В $\\triangle ABC$ $AB = 20, AD = 16, DC = 5$ и $BE = EC = DE$. Найдите $BC$.", en: "In $\\triangle ABC$, $AB = 20, AD = 16, DC = 5$ and $BE = EC = DE$. Find $BC$." }, explanation: { az: "Həlli:\n1) $BE = EC = DE$ şərtindən $\\triangle BDC$ düzbucaqlı üçbucaqdır ($\\angle BDC = 90^\\circ$).\n2) Düzbucaqlı $\\triangle ABD$-də $BD = \\sqrt{20^2 - 16^2} = 12$.\n3) Düzbucaqlı $\\triangle BDC$-də $BC = \\sqrt{BD^2 + DC^2} = \\sqrt{12^2 + 5^2} = 13$.", ru: "Решение:\n1) $\\angle BDC = 90^\circ$.\n2) $BD = \\sqrt{20^2 - 16^2} = 12$.\n3) $BC = \\sqrt{12^2 + 5^2} = 13$.", en: "Solution:\n1) $\\angle BDC = 90^\circ$.\n2) $BD = 12$.\n3) $BC = 13$." } }
+    ];
+
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    function init() { renderApp(); updateScore(); }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => btn.classList.toggle('active', btn.id === `lang-${lang}`));
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) { currentSlide = nextSlide; renderApp(); }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else { renderApp(); }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      userAnswers[qId] = { answer: choice, isCorrect: choice === q.correct };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+      const q = questionsData.find(item => item.id === qId);
+      const cleanVal = val.toLowerCase().replace(/[\s°mмkmкмsmсм]/g, '').replace(/;/g, ',').replace(/\\sqrt/g, '√');
+      const cleanCorrect = q.correct.toLowerCase().replace(/[\s°mмkmкмsmсм]/g, '').replace(/;/g, ',').replace(/\\sqrt/g, '√');
+      userAnswers[qId] = { answer: val, isCorrect: cleanVal === cleanCorrect || cleanVal.includes(cleanCorrect) };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-back').innerText = t.back;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+        if (userAnswers[q.id]) btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        if (currentMode === 'slide' && q.id === currentSlide) btn.classList.add('active');
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+      const questionsToRender = currentMode === 'slide' ? questionsData.filter(q => q.id === currentSlide) : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang] || q.text.az}</div>
+        `;
+
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id}" onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil tapılmadı: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}" value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''} onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang] || q.explanation.az}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>

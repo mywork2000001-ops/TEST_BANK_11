@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Üçbucaq. Üçbucaq bərabərsizliyi. Üçbucağın perimetri</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      padding: 12px 20px;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topic-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #f1f5f9;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary);
+    }
+
+    .topic-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .btn-group button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .btn-group button.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .score-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .grid-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .grid-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .q-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 6px;
+    }
+
+    .q-btn {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .q-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .q-btn.active {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .q-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .q-btn.incorrect {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .q-type-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .q-image-container {
+      margin: 16px 0;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .q-image-container img {
+      max-width: 100%;
+      max-height: 230px;
+      height: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .option-btn.selected-correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46 !important;
+      font-weight: 700;
+    }
+
+    .option-btn.selected-incorrect {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b !important;
+      font-weight: 700;
+    }
+
+    .open-input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      max-width: 440px;
+    }
+
+    .open-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .open-input:focus {
+      border-color: var(--primary);
+    }
+
+    .submit-btn {
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .explanation-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-body {
+      white-space: pre-line;
+      color: #334155;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="topic-title-box">
+        <a href="../../index.html" class="back-btn">← <span id="ui-back">Əsas Menyu</span></a>
+        <div class="topic-title" id="ui-topic">Üçbucaq. Üçbucaq bərabərsizliyi. Üçbucağın perimetri</div>
+      </div>
+      
+      <div class="controls">
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 23</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    const uiTranslations = {
+      az: {
+        topic: "Üçbucaq. Üçbucaq bərabərsizliyi. Üçbucağın perimetri",
+        back: "Əsas Menyu",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı daxil edin...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Треугольник. Неравенство треугольника. Периметр треугольника",
+        back: "Главное меню",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Triangle. Triangle Inequality. Perimeter of a Triangle",
+        back: "Main Menu",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended",
+        check: "Submit",
+        enterAnswer: "Enter answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    const questionsData = [
+      {
+        id: 1,
+        type: "mcq",
+        correct: "A",
+        options: { A: "11 sm", B: "10 sm", C: "9 sm", D: "12 sm", E: "6 sm" },
+        text: {
+          az: "İki tərəfi $7,8\\text{ sm}$ və $3,4\\text{ sm}$ olan üçbucağın üçüncü tərəfinin ən böyük tam qiymətini tapın.",
+          ru: "Найдите наибольшее целое значение длины третьей стороны треугольника со сторонами $7,8\\text{ см}$ и $3,4\\text{ см}$.",
+          en: "Find the maximum integer length of the third side of a triangle with sides $7.8\\text{ cm}$ and $3.4\\text{ cm}$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Üçbucaq bərabərsizliyinə görə: $|7,8 - 3,4| < c < 7,8 + 3,4 \\implies 4,4 < c < 11,2$.\n2) Ən böyük tam qiymət: $c = 11\\text{ sm}$.",
+          ru: "Решение:\n1) По неравенству треугольника: $7,8 - 3,4 < c < 7,8 + 3,4 \\implies 4,4 < c < 11,2$.\n2) Наибольшее целое значение: $11\\text{ см}$.",
+          en: "Solution:\n1) $4.4 < c < 11.2$.\n2) Max integer = $11\\text{ cm}$."
+        }
+      },
+      {
+        id: 2,
+        type: "mcq",
+        correct: "C",
+        options: { A: "11 sm", B: "14 sm", C: "12 sm", D: "10 sm", E: "13 sm" },
+        text: {
+          az: "İki tərəfi $6,9\\text{ sm}$ və $5,7\\text{ sm}$ olan üçbucağın üçüncü tərəfinin ən böyük tam qiymətini tapın.",
+          ru: "Найдите наибольшее целое значение длины третьей стороны треугольника со сторонами $6,9\\text{ см}$ и $5,7\\text{ см}$.",
+          en: "Find the maximum integer length of the third side of a triangle with sides $6.9\\text{ cm}$ and $5.7\\text{ cm}$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $|6,9 - 5,7| < c < 6,9 + 5,7 \\implies 1,2 < c < 12,6$.\n2) Ən böyük tam qiymət: $c = 12\\text{ sm}$.",
+          ru: "Решение:\n1) $1,2 < c < 12,6$.\n2) Наибольшее целое значение: $12\\text{ см}$.",
+          en: "Solution:\n1) $1.2 < c < 12.6$.\n2) Max integer = $12\\text{ cm}$."
+        }
+      },
+      {
+        id: 3,
+        type: "mcq",
+        correct: "B",
+        image: "Ucbucaq_berabersizliyi_Image0003.png",
+        options: { A: "$b < a < c$", B: "$a < b < c$", C: "$a < c < b$", D: "$c < b < a$", E: "$b < c < a$" },
+        text: {
+          az: "Korbucaqlı üçbucağın $a, b$ və $c$ tərəflərini müqayisə edin.",
+          ru: "Сравните стороны $a, b$ и $c$ тупоугольного треугольника.",
+          en: "Compare sides $a, b$, and $c$ of the obtuse-angled triangle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Çertyojda bucaqlar $\\alpha$, $2\\alpha$ və kor bucaq $(180^\\circ - 3\\alpha)$-dır.\n2) Böyük bucaq qarşısında böyük tərəf durur: $\\alpha < 2\\alpha < (180^\\circ - 3\\alpha) \\implies a < b < c$.",
+          ru: "Решение:\n1) Напротив большего угла лежит большая сторона.\n2) Так как $\\alpha < 2\\alpha < \\text{тупой угол}$, то $a < b < c$.",
+          en: "Solution:\n1) Larger side lies opposite the larger angle $\\implies a < b < c$."
+        }
+      },
+      {
+        id: 4,
+        type: "mcq",
+        correct: "D",
+        image: "Ucbucaq_berabersizliyi_Image0004.png",
+        options: { A: "$\\beta < \\gamma < \\alpha$", B: "$\\beta < \\alpha < \\gamma$", C: "$\\alpha < \\gamma < \\beta$", D: "$\\alpha < \\beta < \\gamma$", E: "$\\gamma < \\beta < \\alpha$" },
+        text: {
+          az: "Korbucaqlı üçbucağın $\\alpha, \\beta$ və $\\gamma$ bucaqlarını müqayisə edin.",
+          ru: "Сравните углы $\\alpha, \\beta$ и $\\gamma$ тупоугольного треугольника.",
+          en: "Compare angles $\\alpha, \\beta$, and $\\gamma$ of the obtuse-angled triangle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Çertyojdan görünür ki, $\\gamma$ kor bucaqdır və ən böyükdür, $\\alpha$ isə ən kiçik bucaqdır.\n2) $\\alpha < \\beta < \\gamma$.",
+          ru: "Решение:\n1) $\\alpha < \\beta < \\gamma$.",
+          en: "Solution:\n1) $\\alpha < \\beta < \\gamma$."
+        }
+      },
+      {
+        id: 5,
+        type: "mcq",
+        correct: "E",
+        options: { A: "$8\\text{ sm} \\le P \\le 10\\text{ sm}$", B: "$6\\text{ sm} < P < 10\\text{ sm}$", C: "$10\\text{ sm} < P \\le 12\\text{ sm}$", D: "$3\\text{ sm} \\le P < 7\\text{ sm}$", E: "$10\\text{ sm} < P < 14\\text{ sm}$" },
+        text: {
+          az: "Üçbucağın iki tərəfinin uzunluğu $2\\text{ sm}$ və $5\\text{ sm}$-dir. Üçbucağın perimetri üçün hansı münasibət doğrudur?",
+          ru: "Длины двух сторон треугольника равны $2\\text{ см}$ и $5\\text{ см}$. Какое соотношение верно для периметра $P$?",
+          en: "Two sides of a triangle are $2\\text{ cm}$ and $5\\text{ cm}$. Which relation holds for perimeter $P$?"
+        },
+        explanation: {
+          az: "Həlli:\n1) Üçüncü tərəf: $5 - 2 < c < 5 + 2 \\implies 3 < c < 7$.\n2) Perimetr $P = 2 + 5 + c = 7 + c$.\n3) $7 + 3 < P < 7 + 7 \\implies 10\\text{ sm} < P < 14\\text{ sm}$.",
+          ru: "Решение:\n1) $3 < c < 7$.\n2) $P = 7 + c \\implies 10\\text{ см} < P < 14\\text{ см}$.",
+          en: "Solution:\n1) $3 < c < 7$.\n2) $P = 7 + c \\implies 10 < P < 14$."
+        }
+      },
+      {
+        id: 6,
+        type: "mcq",
+        correct: "D",
+        options: { A: "$6\\text{ sm} < P < 20\\text{ sm}$", B: "$4\\text{ sm} \\le P < 6\\text{ sm}$", C: "$5\\text{ sm} < P < 13\\text{ sm}$", D: "$12\\text{ sm} < P < 20\\text{ sm}$", E: "$10\\text{ sm} \\le P \\le 26\\text{ sm}$" },
+        text: {
+          az: "Üçbucağın iki tərəfinin uzunluğu $4\\text{ sm}$ və $6\\text{ sm}$-dir. Üçbucağın perimetri üçün hansı münasibət doğrudur?",
+          ru: "Длины двух сторон треугольника равны $4\\text{ см}$ и $6\\text{ см}$. Какое соотношение верно для периметра $P$?",
+          en: "Two sides of a triangle are $4\\text{ cm}$ and $6\\text{ cm}$. Which relation holds for perimeter $P$?"
+        },
+        explanation: {
+          az: "Həlli:\n1) $6 - 4 < c < 6 + 4 \\implies 2 < c < 10$.\n2) $P = 4 + 6 + c = 10 + c \\implies 12\\text{ sm} < P < 20\\text{ sm}$.",
+          ru: "Решение:\n1) $2 < c < 10$.\n2) $P = 10 + c \\implies 12\\text{ см} < P < 20\\text{ см}$.",
+          en: "Solution:\n1) $2 < c < 10$.\n2) $12 < P < 20$."
+        }
+      },
+      {
+        id: 7,
+        type: "mcq",
+        correct: "D",
+        options: { A: "4 sm", B: "20 sm", C: "16 sm", D: "12 sm", E: "8 sm" },
+        text: {
+          az: "Üçbucağın tərəflərinin uzunluqları nisbəti $5:4:3$ kimidir. Üçbucağın perimetri $48\\text{ sm}$ olarsa, onun kiçik tərəfini tapın.",
+          ru: "Отношение длин сторон треугольника равно $5:4:3$. Если периметр равен $48\\text{ см}$, найдите меньшую сторону.",
+          en: "The ratio of the sides of a triangle is $5:4:3$. If the perimeter is $48\\text{ cm}$, find the shortest side."
+        },
+        explanation: {
+          az: "Həlli:\n1) $5x + 4x + 3x = 48 \\implies 12x = 48 \\implies x = 4$.\n2) Kiçik tərəf: $3x = 3 \\times 4 = 12\\text{ sm}$.",
+          ru: "Решение:\n1) $12x = 48 \\implies x = 4$.\n2) Меньшая сторона: $3 \\times 4 = 12\\text{ см}$.",
+          en: "Solution:\n1) $12x = 48 \\implies x = 4$.\n2) Shortest side = $12\\text{ cm}$."
+        }
+      },
+      {
+        id: 8,
+        type: "mcq",
+        correct: "A",
+        options: { A: "6 sm; 9 sm; 12 sm", B: "2 sm; 7 sm; 18 sm", C: "3 sm; 6 sm; 18 sm", D: "2 sm; 10 sm; 15 sm", E: "2 sm; 9 sm; 16 sm" },
+        text: {
+          az: "Perimetri $27\\text{ sm}$ olan üçbucağın tərəflərinin uzunluqları nisbəti $2:3:4$ kimidir. Onun tərəflərini tapın.",
+          ru: "Стороны треугольника с периметром $27\\text{ см}$ относятся как $2:3:4$. Найдите его стороны.",
+          en: "The sides of a triangle with perimeter $27\\text{ cm}$ are in the ratio $2:3:4$. Find its sides."
+        },
+        explanation: {
+          az: "Həlli:\n1) $2x + 3x + 4x = 27 \\implies 9x = 27 \\implies x = 3$.\n2) Tərəflər: $2(3) = 6\\text{ sm}, 3(3) = 9\\text{ sm}, 4(3) = 12\\text{ sm}$.",
+          ru: "Решение:\n1) $9x = 27 \\implies x = 3$.\n2) Стороны: $6\\text{ см}, 9\\text{ см}, 12\\text{ см}$.",
+          en: "Solution:\n1) $9x = 27 \\implies x = 3$.\n2) Sides: $6\\text{ cm}, 9\\text{ cm}, 12\\text{ cm}$."
+        }
+      },
+      {
+        id: 9,
+        type: "mcq",
+        correct: "E",
+        image: "Ucbucaq_berabersizliyi_Image0009.png",
+        options: { A: "6", B: "11", C: "8", D: "5", E: "7" },
+        text: {
+          az: "$AB = 2, BC = 3, AD = 4, CD = 6$ olarsa, $x$-in ala biləcəyi tam qiymətlərin cəmini tapın.",
+          ru: "Если $AB = 2, BC = 3, AD = 4, CD = 6$, найдите сумму целых значений $x$.",
+          en: "If $AB = 2, BC = 3, AD = 4, CD = 6$, find the sum of integer values of $x$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\triangle ABC$-dən: $3 - 2 < x < 3 + 2 \\implies 1 < x < 5$.\n2) $\\triangle ADC$-dən: $6 - 4 < x < 6 + 4 \\implies 2 < x < 10$.\n3) Kəsişmə: $2 < x < 5 \\implies x \\in \\{3, 4\\}$.\n4) Cəm: $3 + 4 = 7$.",
+          ru: "Решение:\n1) Из $\\triangle ABC$: $1 < x < 5$.\n2) Из $\\triangle ADC$: $2 < x < 10$.\n3) Пересечение: $2 < x < 5 \\implies x \\in \\{3, 4\\}$.\n4) Сумма: $3 + 4 = 7$.",
+          en: "Solution:\n1) $1 < x < 5$ and $2 < x < 10 \\implies 2 < x < 5$.\n2) Sum = $3 + 4 = 7$."
+        }
+      },
+      {
+        id: 10,
+        type: "mcq",
+        correct: "B",
+        image: "Ucbucaq_berabersizliyi_Image0010.png",
+        options: { A: "10", B: "9", C: "12", D: "7", E: "8" },
+        text: {
+          az: "$AB = 2, BC = 4, AD = 5, CD = 8$ olarsa, $x$-in ala biləcəyi tam qiymətlərin cəmini tapın.",
+          ru: "Если $AB = 2, BC = 4, AD = 5, CD = 8$, найдите сумму целых значений $x$.",
+          en: "If $AB = 2, BC = 4, AD = 5, CD = 8$, find the sum of integer values of $x$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\triangle ABC$: $4 - 2 < x < 4 + 2 \\implies 2 < x < 6$.\n2) $\\triangle ADC$: $8 - 5 < x < 8 + 5 \\implies 3 < x < 13$.\n3) Kəsişmə: $3 < x < 6 \\implies x \\in \\{4, 5\\}$.\n4) Cəm: $4 + 5 = 9$.",
+          ru: "Решение:\n1) $2 < x < 6$ и $3 < x < 13 \\implies 3 < x < 6$.\n2) $x \\in \\{4, 5\\} \\implies 4 + 5 = 9$.",
+          en: "Solution:\n1) $3 < x < 6 \\implies x \\in \\{4, 5\\}$.\n2) Sum = $9$."
+        }
+      },
+      {
+        id: 11,
+        type: "mcq",
+        correct: "A",
+        image: "Ucbucaq_berabersizliyi_Image0011.png",
+        options: { A: "$2b-2c$", B: "$2a-2c$", C: "$2a-2b$", D: "$2c-2b$", E: "$2c-2a$" },
+        text: {
+          az: "$\\alpha > \\beta > \\gamma$ olarsa, $|a-c| + |c-b| - |b-a|$ ifadəsini sadələşdirin.",
+          ru: "Если $\\alpha > \\beta > \\gamma$, упростите выражение $|a-c| + |c-b| - |b-a|$.",
+          en: "If $\\alpha > \\beta > \\gamma$, simplify $|a-c| + |c-b| - |b-a|$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha > \\beta > \\gamma \\implies a > b > c$.\n2) $|a-c| = a-c$, $|c-b| = b-c$, $|b-a| = a-b$.\n3) $(a-c) + (b-c) - (a-b) = a - c + b - c - a + b = 2b - 2c$.",
+          ru: "Решение:\n1) Так как $\\alpha > \\beta > \\gamma \\implies a > b > c$.\n2) $(a-c) + (b-c) - (a-b) = 2b - 2c$.",
+          en: "Solution:\n1) $a > b > c$.\n2) $(a-c) + (b-c) - (a-b) = 2b - 2c$."
+        }
+      },
+      {
+        id: 12,
+        type: "mcq",
+        correct: "B",
+        image: "Ucbucaq_berabersizliyi_Image0012.png",
+        options: { A: "$2b-2a$", B: "$2a-2c$", C: "$2a-2b$", D: "$2b-2c$", E: "$2c-2a$" },
+        text: {
+          az: "$\\beta > \\alpha > \\gamma$ olarsa, $|b-c| + |c-a| - |b-a|$ ifadəsini sadələşdirin.",
+          ru: "Если $\\beta > \\alpha > \\gamma$, упростите выражение $|b-c| + |c-a| - |b-a|$.",
+          en: "If $\\beta > \\alpha > \\gamma$, simplify $|b-c| + |c-a| - |b-a|$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\beta > \\alpha > \\gamma \\implies b > a > c$.\n2) $|b-c| = b-c$, $|c-a| = a-c$, $|b-a| = b-a$.\n3) $(b-c) + (a-c) - (b-a) = b - c + a - c - b + a = 2a - 2c$.",
+          ru: "Решение:\n1) $b > a > c$.\n2) $(b-c) + (a-c) - (b-a) = 2a - 2c$.",
+          en: "Solution:\n1) $(b-c) + (a-c) - (b-a) = 2a - 2c$."
+        }
+      },
+      {
+        id: 13,
+        type: "open",
+        correct: "21",
+        text: {
+          az: "Üçbucağın $a, b, c$ tərəfləri $|a+b-13| + |b+c-14| + |a+c-15| \\le 0$ şərtini ödəyərsə, bu üçbucağın perimetrini tapın.",
+          ru: "Если стороны треугольника $a, b, c$ удовлетворяют условию $|a+b-13| + |b+c-14| + |a+c-15| \\le 0$, найдите периметр этого треугольника.",
+          en: "If sides $a, b, c$ satisfy $|a+b-13| + |b+c-14| + |a+c-15| \\le 0$, find the perimeter of the triangle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Modulların cəmi $\\le 0$ ola bilməsi üçün hər biri 0 olmalıdır:\n$a+b = 13$, $b+c = 14$, $a+c = 15$.\n2) Tərəf-tərəfə toplasaq: $2(a+b+c) = 13 + 14 + 15 = 42 \\implies P = a+b+c = 21$.",
+          ru: "Решение:\n1) $a+b = 13, b+c = 14, a+c = 15$.\n2) $2(a+b+c) = 42 \\implies P = 21$.",
+          en: "Solution:\n1) $2(a+b+c) = 13 + 14 + 15 = 42 \\implies P = 21$."
+        }
+      },
+      {
+        id: 14,
+        type: "open",
+        correct: "18",
+        text: {
+          az: "Üçbucağın $a, b, c$ tərəfləri $|a+b-11| + |b+c-12| + |a+c-13| \\le 0$ şərtini ödəyərsə, bu üçbucağın perimetrini tapın.",
+          ru: "Если стороны треугольника $a, b, c$ удовлетворяют условию $|a+b-11| + |b+c-12| + |a+c-13| \\le 0$, найдите периметр этого треугольника.",
+          en: "If sides $a, b, c$ satisfy $|a+b-11| + |b+c-12| + |a+c-13| \\le 0$, find the perimeter of the triangle."
+        },
+        explanation: {
+          az: "Həlli:\n1) $a+b = 11, b+c = 12, a+c = 13$.\n2) $2P = 11 + 12 + 13 = 36 \\implies P = 18$.",
+          ru: "Решение:\n1) $2P = 11 + 12 + 13 = 36 \\implies P = 18$.",
+          en: "Solution:\n1) $2P = 36 \\implies P = 18$."
+        }
+      },
+      {
+        id: 15,
+        type: "open",
+        correct: "b; c; a, e",
+        text: {
+          az: "Bərabəryanlı üçbucağın iki tərəfinə görə uyğunluğu müəyyən edin.\n1. $8\\text{ sm}$ və $17\\text{ sm}$\n2. $3\\text{ sm}$ və $9\\text{ sm}$\n3. $6\\text{ sm}$ və $14\\text{ sm}$\n\na. oturacaq 6 sm-dir\nb. perimetri 42 sm-dir\nc. perimetri 21 sm-dir\nd. perimetri 30 sm-dir\ne. perimetri 34 sm-dir",
+          ru: "Установите соответствие по двум сторонам равнобедренного треугольника.\n1. $8\\text{ см}$ и $17\\text{ см}$\n2. $3\\text{ см}$ и $9\\text{ см}$\n3. $6\\text{ см}$ и $14\\text{ см}$",
+          en: "Match the properties for the isosceles triangle based on two sides."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tərəflər $8, 17, 17$ ola bilər ($8+8<17$ olmaz) $\\implies P = 17+17+8 = 42\\text{ sm}$ (b).\n2) Tərəflər $3, 9, 9$ ola bilər ($3+3<9$ olmaz) $\\implies P = 9+9+3 = 21\\text{ sm}$ (c).\n3) Tərəflər $6, 14, 14$ ola bilər ($6+6<14$ olmaz) $\\implies$ Oturacaq 6 sm-dir (a) və $P = 34\\text{ sm}$ (e).",
+          ru: "Решение:\n1-b; 2-c; 3-a, e.",
+          en: "Solution:\n1-b; 2-c; 3-a, e."
+        }
+      },
+      {
+        id: 16,
+        type: "open",
+        correct: "13",
+        image: "Ucbucaq_berabersizliyi_Image0016.png",
+        text: {
+          az: "$x$-in ala biləcəyi ən böyük tam qiyməti tapın.",
+          ru: "Найдите наибольшее целое значение $x$.",
+          en: "Find the maximum integer value of $x$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Üçbucaq bərabərsizliyi: $|10 - 7| < x+3 < 10 + 7 \\implies 3 < x+3 < 17 \\implies 0 < x < 14$.\n2) Ən böyük tam qiymət: $x = 13$.",
+          ru: "Решение:\n1) $3 < x+3 < 17 \\implies 0 < x < 14$.\n2) Наибольшее целое: 13.",
+          en: "Solution:\n1) $0 < x < 14 \\implies x_{\\max} = 13$."
+        }
+      },
+      {
+        id: 17,
+        type: "open",
+        correct: "12",
+        image: "Ucbucaq_berabersizliyi_Image0017.png",
+        text: {
+          az: "$x$-in ala biləcəyi ən böyük tam qiyməti tapın.",
+          ru: "Найдите наибольшее целое значение $x$.",
+          en: "Find the maximum integer value of $x$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $|10 - 8| < x+5 < 10 + 8 \\implies 2 < x+5 < 18 \\implies -3 < x < 13$.\n2) Ən böyük tam qiymət: $x = 12$.",
+          ru: "Решение:\n1) $2 < x+5 < 18 \\implies x < 13$.\n2) Наибольшее целое: 12.",
+          en: "Solution:\n1) $x < 13 \\implies x_{\\max} = 12$."
+        }
+      },
+      {
+        id: 18,
+        type: "open",
+        correct: "9",
+        image: "Ucbucaq_berabersizliyi_Image0018.png",
+        text: {
+          az: "Üçbucağın perimetri $26$-dan kiçikdirsə, $x$-in mümkün olan natural qiymətlərinin cəmini tapın.",
+          ru: "Если периметр треугольника меньше 26, найдите сумму возможных натуральных значений $x$.",
+          en: "If the perimeter of the triangle is less than 26, find the sum of possible natural values of $x$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P = (x-1) + 2x + (x+5) = 4x + 4 < 26 \\implies 4x < 22 \\implies x < 5,5$.\n2) Üçbucaq bərabərsizliyi: $x+5 < (x-1) + 2x \\implies x+5 < 3x - 1 \\implies 2x > 6 \\implies x > 3$.\n3) $3 < x < 5,5 \\implies x \\in \\{4, 5\\}$.\n4) Cəm: $4 + 5 = 9$.",
+          ru: "Решение:\n1) $4x + 4 < 26 \\implies x < 5,5$.\n2) $x+5 < 3x-1 \\implies x > 3$.\n3) $x \\in \\{4, 5\\} \\implies 4 + 5 = 9$.",
+          en: "Solution:\n1) $3 < x < 5.5 \\implies x \\in \\{4, 5\\}$.\n2) Sum = $9$."
+        }
+      },
+      {
+        id: 19,
+        type: "open",
+        correct: "7",
+        image: "Ucbucaq_berabersizliyi_Image0019.png",
+        text: {
+          az: "Üçbucağın perimetri $21$-dən kiçikdirsə, $x$-in mümkün olan natural qiymətlərinin cəmini tapın. Cavabınızı izah edin.",
+          ru: "Если периметр треугольника меньше 21, найдите сумму возможных натуральных значений $x$.",
+          en: "If the perimeter of the triangle is less than 21, find the sum of possible natural values of $x$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P = (x-1) + 2x + (x+4) = 4x + 3 < 21 \\implies 4x < 18 \\implies x < 4,5$.\n2) $x+4 < (x-1) + 2x \\implies x+4 < 3x - 1 \\implies 2x > 5 \\implies x > 2,5$.\n3) $2,5 < x < 4,5 \\implies x \\in \\{3, 4\\}$.\n4) Cəm: $3 + 4 = 7$.",
+          ru: "Решение:\n1) $4x + 3 < 21 \\implies x < 4,5$.\n2) $x+4 < 3x-1 \\implies x > 2,5$.\n3) $x \\in \\{3, 4\\} \\implies 3 + 4 = 7$.",
+          en: "Solution:\n1) $2.5 < x < 4.5 \\implies x \\in \\{3, 4\\}$.\n2) Sum = $7$."
+        }
+      },
+      {
+        id: 20,
+        type: "open",
+        correct: "43",
+        image: "Ucbucaq_berabersizliyi_Image0020.png",
+        text: {
+          az: "Eni sabit uzunluqda olan düzxətli su kanalının bir tərəfində ($A$ və $B$ nöqtələrində) iki gözətçi məntəqəsi, digər tərəfində isə ($C$ nöqtəsində) bir gözətçi məntəqəsi mövcuddur. $A$ və $C$ arasındakı məsafə $20\\text{ m}$, $B$ və $C$ arasındakı məsafə isə $24\\text{ m}$-dir. $A$ və $B$ məntəqələri arasındakı məsafənin tam ədəd olduğunu bilərək, $AB$ məsafəsinin ən böyük qiymətini hesablayın.",
+          ru: "На одном берегу прямолинейного канала (в точках $A$ и $B$) находятся два поста, а на другом (в $C$) — один пост. $AC = 20\\text{ м}, BC = 24\\text{ м}$. Найдите наибольшее целое расстояние $AB$.",
+          en: "Two guard posts $A$ and $B$ are on one bank of a straight canal, and post $C$ is on the other. $AC = 20\\text{ m}, BC = 24\\text{ m}$. Find the maximum integer distance $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\triangle ABC$-də: $|24 - 20| < AB < 24 + 20 \\implies 4 < AB < 44$.\n2) Ən böyük tam qiymət: $AB = 43\\text{ m}$.",
+          ru: "Решение:\n1) $4 < AB < 44$.\n2) Наибольшее целое: $43\\text{ м}$.",
+          en: "Solution:\n1) $4 < AB < 44 \\implies AB_{\\max} = 43\\text{ m}$."
+        }
+      },
+      {
+        id: 21,
+        type: "open",
+        correct: "55",
+        image: "Ucbucaq_berabersizliyi_Image0021.png",
+        text: {
+          az: "Eni sabit uzunluqda olan düzxətli su kanalının bir tərəfində ($A$ və $B$ nöqtələrində) iki gözətçi məntəqəsi, digər tərəfində isə ($C$ nöqtəsində) bir gözətçi məntəqəsi mövcuddur. $A$ və $C$ arasındakı məsafə $30\\text{ m}$, $B$ və $C$ arasındakı məsafə isə $26\\text{ m}$-dir. $A$ və $B$ məntəqələri arasındakı məsafənin tam ədəd olduğunu bilərək, $AB$ məsafəsinin ən böyük qiymətini hesablayın.",
+          ru: "На одном берегу канала (в $A$ и $B$) два поста, на другом ($C$) — один пост. $AC = 30\\text{ м}, BC = 26\\text{ м}$. Найдите наибольшее целое расстояние $AB$.",
+          en: "Posts $A, B$ are on one bank, post $C$ on the other. $AC = 30\\text{ m}, BC = 26\\text{ m}$. Find the maximum integer distance $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $|30 - 26| < AB < 30 + 26 \\implies 4 < AB < 56$.\n2) Ən böyük tam qiymət: $AB = 55\\text{ m}$.",
+          ru: "Решение:\n1) $4 < AB < 56$.\n2) Наибольшее целое: $55\\text{ м}$.",
+          en: "Solution:\n1) $4 < AB < 56 \\implies AB_{\\max} = 55\\text{ m}$."
+        }
+      },
+      {
+        id: 22,
+        type: "open",
+        correct: "36",
+        image: "Ucbucaq_berabersizliyi_Image0022.png",
+        text: {
+          az: "$ABC$ üçbucağında $AB = 8, BC = 14$ və $\\angle B > \\angle A$ olarsa, $AC$ tərəfinin ala biləcəyi ən böyük və ən kiçik tam qiymətlərin cəmini tapın.",
+          ru: "В треугольнике $ABC$ $AB = 8, BC = 14$ и $\\angle B > \\angle A$. Найдите сумму наибольшего и наименьшего целых значений стороны $AC$.",
+          en: "In $\\triangle ABC$, $AB = 8, BC = 14$, and $\\angle B > \\angle A$. Find the sum of the maximum and minimum integer values of side $AC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Üçbucaq bərabərsizliyi: $14 - 8 < AC < 14 + 8 \\implies 6 < AC < 22$.\n2) $\\angle B > \\angle A \\implies AC > BC = 14$.\n3) Beləliklə: $14 < AC < 22$.\n4) Ən kiçik tam qiymət: $15$, ən böyük tam qiymət: $21$.\n5) Cəm: $15 + 21 = 36$.",
+          ru: "Решение:\n1) $6 < AC < 22$.\n2) $\\angle B > \\angle A \\implies AC > 14$.\n3) $14 < AC < 22 \\implies AC_{\\min} = 15, AC_{\\max} = 21$.\n4) Сумма: $15 + 21 = 36$.",
+          en: "Solution:\n1) $14 < AC < 22 \\implies AC \\in \\{15, \\dots, 21\\}$.\n2) Sum = $15 + 21 = 36$."
+        }
+      },
+      {
+        id: 23,
+        type: "open",
+        correct: "37",
+        image: "Ucbucaq_berabersizliyi_Image0023.png",
+        text: {
+          az: "$ABC$ üçbucağında $AB = 7, BC = 15$ və $\\angle B > \\angle A$ olarsa, $AC$ tərəfinin ala biləcəyi ən böyük və ən kiçik tam qiymətlərin cəmini tapın.",
+          ru: "В треугольнике $ABC$ $AB = 7, BC = 15$ и $\\angle B > \\angle A$. Найдите сумму наибольшего и наименьшего целых значений стороны $AC$.",
+          en: "In $\\triangle ABC$, $AB = 7, BC = 15$, and $\\angle B > \\angle A$. Find the sum of the maximum and minimum integer values of side $AC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $15 - 7 < AC < 15 + 7 \\implies 8 < AC < 22$.\n2) $\\angle B > \\angle A \\implies AC > BC = 15$.\n3) $15 < AC < 22 \\implies AC_{\\min} = 16, AC_{\\max} = 21$.\n4) Cəm: $16 + 21 = 37$.",
+          ru: "Решение:\n1) $8 < AC < 22$.\n2) $AC > 15 \\implies 15 < AC < 22$.\n3) $AC_{\\min} = 16, AC_{\\max} = 21$.\n4) Сумма: $16 + 21 = 37$.",
+          en: "Solution:\n1) $15 < AC < 22 \\implies AC_{\\min} = 16, AC_{\\max} = 21$.\n2) Sum = $16 + 21 = 37$."
+        }
+      }
+    ];
+
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    function init() {
+      renderApp();
+      updateScore();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `lang-${lang}`);
+      });
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) {
+        currentSlide = nextSlide;
+        renderApp();
+      }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        renderApp();
+      }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      const isCorrect = choice === q.correct;
+      userAnswers[qId] = { answer: choice, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+
+      const q = questionsData.find(item => item.id === qId);
+      
+      const cleanVal = val.toLowerCase().replace(/[\s°mм]/g, '').replace(/;/g, ',');
+      const cleanCorrect = q.correct.toLowerCase().replace(/[\s°mм]/g, '').replace(/;/g, ',');
+      const isCorrect = cleanVal === cleanCorrect || cleanVal.includes(cleanCorrect);
+
+      userAnswers[qId] = { answer: val, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-back').innerText = t.back;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+
+        if (userAnswers[q.id]) {
+          btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        }
+        if (currentMode === 'slide' && q.id === currentSlide) {
+          btn.classList.add('active');
+        }
+
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      const questionsToRender = currentMode === 'slide'
+        ? questionsData.filter(q => q.id === currentSlide)
+        : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang]}</div>
+        `;
+
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id}"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil tapılmadı: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}"
+                value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''}
+                onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang]}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>

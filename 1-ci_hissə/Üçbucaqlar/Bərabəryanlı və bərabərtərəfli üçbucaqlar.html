@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bərabəryanlı və bərabərtərəfli üçbucaqlar</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      padding: 12px 20px;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topic-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #f1f5f9;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary);
+    }
+
+    .topic-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .btn-group button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .btn-group button.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .score-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .grid-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .grid-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .q-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 6px;
+    }
+
+    .q-btn {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .q-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .q-btn.active {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .q-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .q-btn.incorrect {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .q-type-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .q-image-container {
+      margin: 16px 0;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .q-image-container img {
+      max-width: 100%;
+      max-height: 230px;
+      height: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .option-btn.selected-correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46 !important;
+      font-weight: 700;
+    }
+
+    .option-btn.selected-incorrect {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b !important;
+      font-weight: 700;
+    }
+
+    .open-input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      max-width: 440px;
+    }
+
+    .open-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .open-input:focus {
+      border-color: var(--primary);
+    }
+
+    .submit-btn {
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .explanation-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-body {
+      white-space: pre-line;
+      color: #334155;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="topic-title-box">
+        <a href="../../index.html" class="back-btn">← <span id="ui-back">Əsas Menyu</span></a>
+        <div class="topic-title" id="ui-topic">Bərabəryanlı və bərabərtərəfli üçbucaqlar</div>
+      </div>
+      
+      <div class="controls">
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 34</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    const uiTranslations = {
+      az: {
+        topic: "Bərabəryanlı və bərabərtərəfli üçbucaqlar",
+        back: "Əsas Menyu",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı daxil edin...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Равнобедренные и равносторонние треугольники",
+        back: "Главное меню",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Isosceles and Equilateral Triangles",
+        back: "Main Menu",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended",
+        check: "Submit",
+        enterAnswer: "Enter answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    const questionsData = [
+      {
+        id: 1,
+        type: "mcq",
+        correct: "C",
+        options: { A: "60°", B: "30°", C: "45°", D: "75°", E: "40°" },
+        text: {
+          az: "Bərabəryanlı üçbucaqda oturacağa çəkilmiş median oturacaqdan iki dəfə kiçik olarsa, oturacağa bitişik bucağı tapın.",
+          ru: "В равнобедренном треугольнике медиана к основанию в 2 раза меньше основания. Найдите угол при основании.",
+          en: "In an isosceles triangle, the median to the base is half the base. Find the base angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Bərabəryanlı üçbucaqda oturacağa çəkilən median həm də hündürlükdür: $h = m = \\frac{a}{2}$.\n2) Alınan düzbucaqlı üçbucaqda katetlər bərabərdir ($h = \\frac{a}{2}$), deməli bucaq $45^\\circ$-dir.",
+          ru: "Решение:\n1) Высота и половина основания равны: $h = \\frac{a}{2}$.\n2) Прямоугольный треугольник равнобедренный $\\implies \\alpha = 45^\\circ$.",
+          en: "Solution:\n1) $\\tan \\alpha = \\frac{a/2}{a/2} = 1 \\implies \\alpha = 45^\\circ$."
+        }
+      },
+      {
+        id: 2,
+        type: "mcq",
+        correct: "B",
+        options: { A: "$8\\sqrt{2}\\text{ sm}$", B: "$\\frac{16\\sqrt{3}}{3}\\text{ sm}$", C: "$4\\sqrt{3}\\text{ sm}$", D: "$\\frac{8\\sqrt{3}}{3}\\text{ sm}$", E: "$\\frac{5\\sqrt{2}}{3}\\text{ sm}$" },
+        text: {
+          az: "Oturacağı $16\\text{ sm}$ olan bərabəryanlı üçbucağın təpə bucağı $120^\\circ$ olarsa, yan tərəfini tapın.",
+          ru: "Основание равнобедренного треугольника равно $16\\text{ см}$, а угол при вершине равен $120^\\circ$. Найдите боковую сторону.",
+          en: "The base of an isosceles triangle is $16\\text{ cm}$, and the vertex angle is $120^\\circ$. Find the leg."
+        },
+        explanation: {
+          az: "Həlli:\n1) Oturacaqdakı bucaqlar: $\\frac{180^\\circ - 120^\\circ}{2} = 30^\\circ$.\n2) $b \\cos 30^\\circ = \\frac{16}{2} = 8 \\implies b \\frac{\\sqrt{3}}{2} = 8 \\implies b = \\frac{16}{\\sqrt{3}} = \\frac{16\\sqrt{3}}{3}\\text{ sm}$.",
+          ru: "Решение:\n1) Углы при основании равны $30^\\circ$.\n2) $b \\cos 30^\\circ = 8 \\implies b = \\frac{16\\sqrt{3}}{3}\\text{ см}$.",
+          en: "Solution:\n1) $b = \\frac{8}{\\cos 30^\\circ} = \\frac{16\\sqrt{3}}{3}\\text{ cm}$."
+        }
+      },
+      {
+        id: 3,
+        type: "mcq",
+        correct: "B",
+        image: "Beraberyanli_ucbucaq_Image0003.png",
+        options: { A: "43°", B: "94°", C: "137°", D: "30°", E: "103°" },
+        text: {
+          az: "Oturacağı $AB$ olan bərabəryanlı $ABC$ üçbucağının $BC$ tərəfi üzərində $D$ nöqtəsi götürülmüşdür. $\\angle CAD = 30^\\circ, \\angle BAD = 13^\\circ$ olarsa, $C$ bucağını tapın.",
+          ru: "В равнобедренном $\\triangle ABC$ ($AB$ — основание) точка $D$ на $BC$. $\\angle CAD = 30^\\circ, \\angle BAD = 13^\\circ$. Найдите угол $C$.",
+          en: "In isosceles $\\triangle ABC$ (base $AB$), $D$ is on $BC$. $\\angle CAD = 30^\\circ, \\angle BAD = 13^\\circ$. Find $\\angle C$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Oturacaqdakı bucaq: $\\angle A = 30^\\circ + 13^\\circ = 43^\\circ$.\n2) Bərabəryanlı olduğuna görə: $\\angle B = \\angle A = 43^\\circ$.\n3) $\\angle C = 180^\\circ - (43^\\circ + 43^\\circ) = 94^\\circ$.",
+          ru: "Решение:\n1) $\\angle A = 30^\\circ + 13^\\circ = 43^\\circ \\implies \\angle B = 43^\\circ$.\n2) $\\angle C = 180^\\circ - 86^\\circ = 94^\\circ$.",
+          en: "Solution:\n1) $\\angle C = 180^\\circ - 2(43^\\circ) = 94^\\circ$."
+        }
+      },
+      {
+        id: 4,
+        type: "mcq",
+        correct: "B",
+        image: "Beraberyanli_ucbucaq_Image0004.png",
+        options: { A: "6°", B: "3°", C: "12°", D: "8°", E: "7°" },
+        text: {
+          az: "Oturacağı $AB$ olan bərabəryanlı $ABC$ üçbucağının $AC$ tərəfi üzərində $D$ nöqtəsi götürülmüşdür. $\\angle BDC = 13^\\circ$ və $\\angle CBD = 7^\\circ$ olarsa, $ABD$ bucağını tapın.",
+          ru: "В равнобедренном $\\triangle ABC$ ($AB$ — основание) точка $D$ на $AC$. $\\angle BDC = 13^\\circ, \\angle CBD = 7^\\circ$. Найдите угол $ABD$.",
+          en: "In isosceles $\\triangle ABC$ (base $AB$), $D$ is on $AC$. $\\angle BDC = 13^\\circ, \\angle CBD = 7^\\circ$. Find $\\angle ABD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle BDC$ bucağı $\\triangle ABD$-nin xarici bucağıdır: $\\angle BDC = \\angle A + \\angle ABD = 13^\\circ$.\n2) $\\angle A = \\angle B = \\angle ABD + 7^\\circ$.\n3) $(\\angle ABD + 7^\\circ) + \\angle ABD = 13^\\circ \\implies 2\\angle ABD = 6^\\circ \\implies \\angle ABD = 3^\\circ$.",
+          ru: "Решение:\n1) $\\angle A + \\angle ABD = 13^\\circ$.\n2) $\\angle ABD + 7^\\circ + \\angle ABD = 13^\\circ \\implies 2\\angle ABD = 6^\\circ \\implies \\angle ABD = 3^\\circ$.",
+          en: "Solution:\n1) $2\\angle ABD = 6^\\circ \\implies \\angle ABD = 3^\\circ$."
+        }
+      },
+      {
+        id: 5,
+        type: "mcq",
+        correct: "A",
+        image: "Beraberyanli_ucbucaq_Image0005.png",
+        options: { A: "1 sm", B: "1,5 sm", C: "0,5 sm", D: "$\\sqrt{3}\\text{ sm}$", E: "2 sm" },
+        text: {
+          az: "$ABC$ üçbucağında $AB = BC, BD = DC, AC = 2\\text{ sm}$ və $AD$ tənböləndir. $BD$-ni tapın.",
+          ru: "В $\\triangle ABC$ $AB = BC, BD = DC, AC = 2\\text{ см}$, $AD$ — биссектриса. Найдите $BD$.",
+          en: "In $\\triangle ABC$, $AB = BC, BD = DC, AC = 2\\text{ cm}$, and $AD$ is an angle bisector. Find $BD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AD$ tənbölən və $D$ orta nöqtə olduğundan $\\triangle ABC$ bərabərtərəflidir.\n2) $AB = BC = AC = 2\\text{ sm} \\implies BD = \\frac{BC}{2} = 1\\text{ sm}$.",
+          ru: "Решение:\n1) Треугольник равносторонний: $BC = AC = 2\\text{ см}$.\n2) $BD = 2 / 2 = 1\\text{ см}$.",
+          en: "Solution:\n1) $BD = 2 / 2 = 1\\text{ cm}$."
+        }
+      },
+      {
+        id: 6,
+        type: "mcq",
+        correct: "D",
+        image: "Beraberyanli_ucbucaq_Image0006.png",
+        options: { A: "10 sm", B: "6 sm", C: "9 sm", D: "12 sm", E: "11 sm" },
+        text: {
+          az: "$\\triangle ABC$-də $CB = 12\\text{ sm}, \\angle KBD = \\angle CBD$ və $BD \\parallel AC$-dir. $AB$-ni tapın.",
+          ru: "В $\\triangle ABC$ $CB = 12\\text{ см}, \\angle KBD = \\angle CBD$ и $BD \\parallel AC$. Найдите $AB$.",
+          en: "In $\\triangle ABC$, $CB = 12\\text{ cm}, \\angle KBD = \\angle CBD$, and $BD \\parallel AC$. Find $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $BD \\parallel AC \\implies \\angle A = \\angle KBD$ (uyğun) və $\\angle C = \\angle CBD$ (daxili çarpaz).\n2) $\\angle KBD = \\angle CBD \\implies \\angle A = \\angle C \\implies AB = BC = 12\\text{ sm}$.",
+          ru: "Решение:\n1) $\\angle A = \\angle C \\implies AB = BC = 12\\text{ см}$.",
+          en: "Solution:\n1) $AB = BC = 12\\text{ cm}$."
+        }
+      },
+      {
+        id: 7,
+        type: "mcq",
+        correct: "E",
+        image: "Beraberyanli_ucbucaq_Image0007.png",
+        options: { A: "7 sm", B: "4 sm", C: "5 sm", D: "3 sm", E: "6 sm" },
+        text: {
+          az: "$\\triangle ABC$-də $AB = 6\\text{ sm}, BD$ şüası $\\angle KBC$-nin tənböləni və $BD \\parallel AC$-dir. $BC$-ni tapın.",
+          ru: "В $\\triangle ABC$ $AB = 6\\text{ см}, BD$ — биссектриса $\\angle KBC$ и $BD \\parallel AC$. Найдите $BC$.",
+          en: "In $\\triangle ABC$, $AB = 6\\text{ cm}, BD$ bisects $\\angle KBC$, and $BD \\parallel AC$. Find $BC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle A = \\angle C \\implies BC = AB = 6\\text{ sm}$.",
+          ru: "Решение:\n1) $BC = AB = 6\\text{ см}$.",
+          en: "Solution:\n1) $BC = AB = 6\\text{ cm}$."
+        }
+      },
+      {
+        id: 8,
+        type: "mcq",
+        correct: "E",
+        options: { A: "70°", B: "45°", C: "50°", D: "60°", E: "55°" },
+        text: {
+          az: "Təpə bucağı $70^\\circ$ olan bərabəryanlı üçbucağın oturacağına bitişik bucağı tapın.",
+          ru: "Угол при вершине равнобедренного треугольника равен $70^\\circ$. Найдите угол при основании.",
+          en: "The vertex angle of an isosceles triangle is $70^\\circ$. Find the base angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\frac{180^\\circ - 70^\\circ}{2} = \\frac{110^\\circ}{2} = 55^\\circ$.",
+          ru: "Решение:\n1) $(180^\\circ - 70^\\circ) / 2 = 55^\\circ$.",
+          en: "Solution:\n1) $(180^\\circ - 70^\\circ) / 2 = 55^\\circ$."
+        }
+      },
+      {
+        id: 9,
+        type: "mcq",
+        correct: "D",
+        options: { A: "$27\\sqrt{3}\\text{ sm}$", B: "$18\\sqrt{3}\\text{ sm}$", C: "$21\\sqrt{3}\\text{ sm}$", D: "$14\\sqrt{3}\\text{ sm}$", E: "$24\\sqrt{3}\\text{ sm}$" },
+        text: {
+          az: "Bərabərtərəfli üçbucağın tənböləninin uzunluğu $21\\text{ sm}$-ə bərabərdir. Bu üçbucağın tərəfinin uzunluğunu tapın.",
+          ru: "Биссектриса равностороннего треугольника равна $21\\text{ см}$. Найдите сторону этого треугольника.",
+          en: "The bisector (altitude) of an equilateral triangle is $21\\text{ cm}$. Find its side length."
+        },
+        explanation: {
+          az: "Həlli:\n1) Bərabərtərəfli üçbucaqda hündürlük və tənbölən eynidir: $h = \\frac{a\\sqrt{3}}{2} = 21$.\n2) $a = \\frac{42}{\\sqrt{3}} = 14\\sqrt{3}\\text{ sm}$.",
+          ru: "Решение:\n1) $h = \\frac{a\\sqrt{3}}{2} = 21 \\implies a = 14\\sqrt{3}\\text{ см}$.",
+          en: "Solution:\n1) $a = \\frac{42}{\\sqrt{3}} = 14\\sqrt{3}\\text{ cm}$."
+        }
+      },
+      {
+        id: 10,
+        type: "mcq",
+        correct: "A",
+        options: { A: "30 sm", B: "40 sm", C: "15 sm", D: "20 sm", E: "25 sm" },
+        text: {
+          az: "Bərabəryanlı üçbucağın yan tərəfinə çəkilən medianı $30\\text{ sm}$ olub, oturacaqla $30^\\circ$-li bucaq əmələ gətirir. Oturacağa çəkilmiş hündürlüyü tapın.",
+          ru: "Медиана к боковой стороне равнобедренного треугольника равна $30\\text{ см}$ и образует с основанием угол $30^\circ$. Найдите высоту к основанию.",
+          en: "The median to a leg of an isosceles triangle is $30\\text{ cm}$ and makes a $30^\circ$ angle with the base. Find the altitude to the base."
+        },
+        explanation: {
+          az: "Həlli:\n1) Medianların kəsişmə nöqtəsi $M$-dən oturacağa qədər məsafə: $MD = \\frac{1}{3} m \\sin 30^\\circ = 10 \\times 0,5 = 5\\text{ sm}$ deyil, ağırlıq mərkəzinin xassəsindən hündürlük $h = 30\\text{ sm}$ tapılır.",
+          ru: "Решение:\n1) Высота к основанию равна $h = 30\\text{ см}$.",
+          en: "Solution:\n1) Altitude to the base $h = 30\\text{ cm}$."
+        }
+      },
+      {
+        id: 11,
+        type: "mcq",
+        correct: "D",
+        options: { A: "50 sm", B: "30 sm", C: "12,5 sm", D: "25 sm", E: "$\\frac{25\\sqrt{3}}{2}\\text{ sm}$" },
+        text: {
+          az: "Bərabəryanlı üçbucağın təpəsindən çəkilən hündürlük $25\\text{ sm}$-dir. Yan tərəfə çəkilən medianın oturacaq ilə $30^\\circ$-li bucaq əmələ gətirdiyini bilərək, onun uzunluğunu tapın.",
+          ru: "Высота к основанию равна $25\\text{ см}$. Медиана к боковой стороне образует с основанием угол $30^\circ$. Найдите длину медианы.",
+          en: "The altitude to the base is $25\\text{ cm}$. The median to a leg forms a $30^\circ$ angle with the base. Find its length."
+        },
+        explanation: {
+          az: "Həlli:\n1) $m = 25\\text{ sm}$.",
+          ru: "Решение:\n1) Длина медианы равна $25\\text{ см}$.",
+          en: "Solution:\n1) $m = 25\\text{ cm}$."
+        }
+      },
+      {
+        id: 12,
+        type: "mcq",
+        correct: "E",
+        options: { A: "45°", B: "72°", C: "30°", D: "18°", E: "36°" },
+        text: {
+          az: "Bərabəryanlı üçbucağın oturacağı ona bitişik bucağın tənböləninə bərabərdir. Üçbucağın təpə bucağını tapın.",
+          ru: "Основание равнобедренного треугольника равно биссектрисе угла при основании. Найдите угол при вершине.",
+          en: "The base of an isosceles triangle equals the bisector of the base angle. Find the vertex angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\triangle A B l_A$-da $l_A = a \\implies \\angle A = \\angle C = 2 \\times (180^\\circ - 2\\alpha) \\implies \\alpha = 72^\\circ$.\n2) Təpə bucağı: $180^\\circ - 2(72^\\circ) = 36^\\circ$.",
+          ru: "Решение:\n1) Угол при основании равен $72^\\circ$.\n2) Угол при вершине: $180^\\circ - 144^\\circ = 36^\\circ$.",
+          en: "Solution:\n1) Vertex angle = $180^\\circ - 2(72^\\circ) = 36^\\circ$."
+        }
+      },
+      {
+        id: 13,
+        type: "mcq",
+        correct: "A",
+        options: { A: "66°", B: "42°", C: "54°", D: "78°", E: "80°" },
+        text: {
+          az: "Oturacağı $BC$ olan bərabəryanlı $ABC$ üçbucağında $AB$ tərəfini $E$ nöqtəsində kəsən $CE$ düz xətti çəkilmişdir. $\\angle ACE = 18^\\circ$ və $CE = BC$ olarsa, $\\angle ABC$-ni tapın.",
+          ru: "В равнобедренном $\\triangle ABC$ ($BC$ — основание) прямая $CE$ пересекает $AB$ в $E$. $\\angle ACE = 18^\\circ$ и $CE = BC$. Найдите $\\angle ABC$.",
+          en: "In isosceles $\\triangle ABC$ (base $BC$), line $CE$ intersects $AB$ at $E$. $\\angle ACE = 18^\circ$ and $CE = BC$. Find $\\angle ABC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle B = \\angle C = x$. $\\triangle EBC$-də $CE = BC \\implies \\angle CEB = x$.\n2) $x = (180^\\circ - 2x) + 18^\\circ \\implies 3x = 198^\\circ \\implies x = 66^\\circ$.",
+          ru: "Решение:\n1) $3x = 198^\\circ \\implies x = 66^\\circ$.",
+          en: "Solution:\n1) $\\angle ABC = 66^\circ$."
+        }
+      },
+      {
+        id: 14,
+        type: "mcq",
+        correct: "B",
+        options: { A: "18 sm", B: "8 sm", C: "10 sm", D: "20 sm", E: "19 sm" },
+        text: {
+          az: "$ABC$ üçbucağında $AB = BC = 16\\text{ sm}$. $D$ nöqtəsi $AB$ və $E$ nöqtəsi $BC$ üzərindədir. $ED \\perp AB, AD = DB, P(\\triangle AEC) = 24\\text{ sm}$ olarsa, $AC$-ni tapın.",
+          ru: "В $\\triangle ABC$ $AB = BC = 16\\text{ см}$. $ED \\perp AB, AD = DB$. $P(\\triangle AEC) = 24\\text{ см}$. Найдите $AC$.",
+          en: "In $\\triangle ABC$, $AB = BC = 16\\text{ cm}$. $ED \\perp AB, AD = DB$. $P(\\triangle AEC) = 24\\text{ cm}$. Find $AC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $ED$ orta perpendikulyardır $\\implies AE = EB$.\n2) $P(\\triangle AEC) = AC + CE + AE = AC + CE + EB = AC + BC = 24$.\n3) $AC + 16 = 24 \\implies AC = 8\\text{ sm}$.",
+          ru: "Решение:\n1) $AE = EB$.\n2) $AC + BC = 24 \\implies AC + 16 = 24 \\implies AC = 8\\text{ см}$.",
+          en: "Solution:\n1) $AC = 24 - 16 = 8\\text{ cm}$."
+        }
+      },
+      {
+        id: 15,
+        type: "mcq",
+        correct: "A",
+        image: "Beraberyanli_ucbucaq_Image0015.png",
+        options: { A: "16 sm", B: "14 sm", C: "12 sm", D: "18 sm", E: "10 sm" },
+        text: {
+          az: "Oturacağı $AC = 8\\text{ sm}$ olan $ABC$ bərabəryanlı üçbucağının $AD$ tənböləni çəkilmişdir. $\\angle C = 72^\\circ$ olarsa, $AD + BD$ cəmini tapın.",
+          ru: "В равнобедренном $\\triangle ABC$ ($AC = 8\\text{ см}$) $AD$ — биссектриса. $\\angle C = 72^\circ$. Найдите $AD + BD$.",
+          en: "In isosceles $\\triangle ABC$ (base $AC = 8\\text{ cm}$), $AD$ is bisector. $\\angle C = 72^\circ$. Find $AD + BD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Bucaqlar: $\\angle A = 72^\\circ, \\angle B = 36^\\circ, \\angle CAD = 36^\\circ, \\angle BAD = 36^\\circ$.\n2) $\\triangle ABD$-də $AD = BD$. $\\triangle ADC$-də $AD = AC = 8\\text{ sm}$.\n3) $AD + BD = 8 + 8 = 16\\text{ sm}$.",
+          ru: "Решение:\n1) $AD = BD = AC = 8\\text{ см}$.\n2) $AD + BD = 16\\text{ см}$.",
+          en: "Solution:\n1) $AD + BD = 8 + 8 = 16\\text{ cm}$."
+        }
+      },
+      {
+        id: 16,
+        type: "mcq",
+        correct: "A",
+        image: "Beraberyanli_ucbucaq_Image0016.png",
+        options: { A: "12 sm", B: "8 sm", C: "18 sm", D: "9 sm", E: "16 sm" },
+        text: {
+          az: "Oturacağı $AC = 6\\text{ sm}$ olan $ABC$ bərabəryanlı üçbucağının $AD$ tənböləni çəkilmişdir. $\\angle C = 72^\\circ$ olarsa, $AD + BD$ cəmini tapın.",
+          ru: "В равнобедренном $\\triangle ABC$ ($AC = 6\\text{ см}$) $AD$ — биссектриса. $\\angle C = 72^\circ$. Найдите $AD + BD$.",
+          en: "In isosceles $\\triangle ABC$ ($AC = 6\\text{ cm}$), $AD$ is bisector. $\\angle C = 72^\circ$. Find $AD + BD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AD + BD = 2 AC = 2 \\times 6 = 12\\text{ sm}$.",
+          ru: "Решение:\n1) $AD + BD = 2 \\times 6 = 12\\text{ см}$.",
+          en: "Solution:\n1) $AD + BD = 12\\text{ cm}$."
+        }
+      },
+      {
+        id: 17,
+        type: "mcq",
+        correct: "E",
+        image: "Beraberyanli_ucbucaq_Image0017.png",
+        options: { A: "40°", B: "30°", C: "20°", D: "35°", E: "25°" },
+        text: {
+          az: "$AK = BK = BC, KD = DC$ və $\\angle KAB = 50^\\circ$ olarsa, $\\angle DBA$-nı tapın.",
+          ru: "$AK = BK = BC, KD = DC$ и $\\angle KAB = 50^\circ$. Найдите $\\angle DBA$.",
+          en: "$AK = BK = BC, KD = DC$ and $\\angle KAB = 50^\circ$. Find $\\angle DBA$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle DBA = 25^\\circ$.",
+          ru: "Решение:\n1) $\\angle DBA = 25^\\circ$.",
+          en: "Solution:\n1) $\\angle DBA = 25^\\circ$."
+        }
+      },
+      {
+        id: 18,
+        type: "mcq",
+        correct: "C",
+        image: "Beraberyanli_ucbucaq_Image0018.png",
+        options: { A: "15°", B: "30°", C: "20°", D: "25°", E: "10°" },
+        text: {
+          az: "$AK = BK = BC, KD = DC$ və $\\angle KAB = 40^\\circ$ olarsa, $\\angle DBA$-nı tapın.",
+          ru: "$AK = BK = BC, KD = DC$ и $\\angle KAB = 40^\circ$. Найдите $\\angle DBA$.",
+          en: "$AK = BK = BC, KD = DC$ and $\\angle KAB = 40^\circ$. Find $\\angle DBA$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle DBA = 20^\\circ$.",
+          ru: "Решение:\n1) $\\angle DBA = 20^\\circ$.",
+          en: "Solution:\n1) $\\angle DBA = 20^\\circ$."
+        }
+      },
+      {
+        id: 19,
+        type: "mcq",
+        correct: "E",
+        image: "Beraberyanli_ucbucaq_Image0019.png",
+        options: { A: "70°", B: "40°", C: "50°", D: "30°", E: "60°" },
+        text: {
+          az: "$ABC$ üçbucağında $\\angle B = 80^\\circ, \\angle ADC = 100^\\circ, AD = DC$ olarsa, $\\angle ACB$-ni tapın.",
+          ru: "В $\\triangle ABC$ $\\angle B = 80^\circ, \\angle ADC = 100^\circ, AD = DC$. Найдите $\\angle ACB$.",
+          en: "In $\\triangle ABC$, $\\angle B = 80^\circ, \\angle ADC = 100^\circ, AD = DC$. Find $\\angle ACB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle ACB = 60^\\circ$.",
+          ru: "Решение:\n1) $\\angle ACB = 60^\\circ$.",
+          en: "Solution:\n1) $\\angle ACB = 60^\\circ$."
+        }
+      },
+      {
+        id: 20,
+        type: "mcq",
+        correct: "D",
+        image: "Beraberyanli_ucbucaq_Image0020.png",
+        options: { A: "55°", B: "30°", C: "50°", D: "45°", E: "60°" },
+        text: {
+          az: "$ABC$ üçbucağında $BC = AC, BD = DC, \\angle BDC = 130^\\circ, \\angle ABD = 30^\\circ$ olarsa, $\\angle DCA$-nı tapın.",
+          ru: "В $\\triangle ABC$ $BC = AC, BD = DC, \\angle BDC = 130^\circ, \\angle ABD = 30^\circ$. Найдите $\\angle DCA$.",
+          en: "In $\\triangle ABC$, $BC = AC, BD = DC, \\angle BDC = 130^\circ, \\angle ABD = 30^\circ$. Find $\\angle DCA$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle DCA = 45^\\circ$.",
+          ru: "Решение:\n1) $\\angle DCA = 45^\\circ$.",
+          en: "Solution:\n1) $\\angle DCA = 45^\\circ$."
+        }
+      },
+      {
+        id: 21,
+        type: "open",
+        correct: "55",
+        image: "Beraberyanli_ucbucaq_Image0021.png",
+        text: {
+          az: "Bərabərtərəfli $ABC$ üçbucağında $\\angle CAN = 25^\\circ, \\angle CBM = 40^\\circ$ olarsa, $\\angle NDB$-nin dərəcə ölçüsünü tapın.",
+          ru: "В равностороннем $\\triangle ABC$ $\\angle CAN = 25^\circ, \\angle CBM = 40^\circ$. Найдите $\\angle NDB$.",
+          en: "In equilateral $\\triangle ABC$, $\\angle CAN = 25^\circ, \\angle CBM = 40^\circ$. Find $\\angle NDB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle NDB = 55^\\circ$.",
+          ru: "Решение:\n1) $\\angle NDB = 55^\\circ$.",
+          en: "Solution:\n1) $\\angle NDB = 55^\\circ$."
+        }
+      },
+      {
+        id: 22,
+        type: "open",
+        correct: "60",
+        image: "Beraberyanli_ucbucaq_Image0022.png",
+        text: {
+          az: "Bərabərtərəfli $ABC$ üçbucağında $\\angle CAN = 25^\\circ, \\angle CBM = 35^\\circ$ olarsa, $\\angle NDB$-nin dərəcə ölçüsünü tapın.",
+          ru: "В равностороннем $\\triangle ABC$ $\\angle CAN = 25^\circ, \\angle CBM = 35^\circ$. Найдите $\\angle NDB$.",
+          en: "In equilateral $\\triangle ABC$, $\\angle CAN = 25^\circ, \\angle CBM = 35^\circ$. Find $\\angle NDB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle NDB = 60^\\circ$.",
+          ru: "Решение:\n1) $\\angle NDB = 60^\\circ$.",
+          en: "Solution:\n1) $\\angle NDB = 60^\\circ$."
+        }
+      },
+      {
+        id: 23,
+        type: "open",
+        correct: "70",
+        image: "Beraberyanli_ucbucaq_Image0023.png",
+        text: {
+          az: "Bərabəryanlı $ABC$ üçbucağında $AC = BC, \\angle C = 50^\\circ, \\angle CAN = 20^\\circ, \\angle CBM = 40^\\circ$ olarsa, $\\angle NDB$-nin dərəcə ölçüsünü tapın.",
+          ru: "В равнобедренном $\\triangle ABC$ ($AC = BC$) $\\angle C = 50^\circ, \\angle CAN = 20^\circ, \\angle CBM = 40^\circ$. Найдите $\\angle NDB$.",
+          en: "In isosceles $\\triangle ABC$ ($AC = BC$), $\\angle C = 50^\circ, \\angle CAN = 20^\circ, \\angle CBM = 40^\circ$. Find $\\angle NDB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle NDB = 70^\\circ$.",
+          ru: "Решение:\n1) $\\angle NDB = 70^\\circ$.",
+          en: "Solution:\n1) $\\angle NDB = 70^\\circ$."
+        }
+      },
+      {
+        id: 24,
+        type: "open",
+        correct: "60",
+        image: "Beraberyanli_ucbucaq_Image0024.png",
+        text: {
+          az: "Bərabəryanlı $ABC$ üçbucağında $AC = BC, \\angle C = 40^\\circ, \\angle CAN = 30^\\circ, \\angle CBM = 50^\\circ$ olarsa, $\\angle NDB$-nin dərəcə ölçüsünü tapın.",
+          ru: "В равнобедренном $\\triangle ABC$ ($AC = BC$) $\\angle C = 40^\circ, \\angle CAN = 30^\circ, \\angle CBM = 50^\circ$. Найдите $\\angle NDB$.",
+          en: "In isosceles $\\triangle ABC$ ($AC = BC$), $\\angle C = 40^\circ, \\angle CAN = 30^\circ, \\angle CBM = 50^\circ$. Find $\\angle NDB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle NDB = 60^\\circ$.",
+          ru: "Решение:\n1) $\\angle NDB = 60^\\circ$.",
+          en: "Solution:\n1) $\\angle NDB = 60^\\circ$."
+        }
+      },
+      {
+        id: 25,
+        type: "open",
+        correct: "24",
+        text: {
+          az: "Bir bucağı $120^\\circ$ olan bərabəryanlı üçbucağın oturacaqdakı bucağının tənböləni $12\\sqrt{2}$ olarsa, oturacağın uzunluğunu tapın.",
+          ru: "В равнобедренном треугольнике с углом $120^\circ$ биссектриса угла при основании равна $12\\sqrt{2}$. Найдите длину основания.",
+          en: "In an isosceles triangle with an angle of $120^\circ$, the base angle bisector is $12\\sqrt{2}$. Find the base length."
+        },
+        explanation: {
+          az: "Həlli:\n1) Oturacaq $= 24$.",
+          ru: "Решение:\n1) Основание равно 24.",
+          en: "Solution:\n1) Base length = 24."
+        }
+      },
+      {
+        id: 26,
+        type: "open",
+        correct: "50",
+        image: "Beraberyanli_ucbucaq_Image0026.png",
+        text: {
+          az: "$ABC$ üçbucağında $AB = AC = b, BC = a, BK = a - b$ və $\\angle BAK = 15^\\circ$ olarsa, $BCA$ bucağının dərəcə ölçüsünü tapın.",
+          ru: "В $\\triangle ABC$ $AB = AC = b, BC = a, BK = a - b, \\angle BAK = 15^\circ$. Найдите $\\angle BCA$.",
+          en: "In $\\triangle ABC$, $AB = AC = b, BC = a, BK = a - b, \\angle BAK = 15^\circ$. Find $\\angle BCA$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle BCA = 50^\\circ$.",
+          ru: "Решение:\n1) $\\angle BCA = 50^\\circ$.",
+          en: "Solution:\n1) $\\angle BCA = 50^\\circ$."
+        }
+      },
+      {
+        id: 27,
+        type: "open",
+        correct: "40",
+        image: "Beraberyanli_ucbucaq_Image0027.png",
+        text: {
+          az: "$ABC$ üçbucağında $AB = AC = b, BC = a, BK = a - b$ və $\\angle BAK = 30^\\circ$ olarsa, $BCA$ bucağının dərəcə ölçüsünü tapın.",
+          ru: "В $\\triangle ABC$ $AB = AC = b, BC = a, BK = a - b, \\angle BAK = 30^\circ$. Найдите $\\angle BCA$.",
+          en: "In $\\triangle ABC$, $AB = AC = b, BC = a, BK = a - b, \\angle BAK = 30^\circ$. Find $\\angle BCA$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle BCA = 40^\\circ$.",
+          ru: "Решение:\n1) $\\angle BCA = 40^\\circ$.",
+          en: "Solution:\n1) $\\angle BCA = 40^\\circ$."
+        }
+      },
+      {
+        id: 28,
+        type: "open",
+        correct: "18",
+        text: {
+          az: "Bərabəryanlı $ABC$ üçbucağında $AC$ oturacağının uzunluğu $8$-ə, medianların kəsişmə nöqtəsindən $B$ təpəsinə qədər məsafə isə $2$-yə bərabərdir. $ABC$ üçbucağının perimetrini tapın.",
+          ru: "В равнобедренном $\\triangle ABC$ основание $AC = 8$, расстояние от центроида до $B$ равно $2$. Найдите периметр.",
+          en: "In isosceles $\\triangle ABC$, base $AC = 8$, distance from centroid to $B$ is $2$. Find the perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $BM = 2 \\implies h_b = \\frac{3}{2} \\times 2 = 3$.\n2) Yan tərəf: $b = \\sqrt{4^2 + 3^2} = 5$.\n3) $P = 5 + 5 + 8 = 18$.",
+          ru: "Решение:\n1) $h = 3 \\implies b = 5$.\n2) $P = 5 + 5 + 8 = 18$.",
+          en: "Solution:\n1) $P = 18$."
+        }
+      },
+      {
+        id: 29,
+        type: "open",
+        correct: "36",
+        text: {
+          az: "Bərabəryanlı $ABC$ üçbucağında $AC$ oturacağının uzunluğu $16$-ya, medianların kəsişmə nöqtəsindən $AC$-yə qədər məsafə isə $2$-yə bərabərdir. $ABC$ üçbucağının perimetrini tapın.",
+          ru: "В равнобедренном $\\triangle ABC$ основание $AC = 16$, расстояние от центроида до $AC$ равно $2$. Найдите периметр.",
+          en: "In isosceles $\\triangle ABC$, base $AC = 16$, distance from centroid to $AC$ is $2$. Find the perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\frac{1}{3}h = 2 \\implies h = 6$.\n2) Yan tərəf: $b = \\sqrt{8^2 + 6^2} = 10$.\n3) $P = 10 + 10 + 16 = 36$.",
+          ru: "Решение:\n1) $h = 6 \\implies b = 10$.\n2) $P = 10 + 10 + 16 = 36$.",
+          en: "Solution:\n1) $P = 36$."
+        }
+      },
+      {
+        id: 30,
+        type: "open",
+        correct: "104",
+        image: "Beraberyanli_ucbucaq_Image0030.png",
+        text: {
+          az: "$ABC$ üçbucağının $AB$ tərəfi üzərində $M$ və $N$ nöqtələri qeyd olunmuşdur. $AN = AC, BM = BC$ və $\\angle MCN = 38^\\circ$ olarsa, $ACB$ bucağının dərəcə ölçüsünü tapın.",
+          ru: "На стороне $AB$ отмечены $M$ и $N$. $AN = AC, BM = BC, \\angle MCN = 38^\circ$. Найдите угол $ACB$.",
+          en: "Points $M, N$ are on $AB$. $AN = AC, BM = BC, \\angle MCN = 38^\circ$. Find $\\angle ACB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle ACB = 180^\\circ - 2 \\times 38^\\circ = 104^\\circ$.",
+          ru: "Решение:\n1) $\\angle ACB = 180^\\circ - 2(38^\circ) = 104^\\circ$.",
+          en: "Solution:\n1) $\\angle ACB = 104^\circ$."
+        }
+      },
+      {
+        id: 31,
+        type: "open",
+        correct: "96",
+        image: "Beraberyanli_ucbucaq_Image0031.png",
+        text: {
+          az: "$ABC$ üçbucağının $AB$ tərəfi üzərində $M$ və $N$ nöqtələri qeyd olunmuşdur. $AN = AC, BM = BC$ və $\\angle MCN = 42^\\circ$ olarsa, $ACB$ bucağının dərəcə ölçüsünü tapın.",
+          ru: "На стороне $AB$ отмечены $M$ и $N$. $AN = AC, BM = BC, \\angle MCN = 42^\circ$. Найдите угол $ACB$.",
+          en: "Points $M, N$ are on $AB$. $AN = AC, BM = BC, \\angle MCN = 42^\circ$. Find $\\angle ACB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle ACB = 180^\\circ - 2 \\times 42^\\circ = 96^\\circ$.",
+          ru: "Решение:\n1) $\\angle ACB = 180^\\circ - 2(42^\circ) = 96^\\circ$.",
+          en: "Solution:\n1) $\\angle ACB = 96^\circ$."
+        }
+      },
+      {
+        id: 32,
+        type: "open",
+        correct: "36",
+        image: "Beraberyanli_ucbucaq_Image0032.png",
+        text: {
+          az: "$ABC$ üçbucağının $AF, BD$ və $CE$ medianları $P$ nöqtəsində kəsişir. $PE = PF = \\frac{1}{2}\\sqrt{41}, PD = 4$ olarsa, $ABC$ üçbucağının perimetrini tapın.",
+          ru: "Медианы пересекаются в $P$. $PE = PF = \\frac{1}{2}\\sqrt{41}, PD = 4$. Найдите $P(\\triangle ABC)$.",
+          en: "Medians intersect at $P$. $PE = PF = \\frac{1}{2}\\sqrt{41}, PD = 4$. Find $P(\\triangle ABC)$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P = 36$.",
+          ru: "Решение:\n1) $P = 36$.",
+          en: "Solution:\n1) $P = 36$."
+        }
+      },
+      {
+        id: 33,
+        type: "open",
+        correct: "32",
+        image: "Beraberyanli_ucbucaq_Image0033.png",
+        text: {
+          az: "$ABC$ üçbucağının $AF, BD$ və $CE$ medianları $P$ nöqtəsində kəsişir. $PE = PF = \\frac{1}{3}\\sqrt{97}, PD = 2\\frac{2}{3}$ olarsa, $ABC$ üçbucağının perimetrini tapın.",
+          ru: "Медианы пересекаются в $P$. $PE = PF = \\frac{1}{3}\\sqrt{97}, PD = \\frac{8}{3}$. Найдите $P(\\triangle ABC)$.",
+          en: "Medians intersect at $P$. $PE = PF = \\frac{1}{3}\\sqrt{97}, PD = 2\\frac{2}{3}$. Find $P(\\triangle ABC)$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P = 32$.",
+          ru: "Решение:\n1) $P = 32$.",
+          en: "Solution:\n1) $P = 32$."
+        }
+      },
+      {
+        id: 34,
+        type: "open",
+        correct: "14",
+        image: "Beraberyanli_ucbucaq_Image0034.png",
+        text: {
+          az: "$ABC$ üçbucağında $AB = AC, AD \\perp AB, AD = 6$ və $BD = 18$ olarsa, $DC$ parçasının uzunluğunu tapın.",
+          ru: "В $\\triangle ABC$ $AB = AC, AD \\perp AB, AD = 6, BD = 18$. Найдите $DC$.",
+          en: "In $\\triangle ABC$, $AB = AC, AD \\perp AB, AD = 6, BD = 18$. Find $DC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $DC = 14$.",
+          ru: "Решение:\n1) $DC = 14$.",
+          en: "Solution:\n1) $DC = 14$."
+        }
+      }
+    ];
+
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    function init() {
+      renderApp();
+      updateScore();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `lang-${lang}`);
+      });
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) {
+        currentSlide = nextSlide;
+        renderApp();
+      }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        renderApp();
+      }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      const isCorrect = choice === q.correct;
+      userAnswers[qId] = { answer: choice, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+
+      const q = questionsData.find(item => item.id === qId);
+      
+      const cleanVal = val.toLowerCase().replace(/[\s°mм]/g, '').replace(/;/g, ',');
+      const cleanCorrect = q.correct.toLowerCase().replace(/[\s°mм]/g, '').replace(/;/g, ',');
+      const isCorrect = cleanVal === cleanCorrect || cleanVal.includes(cleanCorrect);
+
+      userAnswers[qId] = { answer: val, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-back').innerText = t.back;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+
+        if (userAnswers[q.id]) {
+          btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        }
+        if (currentMode === 'slide' && q.id === currentSlide) {
+          btn.classList.add('active');
+        }
+
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      const questionsToRender = currentMode === 'slide'
+        ? questionsData.filter(q => q.id === currentSlide)
+        : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang]}</div>
+        `;
+
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id}"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil tapılmadı: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}"
+                value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''}
+                onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang]}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>

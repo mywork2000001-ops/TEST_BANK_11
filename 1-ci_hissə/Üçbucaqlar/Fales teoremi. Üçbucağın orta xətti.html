@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Üçbucaqların konqruyentlik əlaməti. Fales teoremi. Üçbucağın orta xətti</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      padding: 12px 20px;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topic-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #f1f5f9;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary);
+    }
+
+    .topic-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .btn-group button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .btn-group button.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .score-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .grid-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .grid-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .q-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 6px;
+    }
+
+    .q-btn {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .q-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .q-btn.active {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .q-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .q-btn.incorrect {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .q-type-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .q-image-container {
+      margin: 16px 0;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .q-image-container img {
+      max-width: 100%;
+      max-height: 230px;
+      height: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .option-btn.selected-correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46 !important;
+      font-weight: 700;
+    }
+
+    .option-btn.selected-incorrect {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b !important;
+      font-weight: 700;
+    }
+
+    .open-input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      max-width: 440px;
+    }
+
+    .open-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .open-input:focus {
+      border-color: var(--primary);
+    }
+
+    .submit-btn {
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .explanation-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-body {
+      white-space: pre-line;
+      color: #334155;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="topic-title-box">
+        <a href="../../index.html" class="back-btn">← <span id="ui-back">Əsas Menyu</span></a>
+        <div class="topic-title" id="ui-topic">Üçbucaqların konqruyentlik əlaməti. Fales teoremi. Üçbucağın orta xətti</div>
+      </div>
+      
+      <div class="controls">
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 14</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    const uiTranslations = {
+      az: {
+        topic: "Üçbucaqların konqruyentlik əlaməti. Fales teoremi. Üçbucağın orta xətti",
+        back: "Əsas Menyu",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı daxil edin...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Признаки равенства треугольников. Теорема Фалеса. Средняя линия треугольника",
+        back: "Главное меню",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Triangle Congruence Criteria. Thales's Theorem. Triangle Midsegment",
+        back: "Main Menu",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended",
+        check: "Submit",
+        enterAnswer: "Enter answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    const questionsData = [
+      {
+        id: 1,
+        type: "mcq",
+        correct: "C",
+        image: "Ucbucagin_orta_xetti_Image0001.png",
+        options: { A: "7,5 sm", B: "12,5 sm", C: "10 sm", D: "3 sm", E: "5 sm" },
+        text: {
+          az: "Üçbucağın uzunluğu $a$ olan tərəfinə paralel orta xətti $b$-dir. $a+b=15\\text{ sm}$ olarsa, $a$-nı tapın.",
+          ru: "Средняя линия $b$ треугольника параллельна стороне $a$. Если $a+b=15\\text{ см}$, найдите $a$.",
+          en: "The midsegment $b$ of a triangle is parallel to side $a$. If $a+b=15\\text{ cm}$, find $a$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Üçbucağın orta xəttinin xassəsinə görə: $b = \\frac{a}{2}$.\n2) Şərtdə veriləni nəzərə alsaq: $a + \\frac{a}{2} = 15 \\implies \\frac{3a}{2} = 15 \\implies 3a = 30 \\implies a = 10\\text{ sm}$.",
+          ru: "Решение:\n1) По свойству средней линии треугольника: $b = \\frac{a}{2}$.\n2) $a + \\frac{a}{2} = 15 \\implies \\frac{3a}{2} = 15 \\implies a = 10\\text{ см}$.",
+          en: "Solution:\n1) By the Midsegment Theorem: $b = \\frac{a}{2}$.\n2) $a + \\frac{a}{2} = 15 \\implies \\frac{3a}{2} = 15 \\implies a = 10\\text{ cm}$."
+        }
+      },
+      {
+        id: 2,
+        type: "mcq",
+        correct: "D",
+        options: { A: "3,45 sm", B: "2,7 sm", C: "3,25 sm", D: "3,35 sm", E: "3,75 sm" },
+        text: {
+          az: "Üçbucağın perimetri $6,7\\text{ sm}$-dir. Üçbucağın orta xətlərindən birinin verilən üçbucaqdan ayırdığı üçbucağın perimetrini tapın.",
+          ru: "Периметр треугольника равен $6,7\\text{ см}$. Найдите периметр треугольника, отсекаемого одной из его средних линий.",
+          en: "The perimeter of a triangle is $6.7\\text{ cm}$. Find the perimeter of the smaller triangle cut off by one of its midsegments."
+        },
+        explanation: {
+          az: "Həlli:\n1) Orta xəttin ayırdığı kiçik üçbucağın bütün tərəfləri böyük üçbucağın tərəflərinin yarısına bərabərdir.\n2) $P_{\\text{kiçik}} = \\frac{P}{2} = \\frac{6,7}{2} = 3,35\\text{ sm}$.",
+          ru: "Решение:\n1) Стороны отсекаемого треугольника равны половинам сторон исходного треугольника.\n2) $P_{\\text{мал}} = \\frac{6,7}{2} = 3,35\\text{ см}$.",
+          en: "Solution:\n1) The sides of the cut-off triangle are half of the original triangle's sides.\n2) $P = \\frac{6.7}{2} = 3.35\\text{ cm}$."
+        }
+      },
+      {
+        id: 3,
+        type: "mcq",
+        correct: "D",
+        image: "Ucbucagin_orta_xetti_Image0003.png",
+        options: { A: "12,5 sm", B: "15 sm", C: "7,5 sm", D: "10 sm", E: "5 sm" },
+        text: {
+          az: "Üçbucağın uzunluğu $a$ olan tərəfinə paralel orta xətti $b$-dir. $a-b=5\\text{ sm}$ olarsa, $a$-nı tapın.",
+          ru: "Средняя линия $b$ треугольника параллельна стороне $a$. Если $a-b=5\\text{ см}$, найдите $a$.",
+          en: "The midsegment $b$ is parallel to side $a$. If $a-b=5\\text{ cm}$, find $a$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $b = \\frac{a}{2}$ olduğuna görə: $a - \\frac{a}{2} = 5$.\n2) $\\frac{a}{2} = 5 \\implies a = 10\\text{ sm}$.",
+          ru: "Решение:\n1) $b = \\frac{a}{2} \\implies a - \\frac{a}{2} = 5$.\n2) $\\frac{a}{2} = 5 \\implies a = 10\\text{ см}$.",
+          en: "Solution:\n1) $b = \\frac{a}{2} \\implies a - \\frac{a}{2} = 5 \\implies a = 10\\text{ cm}$."
+        }
+      },
+      {
+        id: 4,
+        type: "mcq",
+        correct: "A",
+        options: { A: "2", B: "1", C: "yoxdur", D: "3", E: "1 və ya 3" },
+        text: {
+          az: "Təpələri verilmiş korbucaqlı üçbucağın tərəflərinin orta nöqtələri olan üçbucağın iti bucaqlarının sayını tapın.",
+          ru: "Найдите количество острых углов треугольника, вершины которого являются серединами сторон тупоугольного треугольника.",
+          en: "Find the number of acute angles in a triangle whose vertices are the midpoints of the sides of an obtuse triangle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tərəflərin orta nöqtələrini birləşdirdikdə alınan üçbucaq verilmiş üçbucağa oxşardır və eyni bucaqlara malikdir.\n2) Korbucaqlı üçbucaqda 1 kor və 2 iti bucaq olduğu üçün alınan üçbucağın da 2 iti bucağı var.",
+          ru: "Решение:\n1) Треугольник, образованный средними линиями, подобен исходному.\n2) В тупоугольном треугольнике 1 тупой и 2 острых угла, следовательно, у нового треугольника 2 острых угла.",
+          en: "Solution:\n1) The medial triangle is similar to the original triangle.\n2) An obtuse triangle has 1 obtuse angle and 2 acute angles, so the answer is 2."
+        }
+      },
+      {
+        id: 5,
+        type: "mcq",
+        correct: "E",
+        options: { A: "1", B: "1 və ya 3", C: "yoxdur", D: "3", E: "2" },
+        text: {
+          az: "Təpələri verilmiş düzbucaqlı üçbucağın tərəflərinin orta nöqtələri olan üçbucağın iti bucaqlarının sayını tapın.",
+          ru: "Найдите количество острых углов треугольника, вершины которого являются серединами сторон прямоугольного треугольника.",
+          en: "Find the number of acute angles in a triangle whose vertices are the midpoints of the sides of a right triangle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tərəflərinin orta nöqtələrindən qurulan üçbucaq da düzbucaqlı üçbucaqdır.\n2) Hər bir düzbucaqlı üçbucağın 2 iti bucağı vardır.",
+          ru: "Решение:\n1) Треугольник, образованный средними линиями прямоугольного треугольника, также является прямоугольным.\n2) В прямоугольном треугольнике ровно 2 острых угла.",
+          en: "Solution:\n1) The medial triangle of a right triangle is also a right triangle.\n2) Every right triangle has 2 acute angles."
+        }
+      },
+      {
+        id: 6,
+        type: "mcq",
+        correct: "C",
+        options: { A: "10,8 sm", B: "13,5 sm", C: "16,2 sm", D: "21,6 sm", E: "12,7 sm" },
+        text: {
+          az: "Üçbucağın orta xətti paralel olduğu tərəfdən $5,4\\text{ sm}$ kiçikdir. Üçbucağın bu tərəfi ilə orta xəttinin uzunluqları cəmini tapın.",
+          ru: "Средняя линия треугольника на $5,4\\text{ см}$ меньше стороны, которой она параллельна. Найдите сумму длин этой стороны и средней линии.",
+          en: "A triangle's midsegment is $5.4\\text{ cm}$ shorter than the side it is parallel to. Find the sum of the lengths of this side and the midsegment."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tərəf $a$, orta xətt isə $\\frac{a}{2}$-dir: $a - \\frac{a}{2} = 5,4 \\implies \\frac{a}{2} = 5,4 \\implies a = 10,8\\text{ sm}$.\n2) Orta xətt $= 5,4\\text{ sm}$.\n3) Cəm: $10,8 + 5,4 = 16,2\\text{ sm}$.",
+          ru: "Решение:\n1) $a - \\frac{a}{2} = 5,4 \\implies a = 10,8\\text{ см}$.\n2) Средняя линия $= 5,4\\text{ см}$.\n3) Сумма: $10,8 + 5,4 = 16,2\\text{ см}$.",
+          en: "Solution:\n1) $a - \\frac{a}{2} = 5.4 \\implies a = 10.8\\text{ cm}$.\n2) Midsegment $= 5.4\\text{ cm}$.\n3) Sum $= 10.8 + 5.4 = 16.2\\text{ cm}$."
+        }
+      },
+      {
+        id: 7,
+        type: "mcq",
+        correct: "A",
+        options: { A: "10,8 sm", B: "3,6 sm", C: "7,2 sm", D: "14,4 sm", E: "5,4 sm" },
+        text: {
+          az: "Üçbucağın orta xətti paralel olduğu tərəfdən $3,6\\text{ sm}$ kiçikdir. Üçbucağın oturacağı ilə orta xəttinin cəmini tapın.",
+          ru: "Средняя линия треугольника на $3,6\\text{ см}$ меньше основания, которому она параллельна. Найдите сумму основания и средней линии.",
+          en: "A triangle's midsegment is $3.6\\text{ cm}$ shorter than the base it is parallel to. Find the sum of the base and the midsegment."
+        },
+        explanation: {
+          az: "Həlli:\n1) $a - \\frac{a}{2} = 3,6 \\implies \\frac{a}{2} = 3,6 \\implies a = 7,2\\text{ sm}$.\n2) Cəm: $7,2 + 3,6 = 10,8\\text{ sm}$.",
+          ru: "Решение:\n1) $a - \\frac{a}{2} = 3,6 \\implies a = 7,2\\text{ см}$.\n2) Сумма: $7,2 + 3,6 = 10,8\\text{ см}$.",
+          en: "Solution:\n1) $a - \\frac{a}{2} = 3.6 \\implies a = 7.2\\text{ cm}$.\n2) Sum $= 7.2 + 3.6 = 10.8\\text{ cm}$."
+        }
+      },
+      {
+        id: 8,
+        type: "mcq",
+        correct: "B",
+        options: { A: "5 sm", B: "4 sm", C: "5,5 sm", D: "8 sm", E: "6,5 sm" },
+        text: {
+          az: "Bərabəryanlı üçbucağın yan tərəfinə paralel olan orta xətti $4\\text{ sm}$-dir. Üçbucağın perimetri $20\\text{ sm}$ olarsa, oturacağını tapın.",
+          ru: "Средняя линия равнобедренного треугольника, параллельная боковой стороне, равна $4\\text{ см}$. Если периметр равен $20\\text{ см}$, найдите основание.",
+          en: "The midsegment of an isosceles triangle parallel to a lateral side is $4\\text{ cm}$. If the perimeter is $20\\text{ cm}$, find the base."
+        },
+        explanation: {
+          az: "Həlli:\n1) Yan tərəf: $b = 2 \\times 4 = 8\\text{ sm}$.\n2) Bərabəryanlı üçbucağın hər iki yan tərəfi $8\\text{ sm}$-dir.\n3) $P = 2b + a = 20 \\implies 2(8) + a = 20 \\implies 16 + a = 20 \\implies a = 4\\text{ sm}$.",
+          ru: "Решение:\n1) Боковая сторона: $b = 2 \\times 4 = 8\\text{ см}$.\n2) $P = 2b + a = 20 \\implies 16 + a = 20 \\implies a = 4\\text{ см}$.",
+          en: "Solution:\n1) Lateral side: $b = 2 \\times 4 = 8\\text{ cm}$.\n2) $P = 2(8) + a = 20 \\implies a = 4\\text{ cm}$."
+        }
+      },
+      {
+        id: 9,
+        type: "mcq",
+        correct: "B",
+        options: { A: "9 sm", B: "7 sm", C: "8 sm", D: "6 sm", E: "12 sm" },
+        text: {
+          az: "Bərabəryanlı üçbucağın oturacağına paralel olan orta xəttinin uzunluğu $4\\text{ sm}$-dir. Üçbucağın perimetri $22\\text{ sm}$ olarsa, yan tərəfini tapın.",
+          ru: "Средняя линия равнобедренного треугольника, параллельная основанию, равна $4\\text{ см}$. Если периметр равен $22\\text{ см}$, найдите боковую сторону.",
+          en: "The midsegment parallel to the base of an isosceles triangle is $4\\text{ cm}$. If the perimeter is $22\\text{ cm}$, find the leg length."
+        },
+        explanation: {
+          az: "Həlli:\n1) Oturacaq: $a = 2 \\times 4 = 8\\text{ sm}$.\n2) $P = 2b + a = 22 \\implies 2b + 8 = 22 \\implies 2b = 14 \\implies b = 7\\text{ sm}$.",
+          ru: "Решение:\n1) Основание: $a = 2 \\times 4 = 8\\text{ см}$.\n2) $P = 2b + 8 = 22 \\implies 2b = 14 \\implies b = 7\\text{ см}$.",
+          en: "Solution:\n1) Base: $a = 2 \\times 4 = 8\\text{ cm}$.\n2) $P = 2b + 8 = 22 \\implies 2b = 14 \\implies b = 7\\text{ cm}$."
+        }
+      },
+      {
+        id: 10,
+        type: "mcq",
+        correct: "B",
+        options: { A: "$2(a+b)$", B: "$a+b$", C: "$a-b$", D: "$\\frac{a+b}{2}$", E: "$\\frac{a-b}{2}$" },
+        text: {
+          az: "Üçbucağın iki tərəfi $a$ və $b$-yə bərabərdir, üçüncü tərəfin ortasından verilmiş tərəflərə paralel düz xətlər keçirilmişdir. Alınan dördbucaqlının perimetrini tapın.",
+          ru: "Две стороны треугольника равны $a$ и $b$. Через середину третьей стороны проведены прямые, параллельные этим сторонам. Найдите периметр полученного четырехугольника.",
+          en: "Two sides of a triangle are $a$ and $b$. Lines are drawn through the midpoint of the third side parallel to these sides. Find the perimeter of the resulting quadrilateral."
+        },
+        explanation: {
+          az: "Həlli:\n1) Alınan fiqur tərəfləri üçbucağın orta xətləri olan paraleloqramdır.\n2) Paraleoloqramın tərəfləri $\\frac{a}{2}$ və $\\frac{b}{2}$-dir.\n3) $P = 2 \\cdot \\left(\\frac{a}{2} + \\frac{b}{2}\\right) = a + b$.",
+          ru: "Решение:\n1) Полученная фигура — параллелограмм со сторонами $\\frac{a}{2}$ и $\\frac{b}{2}$.\n2) Периметр: $P = 2 \\cdot \\left(\\frac{a}{2} + \\frac{b}{2}\\right) = a + b$.",
+          en: "Solution:\n1) The resulting shape is a parallelogram with sides $\\frac{a}{2}$ and $\\frac{b}{2}$.\n2) Perimeter: $P = 2\\left(\\frac{a}{2} + \\frac{b}{2}\\right) = a + b$."
+        }
+      },
+      {
+        id: 11,
+        type: "mcq",
+        correct: "A",
+        options: { A: "4,8 sm", B: "2,6 sm", C: "6,5 sm", D: "10,4 sm", E: "6 sm" },
+        text: {
+          az: "Üçbucağın tərəfləri nisbəti $3:4:6$ kimidir. Tərəfləri bu üçbucağın orta xətləri olan ikinci üçbucağın perimetri $5,2\\text{ sm}$-dir. Birinci üçbucağın böyük tərəfini tapın.",
+          ru: "Стороны треугольника относятся как $3:4:6$. Периметр треугольника, образованного его средними линиями, равен $5,2\\text{ см}$. Найдите большую сторону исходного треугольника.",
+          en: "The sides of a triangle are in the ratio $3:4:6$. The perimeter of the triangle formed by its midsegments is $5.2\\text{ cm}$. Find the largest side of the first triangle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Əsas üçbucağın perimetri: $P = 2 \\times 5,2 = 10,4\\text{ sm}$.\n2) $3x + 4x + 6x = 10,4 \\implies 13x = 10,4 \\implies x = 0,8\\text{ sm}$.\n3) Ən böyük tərəf: $6x = 6 \\times 0,8 = 4,8\\text{ sm}$.",
+          ru: "Решение:\n1) Периметр исходного треугольника: $P = 2 \\times 5,2 = 10,4\\text{ см}$.\n2) $13x = 10,4 \\implies x = 0,8\\text{ см}$.\n3) Большая сторона: $6x = 6 \\times 0,8 = 4,8\\text{ см}$.",
+          en: "Solution:\n1) Original perimeter: $P = 2 \\times 5.2 = 10.4\\text{ cm}$.\n2) $13x = 10.4 \\implies x = 0.8\\text{ cm}$.\n3) Largest side: $6x = 6 \\times 0.8 = 4.8\\text{ cm}$."
+        }
+      },
+      {
+        id: 12,
+        type: "mcq",
+        correct: "C",
+        options: { A: "1 sm", B: "4 sm", C: "2 sm", D: "3 sm", E: "5 sm" },
+        text: {
+          az: "Parça düz xətti kəsir və onun ucları düz xətdən $6\\text{ sm}$ və $10\\text{ sm}$-lik məsafədədir. Parçanın orta nöqtəsi bu düz xətdən hansı məsafədədir?",
+          ru: "Отрезок пересекает прямую, и его концы находятся на расстояниях $6\\text{ см}$ и $10\\text{ см}$ от прямой. На каком расстоянии от прямой находится середина отрезка?",
+          en: "A line segment intersects a straight line, and its endpoints are at distances of $6\\text{ cm}$ and $10\\text{ cm}$ from the line. What is the distance from the midpoint of the segment to the line?"
+        },
+        explanation: {
+          az: "Həlli:\n1) Parça düz xətti kəsdiyi üçün ucları müxtəlif yarımmüstəvilərdə yerləşir.\n2) Orta nöqtədən düz xəttə qədər olan məsafə: $d = \\frac{|10 - 6|}{2} = \\frac{4}{2} = 2\\text{ sm}$.",
+          ru: "Решение:\n1) Поскольку отрезок пересекает прямую, концы лежат по разные стороны от нее.\n2) $d = \\frac{|10 - 6|}{2} = \\frac{4}{2} = 2\\text{ см}$.",
+          en: "Solution:\n1) Since the segment intersects the line, the endpoints lie on opposite sides.\n2) $d = \\frac{|10 - 6|}{2} = 2\\text{ cm}$."
+        }
+      },
+      {
+        id: 13,
+        type: "mcq",
+        correct: "B",
+        image: "Ucbucagin_orta_xetti_Image0013.png",
+        options: { A: "$y=\\sqrt{x^2+2}$", B: "$y=\\sqrt{x^2+4}$", C: "$y=\\sqrt{x^2-4}$", D: "$y=\\sqrt{x^2+1}$", E: "$y=\\sqrt{4-x^2}$" },
+        text: {
+          az: "$\\Delta ABC$-də $\\angle C=90^\\circ$, $MN \\parallel BC$, $MN=2$, $BC=4$, $AN=x$, $MB=y$ olarsa, $y$-i $x$-lə ifadə edin.",
+          ru: "В $\\Delta ABC$ $\\angle C=90^\\circ$, $MN \\parallel BC$, $MN=2$, $BC=4$, $AN=x$, $MB=y$. Выразите $y$ через $x$.",
+          en: "In $\\Delta ABC$, $\\angle C=90^\\circ$, $MN \\parallel BC$, $MN=2$, $BC=4$, $AN=x$, $MB=y$. Express $y$ in terms of $x$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $MN \\parallel BC$ və $MN = \\frac{1}{2}BC$ ($2 = \\frac{4}{2}$) olduğundan $MN$ orta xəttdir.\n2) Deməli, $M$ və $N$ orta nöqtələrdir: $AM = MB = y$, $AN = NC = x$.\n3) Düzbucaqlı $\\Delta AMN$-dən: $y = AM = \\sqrt{AN^2 + MN^2} = \\sqrt{x^2 + 2^2} = \\sqrt{x^2 + 4}$.",
+          ru: "Решение:\n1) $MN$ — средняя линия, так как $MN \\parallel BC$ и $MN = \\frac{1}{2}BC = 2$.\n2) Следовательно, $M$ — середина $AB$ ($AM = MB = y$).\n3) Из прямоугольного $\\Delta AMN$: $y = \\sqrt{x^2 + 2^2} = \\sqrt{x^2 + 4}$.",
+          en: "Solution:\n1) $MN$ is a midsegment since $MN \\parallel BC$ and $MN = \\frac{BC}{2} = 2$.\n2) Thus, $AM = MB = y$.\n3) From right triangle $\\Delta AMN$: $y = \\sqrt{x^2 + 2^2} = \\sqrt{x^2 + 4}$."
+        }
+      },
+      {
+        id: 14,
+        type: "open",
+        correct: "6",
+        image: "Ucbucagin_orta_xetti_Image0014.png",
+        text: {
+          az: "$ABC$ üçbucağında $AB \\perp BC$, $AT \\perp BM$ və $AT$ tənböləndir. $BT=3$ və $CT=5$ olarsa, $AM$-i tapın.",
+          ru: "В треугольнике $ABC$ $AB \\perp BC$, $AT \\perp BM$ и $AT$ — биссектриса. Если $BT=3$ и $CT=5$, найдите $AM$.",
+          en: "In $\\Delta ABC$, $AB \\perp BC$, $AT \\perp BM$, and $AT$ is an angle bisector. If $BT=3$ and $CT=5$, find $AM$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\Delta ABM$-də $AT$ həm tənbölən, həm də hündürlükdür ($AT \\perp BM$), ona görə də $\\Delta ABM$ bərabəryanlıdır: $AM = AB$.\n2) Düzbucaqlı $\\Delta ABC$-də tənbölən xassəsinə görə: $\\frac{AB}{AC} = \\frac{BT}{TC} = \\frac{3}{5} \\implies AB = 3k, AC = 5k$.\n3) Pifaqor teoreminə görə: $BC = 4k$. Şərtdən $BC = 3 + 5 = 8 \\implies 4k = 8 \\implies k = 2$.\n4) $AB = 3k = 3(2) = 6 \\implies AM = 6$.",
+          ru: "Решение:\n1) В $\\Delta ABM$ отрезок $AT$ является биссектрисой и высотой, следовательно $AM = AB$.\n2) В $\\Delta ABC$ по свойству биссектрисы: $\\frac{AB}{AC} = \\frac{3}{5} \\implies AB = 3k, AC = 5k$.\n3) $BC = \\sqrt{AC^2 - AB^2} = 4k$. Так как $BC = 3 + 5 = 8 \\implies 4k = 8 \\implies k = 2$.\n4) $AM = AB = 3(2) = 6$.",
+          en: "Solution:\n1) In $\\Delta ABM$, $AT$ is both bisector and altitude $\\implies AM = AB$.\n2) By Angle Bisector Theorem in $\\Delta ABC$: $\\frac{AB}{AC} = \\frac{3}{5} \\implies AB = 3k, AC = 5k$.\n3) $BC = 4k = 8 \\implies k = 2$.\n4) $AM = AB = 3(2) = 6$."
+        }
+      }
+    ];
+
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    function init() {
+      renderApp();
+      updateScore();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `lang-${lang}`);
+      });
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) {
+        currentSlide = nextSlide;
+        renderApp();
+      }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        renderApp();
+      }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      const isCorrect = choice === q.correct;
+      userAnswers[qId] = { answer: choice, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+
+      const q = questionsData.find(item => item.id === qId);
+      
+      const cleanVal = val.toLowerCase().replace(/[\s°mмsmсм]/g, '').replace(/;/g, ',');
+      const cleanCorrect = q.correct.toLowerCase().replace(/[\s°mмsmсм]/g, '').replace(/;/g, ',');
+      const isCorrect = cleanVal === cleanCorrect || cleanVal.includes(cleanCorrect);
+
+      userAnswers[qId] = { answer: val, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-back').innerText = t.back;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+
+        if (userAnswers[q.id]) {
+          btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        }
+        if (currentMode === 'slide' && q.id === currentSlide) {
+          btn.classList.add('active');
+        }
+
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      const questionsToRender = currentMode === 'slide'
+        ? questionsData.filter(q => q.id === currentSlide)
+        : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang]}</div>
+        `;
+
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id}"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}"
+                value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''}
+                onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang]}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>

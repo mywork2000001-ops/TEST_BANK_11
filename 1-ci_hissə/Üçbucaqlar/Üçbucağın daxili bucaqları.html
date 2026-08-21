@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Üçbucağın daxili bucaqlarının cəmi. Üçbucağın xarici bucağının xassəsi</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      padding: 12px 20px;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topic-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #f1f5f9;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary);
+    }
+
+    .topic-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .btn-group button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .btn-group button.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .score-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .grid-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .grid-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .q-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 6px;
+    }
+
+    .q-btn {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .q-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .q-btn.active {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .q-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .q-btn.incorrect {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .q-type-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .q-image-container {
+      margin: 16px 0;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .q-image-container img {
+      max-width: 100%;
+      max-height: 230px;
+      height: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .option-btn.selected-correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46 !important;
+      font-weight: 700;
+    }
+
+    .option-btn.selected-incorrect {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b !important;
+      font-weight: 700;
+    }
+
+    .open-input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      max-width: 440px;
+    }
+
+    .open-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .open-input:focus {
+      border-color: var(--primary);
+    }
+
+    .submit-btn {
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .explanation-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-body {
+      white-space: pre-line;
+      color: #334155;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="topic-title-box">
+        <a href="../../index.html" class="back-btn">← <span id="ui-back">Əsas Menyu</span></a>
+        <div class="topic-title" id="ui-topic">Üçbucağın daxili bucaqlarının cəmi. Xarici bucağın xassəsi</div>
+      </div>
+      
+      <div class="controls">
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 35</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    const uiTranslations = {
+      az: {
+        topic: "Üçbucağın daxili bucaqlarının cəmi. Üçbucağın xarici bucağının xassəsi",
+        back: "Əsas Menyu",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı daxil edin...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Сумма внутренних углов треугольника. Свойство внешнего угла",
+        back: "Главное меню",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Sum of Interior Angles of a Triangle. Exterior Angle Theorem",
+        back: "Main Menu",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended",
+        check: "Submit",
+        enterAnswer: "Enter answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    const questionsData = [
+      {
+        id: 1,
+        type: "mcq",
+        correct: "D",
+        options: { A: "$\\frac{\\pi}{10}$", B: "$\\frac{4\\pi}{15}$", C: "$\\frac{7\\pi}{20}$", D: "$\\frac{3\\pi}{10}$", E: "$\\frac{\\pi}{15}$" },
+        text: {
+          az: "Düzbucaqlı üçbucağın iti bucaqlarından biri $\\frac{\\pi}{5}$ olarsa, o biri iti bucağı tapın.",
+          ru: "Один из острых углов прямоугольного треугольника равен $\\frac{\\pi}{5}$. Найдите другой острый угол.",
+          en: "One acute angle of a right triangle is $\\frac{\\pi}{5}$. Find the other acute angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Düzbucaqlı üçbucağın iti bucaqlarının cəmi $\\frac{\\pi}{2}$-dir ($90^\\circ$).\n2) $\\frac{\\pi}{2} - \\frac{\\pi}{5} = \\frac{5\\pi - 2\\pi}{10} = \\frac{3\\pi}{10}$.",
+          ru: "Решение:\n1) $\\frac{\\pi}{2} - \\frac{\\pi}{5} = \\frac{3\\pi}{10}$.",
+          en: "Solution:\n1) $\\frac{\\pi}{2} - \\frac{\\pi}{5} = \\frac{3\\pi}{10}$."
+        }
+      },
+      {
+        id: 2,
+        type: "mcq",
+        correct: "B",
+        options: { A: "$\\frac{5\\pi}{16}$", B: "$\\frac{3\\pi}{8}$", C: "$\\frac{7\\pi}{16}$", D: "$\\frac{3\\pi}{16}$", E: "$\\frac{\\pi}{4}$" },
+        text: {
+          az: "Düzbucaqlı üçbucağın iti bucaqlarından biri $\\frac{\\pi}{8}$ olarsa, o biri iti bucağı tapın.",
+          ru: "Один из острых углов прямоугольного треугольника равен $\\frac{\\pi}{8}$. Найдите другой острый угол.",
+          en: "One acute angle of a right triangle is $\\frac{\\pi}{8}$. Find the other acute angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\frac{\\pi}{2} - \\frac{\\pi}{8} = \\frac{4\\pi - \\pi}{8} = \\frac{3\\pi}{8}$.",
+          ru: "Решение:\n1) $\\frac{\\pi}{2} - \\frac{\\pi}{8} = \\frac{3\\pi}{8}$.",
+          en: "Solution:\n1) $\\frac{\\pi}{2} - \\frac{\\pi}{8} = \\frac{3\\pi}{8}$."
+        }
+      },
+      {
+        id: 3,
+        type: "mcq",
+        correct: "B",
+        options: { A: "70°", B: "60°", C: "90°", D: "45°", E: "50°" },
+        text: {
+          az: "Üçbucağın $A$ təpəsindəki xarici bucağı ilə $B$ təpəsindəki daxili bucağının fərqi $60^\\circ$-dir. $C$ təpəsindəki daxili bucağı tapın.",
+          ru: "Разность внешнего угла при вершине $A$ и внутреннего угла при вершине $B$ равна $60^\\circ$. Найдите внутренний угол при вершине $C$.",
+          en: "The difference between the exterior angle at vertex $A$ and the interior angle at vertex $B$ is $60^\\circ$. Find the interior angle at vertex $C$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Xarici bucağın xassəsinə görə: $\\angle A_{xar} = \\angle B + \\angle C$.\n2) $\\angle A_{xar} - \\angle B = \\angle C = 60^\\circ$.",
+          ru: "Решение:\n1) $\\angle A_{ext} = \\angle B + \\angle C$.\n2) $\\angle A_{ext} - \\angle B = \\angle C = 60^\\circ$.",
+          en: "Solution:\n1) $\\angle A_{ext} = \\angle B + \\angle C \\implies \\angle C = 60^\\circ$."
+        }
+      },
+      {
+        id: 4,
+        type: "mcq",
+        correct: "E",
+        image: "Ucbucagin_bucaqlar_Image0004.png",
+        options: { A: "80°", B: "55°", C: "75°", D: "70°", E: "60°" },
+        text: {
+          az: "$\\beta$-nı tapın.",
+          ru: "Найдите $\\beta$.",
+          en: "Find $\\beta$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Yuxarı üçbucaqda üçüncü bucaq: $180^\\circ - (65^\\circ + 45^\\circ) = 70^\\circ$.\n2) Qarşılıqlı bucaq $70^\\circ$ olduğundan: $\\beta + 50^\\circ + 70^\\circ = 180^\\circ \\implies \\beta = 60^\\circ$.",
+          ru: "Решение:\n1) Вертикальный угол равен $180^\\circ - (65^\\circ + 45^\\circ) = 70^\\circ$.\n2) $\\beta = 180^\\circ - (70^\\circ + 50^\\circ) = 60^\\circ$.",
+          en: "Solution:\n1) $\\beta = 180^\\circ - (70^\\circ + 50^\\circ) = 60^\\circ$."
+        }
+      },
+      {
+        id: 5,
+        type: "mcq",
+        correct: "C",
+        image: "Ucbucagin_bucaqlar_Image0005.png",
+        options: { A: "30°", B: "40°", C: "50°", D: "100°", E: "60°" },
+        text: {
+          az: "$\\alpha$-nı tapın.",
+          ru: "Найдите $\\alpha$.",
+          en: "Find $\\alpha$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Yuxarı bucaq: $180^\\circ - (80^\\circ + 40^\\circ) = 60^\\circ$.\n2) Aşağı üçbucaqda: $70^\\circ + 60^\\circ + \\alpha = 180^\\circ \\implies \\alpha = 50^\\circ$.",
+          ru: "Решение:\n1) $\\alpha = 180^\\circ - (70^\\circ + 60^\\circ) = 50^\\circ$.",
+          en: "Solution:\n1) $\\alpha = 50^\\circ$."
+        }
+      },
+      {
+        id: 6,
+        type: "mcq",
+        correct: "A",
+        options: { A: "154°", B: "156°", C: "160°", D: "148°", E: "120°" },
+        text: {
+          az: "Üçbucağın iki xarici bucağı $76^\\circ$ və $130^\\circ$-dir. Üçüncü xarici bucağı tapın.",
+          ru: "Два внешних угла треугольника равны $76^\\circ$ и $130^\\circ$. Найдите третий внешний угол.",
+          en: "Two exterior angles of a triangle are $76^\\circ$ and $130^\\circ$. Find the third exterior angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Üçbucağın xarici bucaqlarının cəmi $360^\\circ$-dir.\n2) Üçüncü xarici bucaq: $360^\\circ - (76^\\circ + 130^\\circ) = 360^\\circ - 206^\\circ = 154^\\circ$.",
+          ru: "Решение:\n1) Сумма внешних углов равна $360^\\circ$.\n2) $360^\\circ - (76^\\circ + 130^\\circ) = 154^\\circ$.",
+          en: "Solution:\n1) $360^\\circ - (76^\\circ + 130^\\circ) = 154^\\circ$."
+        }
+      },
+      {
+        id: 7,
+        type: "mcq",
+        correct: "B",
+        options: { A: "60°", B: "160°", C: "100°", D: "80°", E: "90°" },
+        text: {
+          az: "Üçbucağın iki xarici bucağı $80^\\circ$ və $120^\\circ$-dir. Üçüncü xarici bucağı tapın.",
+          ru: "Два внешних угла треугольника равны $80^\\circ$ и $120^\\circ$. Найдите третий внешний угол.",
+          en: "Two exterior angles of a triangle are $80^\\circ$ and $120^\\circ$. Find the third exterior angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) $360^\\circ - (80^\\circ + 120^\\circ) = 360^\\circ - 200^\\circ = 160^\\circ$.",
+          ru: "Решение:\n1) $360^\\circ - (80^\\circ + 120^\\circ) = 160^\\circ$.",
+          en: "Solution:\n1) $360^\\circ - 200^\\circ = 160^\\circ$."
+        }
+      },
+      {
+        id: 8,
+        type: "mcq",
+        correct: "D",
+        options: { A: "110°, 90°", B: "120°, 170°", C: "135°, 155°", D: "125°, 165°", E: "125°, 160°" },
+        text: {
+          az: "Üçbucağın daxili bucaqlarından biri $55^\\circ$, xarici bucaqlarından biri isə $70^\\circ$-dir. Üçbucağın qalan xarici bucaqlarını tapın.",
+          ru: "Один из внутренних углов равен $55^\\circ$, а один из внешних равен $70^\\circ$. Найдите остальные внешние углы.",
+          en: "One interior angle is $55^\\circ$, and one exterior angle is $70^\\circ$. Find the remaining exterior angles."
+        },
+        explanation: {
+          az: "Həlli:\n1) $55^\\circ$-li bucağın xarici bucağı: $180^\\circ - 55^\\circ = 125^\\circ$.\n2) Üçüncü xarici bucaq: $360^\\circ - (125^\\circ + 70^\\circ) = 165^\\circ$.\n3) Qalan xarici bucaqlar: $125^\\circ$ və $165^\\circ$.",
+          ru: "Решение:\n1) Внешний угол к $55^\\circ$: $180^\\circ - 55^\\circ = 125^\\circ$.\n2) Третий внешний: $360^\\circ - (125^\\circ + 70^\\circ) = 165^\\circ$.",
+          en: "Solution:\n1) $180^\\circ - 55^\\circ = 125^\\circ$.\n2) $360^\\circ - (125^\\circ + 70^\\circ) = 165^\\circ$."
+        }
+      },
+      {
+        id: 9,
+        type: "mcq",
+        correct: "E",
+        options: { A: "150°, 140°", B: "45°, 35°", C: "180°, 80°", D: "200°, 100°", E: "145°, 135°" },
+        text: {
+          az: "Üçbucağın daxili bucaqlarından biri $45^\\circ$, xarici bucaqlarından biri isə $80^\\circ$-dir. Üçbucağın qalan xarici bucaqlarını tapın.",
+          ru: "Один из внутренних углов равен $45^\\circ$, а один из внешних равен $80^\\circ$. Найдите остальные внешние углы.",
+          en: "One interior angle is $45^\\circ$, and one exterior angle is $80^\\circ$. Find the remaining exterior angles."
+        },
+        explanation: {
+          az: "Həlli:\n1) $180^\\circ - 45^\\circ = 135^\\circ$.\n2) $360^\\circ - (135^\\circ + 80^\\circ) = 145^\\circ$.\n3) Cavab: $145^\\circ, 135^\\circ$.",
+          ru: "Решение:\n1) $180^\\circ - 45^\\circ = 135^\\circ$.\n2) $360^\\circ - (135^\\circ + 80^\\circ) = 145^\\circ$.",
+          en: "Solution:\n1) $145^\\circ, 135^\\circ$."
+        }
+      },
+      {
+        id: 10,
+        type: "mcq",
+        correct: "D",
+        image: "Ucbucagin_bucaqlar_Image0010.png",
+        options: { A: "130°", B: "100°", C: "70°", D: "120°", E: "108°" },
+        text: {
+          az: "Xarici bucaqlarından biri $110^\\circ$ olan üçbucağın $\\beta$ xarici bucağını tapın.",
+          ru: "Найдите внешний угол $\\beta$ треугольника, у которого один внешний угол равен $110^\\circ$, а внутренний угол при вершине равен $50^\\circ$.",
+          en: "Find the exterior angle $\\beta$ of a triangle having one exterior angle $110^\\circ$ and top interior angle $50^\\circ$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Təpə bucağının xarici bucağı: $180^\\circ - 50^\\circ = 130^\\circ$.\n2) $\\beta = 360^\\circ - (110^\\circ + 130^\\circ) = 120^\\circ$.",
+          ru: "Решение:\n1) Внешний угол при вершине: $180^\\circ - 50^\\circ = 130^\\circ$.\n2) $\\beta = 360^\\circ - 240^\\circ = 120^\\circ$.",
+          en: "Solution:\n1) $\\beta = 360^\\circ - (110^\\circ + 130^\\circ) = 120^\\circ$."
+        }
+      },
+      {
+        id: 11,
+        type: "mcq",
+        correct: "C",
+        image: "Ucbucagin_bucaqlar_Image0011.png",
+        options: { A: "58°", B: "60°", C: "50°", D: "72°", E: "70°" },
+        text: {
+          az: "Üçbucağın xarici bucaqları $122^\\circ$ və $108^\\circ$ olarsa, $\\alpha$ bucağını tapın.",
+          ru: "Внешние углы треугольника равны $122^\\circ$ и $108^\\circ$. Найдите внутренний угол $\\alpha$.",
+          en: "Exterior angles are $122^\\circ$ and $108^\\circ$. Find interior angle $\\alpha$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha$ bucağının xarici bucağı: $360^\\circ - (122^\\circ + 108^\\circ) = 130^\\circ$.\n2) $\\alpha = 180^\\circ - 130^\\circ = 50^\\circ$.",
+          ru: "Решение:\n1) Внешний угол к $\\alpha$: $360^\\circ - 230^\\circ = 130^\\circ$.\n2) $\\alpha = 180^\\circ - 130^\\circ = 50^\\circ$.",
+          en: "Solution:\n1) $\\alpha = 50^\\circ$."
+        }
+      },
+      {
+        id: 12,
+        type: "mcq",
+        correct: "A",
+        image: "Ucbucagin_bucaqlar_Image0012.png",
+        options: { A: "70°", B: "140°", C: "80°", D: "65°", E: "105°" },
+        text: {
+          az: "$AC$ və $AB$ düz xətləri kəsişirlər. $ABC$ üçbucağının xarici bucaqlarından biri $105^\\circ$ olarsa, $\\beta$ bucağını tapın.",
+          ru: "$AC$ и $AB$ пересекаются. Один из внешних углов равен $105^\\circ$. Найдите угол $\\beta$.",
+          en: "Lines $AC$ and $AB$ intersect. One exterior angle is $105^\\circ$. Find angle $\\beta$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle A = 35^\\circ$.\n2) Xarici bucaq xassəsi: $105^\\circ = \\beta + 35^\\circ \\implies \\beta = 70^\\circ$.",
+          ru: "Решение:\n1) $105^\\circ = \\beta + 35^\\circ \\implies \\beta = 70^\\circ$.",
+          en: "Solution:\n1) $\\beta = 105^\\circ - 35^\\circ = 70^\\circ$."
+        }
+      },
+      {
+        id: 13,
+        type: "mcq",
+        correct: "E",
+        image: "Ucbucagin_bucaqlar_Image0013.png",
+        options: { A: "114°", B: "36°", C: "124°", D: "104°", E: "144°" },
+        text: {
+          az: "$AC$ və $AB$ düz xətləri kəsişirlər. $ABC$ üçbucağının $\\alpha$ xarici bucağını tapın.",
+          ru: "Найдите внешний угол $\\alpha$ треугольника $ABC$.",
+          en: "Find exterior angle $\\alpha$ of triangle $ABC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha = 40^\\circ + 104^\\circ = 144^\\circ$.",
+          ru: "Решение:\n1) $\\alpha = 40^\\circ + 104^\\circ = 144^\\circ$.",
+          en: "Solution:\n1) $\\alpha = 144^\\circ$."
+        }
+      },
+      {
+        id: 14,
+        type: "mcq",
+        correct: "B",
+        image: "Ucbucagin_bucaqlar_Image0014.png",
+        options: { A: "15°", B: "35°", C: "20°", D: "30°", E: "25°" },
+        text: {
+          az: "$x$-i tapın.",
+          ru: "Найдите $x$.",
+          en: "Find $x$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $60^\\circ = x + 15^\\circ + 10^\\circ \\implies x = 35^\\circ$.",
+          ru: "Решение:\n1) $x = 60^\\circ - (15^\\circ + 10^\\circ) = 35^\\circ$.",
+          en: "Solution:\n1) $x = 35^\\circ$."
+        }
+      },
+      {
+        id: 15,
+        type: "mcq",
+        correct: "C",
+        image: "Ucbucagin_bucaqlar_Image0015.png",
+        options: { A: "65°", B: "10°", C: "30°", D: "15°", E: "40°" },
+        text: {
+          az: "$x$-i tapın.",
+          ru: "Найдите $x$.",
+          en: "Find $x$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $130^\\circ = 65^\\circ + 35^\\circ + x \\implies 130^\\circ = 100^\\circ + x \\implies x = 30^\\circ$.",
+          ru: "Решение:\n1) $130^\\circ = 65^\\circ + 35^\\circ + x \\implies x = 30^\\circ$.",
+          en: "Solution:\n1) $x = 30^\\circ$."
+        }
+      },
+      {
+        id: 16,
+        type: "mcq",
+        correct: "D",
+        image: "Ucbucagin_bucaqlar_Image0016.png",
+        options: { A: "7,5 sm", B: "9,5 sm", C: "15 sm", D: "19 sm", E: "17 sm" },
+        text: {
+          az: "$a \\parallel b$, $\\alpha = \\beta = 120^\\circ$, $AB$-nin $b$ düz xətti üzərindəki proyeksiyası $9,5\\text{ sm}$ olarsa, $AC$-ni tapın.",
+          ru: "$a \\parallel b$, $\\alpha = \\beta = 120^\\circ$, проекция $AB$ на прямую $b$ равна $9,5\\text{ см}$. Найдите $AC$.",
+          en: "$a \\parallel b$, $\\alpha = \\beta = 120^\\circ$, projection of $AB$ on line $b$ is $9.5\\text{ cm}$. Find $AC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\triangle ABC$ bərabərtərəflidir ($60^\\circ, 60^\\circ, 60^\\circ$).\n2) Hündürlük oturacağı yarıya bölür: $AC = 2 \\times 9,5 = 19\\text{ sm}$.",
+          ru: "Решение:\n1) Треугольник равносторонний: $AC = 2 \\times 9,5 = 19\\text{ см}$.",
+          en: "Solution:\n1) $AC = 2(9.5) = 19\\text{ cm}$."
+        }
+      },
+      {
+        id: 17,
+        type: "mcq",
+        correct: "C",
+        options: { A: "30°", B: "15°", C: "60°", D: "45°", E: "75°" },
+        text: {
+          az: "Bərabərtərəfli üçbucağın iki tənböləni arasında qalan iti bucaq neçə dərəcədir?",
+          ru: "Чему равен острый угол между двумя биссектрисами равностороннего треугольника?",
+          en: "What is the acute angle between two bisectors of an equilateral triangle?"
+        },
+        explanation: {
+          az: "Həlli:\n1) Tənbölənlər arasındakı kor bucaq: $90^\\circ + \\frac{60^\\circ}{2} = 120^\\circ$.\n2) İti bucaq: $180^\\circ - 120^\\circ = 60^\\circ$.",
+          ru: "Решение:\n1) $180^\\circ - 120^\\circ = 60^\\circ$.",
+          en: "Solution:\n1) Acute angle = $60^\\circ$."
+        }
+      },
+      {
+        id: 18,
+        type: "mcq",
+        correct: "B",
+        options: { A: "15°", B: "60°", C: "90°", D: "30°", E: "75°" },
+        text: {
+          az: "Bərabərtərəfli üçbucağın iki medianı arasında qalan iti bucaq neçə dərəcədir?",
+          ru: "Чему равен острый угол между двумя медианами равностороннего треугольника?",
+          en: "What is the acute angle between two medians of an equilateral triangle?"
+        },
+        explanation: {
+          az: "Həlli:\n1) Bərabərtərəfli üçbucaqda medianlar tənböləndir $\\implies 60^\\circ$.",
+          ru: "Решение:\n1) $60^\\circ$.",
+          en: "Solution:\n1) $60^\\circ$."
+        }
+      },
+      {
+        id: 19,
+        type: "mcq",
+        correct: "A",
+        image: "Ucbucagin_bucaqlar_Image0019.png",
+        options: { A: "35°", B: "25°", C: "45°", D: "60°", E: "70°" },
+        text: {
+          az: "$ABC$ üçbucağında $\\angle BAC = 110^\\circ, BD = BE$ və $CE = CF$ olarsa, $DEF$ bucağını tapın.",
+          ru: "В $\\triangle ABC$ $\\angle BAC = 110^\\circ, BD = BE$ и $CE = CF$. Найдите угол $DEF$.",
+          en: "In $\\triangle ABC$, $\\angle BAC = 110^\\circ, BD = BE$ and $CE = CF$. Find angle $DEF$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle DEF = \\frac{180^\\circ - \\angle A}{2} = \\frac{180^\\circ - 110^\\circ}{2} = 35^\\circ$.",
+          ru: "Решение:\n1) $\\angle DEF = \\frac{180^\\circ - 110^\\circ}{2} = 35^\\circ$.",
+          en: "Solution:\n1) $\\angle DEF = 35^\\circ$."
+        }
+      },
+      {
+        id: 20,
+        type: "mcq",
+        correct: "D",
+        image: "Ucbucagin_bucaqlar_Image0020.png",
+        options: { A: "15°", B: "30°", C: "10°", D: "20°", E: "40°" },
+        text: {
+          az: "$ABC$ və $DBC$ üçbucaqlarında $\\angle BDC = 120^\\circ, \\beta = \\alpha + 20^\\circ$ olarsa, $\\gamma$ bucağını tapın.",
+          ru: "В треугольниках $ABC$ и $DBC$ $\\angle BDC = 120^\\circ, \\beta = \\alpha + 20^\\circ$. Найдите угол $\\gamma$.",
+          en: "In $\\triangle ABC$ and $\\triangle DBC$, $\\angle BDC = 120^\\circ, \\beta = \\alpha + 20^\\circ$. Find angle $\\gamma$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Həndəsi əlaqələrdən $\\gamma = 20^\\circ$ tapılır.",
+          ru: "Решение:\n1) $\\gamma = 20^\\circ$.",
+          en: "Solution:\n1) $\\gamma = 20^\\circ$."
+        }
+      },
+      {
+        id: 21,
+        type: "mcq",
+        correct: "C",
+        image: "Ucbucagin_bucaqlar_Image0021.png",
+        options: { A: "45°", B: "30°", C: "60°", D: "80°", E: "75°" },
+        text: {
+          az: "$ABC$ və $DBC$ üçbucaqlarında $BDC$ düz bucaq və $\\beta = \\frac{\\alpha}{3}$ olarsa, $\\gamma$ bucağını tapın.",
+          ru: "$\\angle BDC = 90^\\circ, \\beta = \\frac{\\alpha}{3}$. Найдите угол $\\gamma$.",
+          en: "$\\angle BDC = 90^\\circ, \\beta = \\frac{\\alpha}{3}$. Find angle $\\gamma$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\gamma = 60^\\circ$.",
+          ru: "Решение:\n1) $\\gamma = 60^\\circ$.",
+          en: "Solution:\n1) $\\gamma = 60^\\circ$."
+        }
+      },
+      {
+        id: 22,
+        type: "mcq",
+        correct: "D",
+        options: { A: "112°", B: "36°", C: "108°", D: "144°", E: "115°" },
+        text: {
+          az: "$ABC$ üçbucağının $AA_1$ və $CC_1$ hündürlükləri $K$ nöqtəsində kəsişir. $\\angle A = 62^\\circ, \\angle C = 82^\\circ$ olduğunu bilərək, $\\angle AKC$-ni tapın.",
+          ru: "Высоты $AA_1$ и $CC_1$ пересекаются в $K$. $\\angle A = 62^\\circ, \\angle C = 82^\\circ$. Найдите $\\angle AKC$.",
+          en: "Altitudes $AA_1$ and $CC_1$ intersect at $K$. $\\angle A = 62^\\circ, \\angle C = 82^\\circ$. Find $\\angle AKC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle B = 180^\\circ - (62^\\circ + 82^\\circ) = 36^\\circ$.\n2) $\\angle AKC = 180^\\circ - \\angle B = 180^\\circ - 36^\\circ = 144^\\circ$.",
+          ru: "Решение:\n1) $\\angle B = 180^\\circ - 144^\\circ = 36^\\circ$.\n2) $\\angle AKC = 180^\\circ - 36^\\circ = 144^\\circ$.",
+          en: "Solution:\n1) $\\angle AKC = 180^\\circ - 36^\\circ = 144^\\circ$."
+        }
+      },
+      {
+        id: 23,
+        type: "mcq",
+        correct: "E",
+        options: { A: "23°", B: "55°", C: "35°", D: "62°", E: "58°" },
+        text: {
+          az: "Üçbucağın iki bucağı $55^\\circ$ və $67^\\circ$-dir. Bu bucaqların təpəsindən çəkilən hündürlüklər arasındakı ən kiçik bucağı tapın.",
+          ru: "Два угла треугольника равны $55^\\circ$ и $67^\\circ$. Найдите наименьший угол между высотами из этих вершин.",
+          en: "Two angles of a triangle are $55^\\circ$ and $67^\\circ$. Find the smallest angle between altitudes from these vertices."
+        },
+        explanation: {
+          az: "Həlli:\n1) Üçüncü bucaq: $180^\\circ - (55^\\circ + 67^\\circ) = 58^\\circ$.\n2) Hündürlüklər arasındakı iti bucaq üçüncü bucağa bərabərdir: $58^\\circ$.",
+          ru: "Решение:\n1) Третий угол: $180^\\circ - 122^\\circ = 58^\\circ$.\n2) Острый угол между высотами равен третьему углу: $58^\\circ$.",
+          en: "Solution:\n1) Acute angle = $58^\\circ$."
+        }
+      },
+      {
+        id: 24,
+        type: "mcq",
+        correct: "E",
+        options: { A: "91°", B: "94°", C: "92°", D: "90°", E: "95°" },
+        text: {
+          az: "$MNK$ üçbucağında $\\angle M = 59^\\circ, \\angle K = 36^\\circ$-dir. $M$ və $K$ təpələrindən çəkilən hündürlüklər $E$ nöqtəsində kəsişir. $MEK$ bucağının qiymətini tapın.",
+          ru: "В $\\triangle MNK$ $\\angle M = 59^\\circ, \\angle K = 36^\\circ$. Высоты из $M$ и $K$ пересекаются в $E$. Найдите $\\angle MEK$.",
+          en: "In $\\triangle MNK$, $\\angle M = 59^\\circ, \\angle K = 36^\\circ$. Altitudes from $M$ and $K$ intersect at $E$. Find $\\angle MEK$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle N = 180^\\circ - (59^\\circ + 36^\\circ) = 85^\\circ$.\n2) $\\angle MEK = 180^\\circ - 85^\\circ = 95^\\circ$.",
+          ru: "Решение:\n1) $\\angle N = 85^\\circ \\implies \\angle MEK = 180^\\circ - 85^\\circ = 95^\\circ$.",
+          en: "Solution:\n1) $\\angle MEK = 95^\\circ$."
+        }
+      },
+      {
+        id: 25,
+        type: "mcq",
+        correct: "C",
+        options: { A: "70°", B: "80°", C: "40°", D: "30°", E: "50°" },
+        text: {
+          az: "$ABC$ üçbucağının $A$ və $B$ təpələrindən çəkilmiş tənbölənlər $D$ nöqtəsində kəsişirlər. $\\angle DAC + \\angle ABD = 70^\\circ$ olarsa, $\\angle ACB$-ni tapın.",
+          ru: "Биссектрисы из $A$ и $B$ пересекаются в $D$. $\\angle DAC + \\angle ABD = 70^\\circ$. Найдите $\\angle ACB$.",
+          en: "Bisectors from $A$ and $B$ intersect at $D$. $\\angle DAC + \\angle ABD = 70^\\circ$. Find $\\angle ACB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\frac{\\angle A}{2} + \\frac{\\angle B}{2} = 70^\\circ \\implies \\angle A + \\angle B = 140^\\circ$.\n2) $\\angle ACB = 180^\\circ - 140^\\circ = 40^\\circ$.",
+          ru: "Решение:\n1) $\\angle A + \\angle B = 140^\\circ$.\n2) $\\angle ACB = 180^\\circ - 140^\\circ = 40^\\circ$.",
+          en: "Solution:\n1) $\\angle ACB = 40^\\circ$."
+        }
+      },
+      {
+        id: 26,
+        type: "mcq",
+        correct: "A",
+        options: { A: "115°", B: "60°", C: "110°", D: "130°", E: "150°" },
+        text: {
+          az: "$ABC$ üçbucağının $A$ və $B$ təpələrindən çəkilmiş tənbölənlər $D$ nöqtəsində kəsişirlər. $\\angle ACB = 50^\\circ$ olarsa, $\\angle ADB$-ni tapın.",
+          ru: "Биссектрисы из $A$ и $B$ пересекаются в $D$. $\\angle ACB = 50^\\circ$. Найдите $\\angle ADB$.",
+          en: "Bisectors from $A$ and $B$ intersect at $D$. $\\angle ACB = 50^\\circ$. Find $\\angle ADB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle ADB = 90^\\circ + \\frac{\\angle C}{2} = 90^\\circ + 25^\\circ = 115^\\circ$.",
+          ru: "Решение:\n1) $\\angle ADB = 90^\\circ + 50^\\circ / 2 = 115^\\circ$.",
+          en: "Solution:\n1) $\\angle ADB = 115^\\circ$."
+        }
+      },
+      {
+        id: 27,
+        type: "mcq",
+        correct: "D",
+        image: "Ucbucagin_bucaqlar_Image0027.png",
+        options: { A: "23°", B: "17°", C: "21°", D: "19°", E: "18°" },
+        text: {
+          az: "$ABC$ üçbucağında $AD$ tənbölən, $\\angle ABC = 68^\\circ, \\angle BAC = 82^\\circ, AD \\perp DE$ olarsa, $\\angle EDC$-ni tapın.",
+          ru: "В $\\triangle ABC$ $AD$ — биссектриса, $\\angle B = 68^\\circ, \\angle A = 82^\\circ, AD \\perp DE$. Найдите $\\angle EDC$.",
+          en: "In $\\triangle ABC$, $AD$ bisects $A$, $\\angle B = 68^\\circ, \\angle A = 82^\\circ, AD \\perp DE$. Find $\\angle EDC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle EDC = 19^\\circ$.",
+          ru: "Решение:\n1) $\\angle EDC = 19^\\circ$.",
+          en: "Solution:\n1) $\\angle EDC = 19^\\circ$."
+        }
+      },
+      {
+        id: 28,
+        type: "mcq",
+        correct: "E",
+        image: "Ucbucagin_bucaqlar_Image0028.png",
+        options: { A: "12°", B: "18°", C: "17°", D: "19°", E: "16°" },
+        text: {
+          az: "$ABC$ üçbucağında $AD$ tənbölən, $\\angle ABC = 64^\\circ, \\angle BAC = 84^\\circ, AD \\perp DE$ olarsa, $\\angle EDC$-ni tapın.",
+          ru: "В $\\triangle ABC$ $AD$ — биссектриса, $\\angle B = 64^\\circ, \\angle A = 84^\\circ, AD \\perp DE$. Найдите $\\angle EDC$.",
+          en: "In $\\triangle ABC$, $AD$ is bisector, $\\angle B = 64^\\circ, \\angle A = 84^\\circ, AD \\perp DE$. Find $\\angle EDC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle EDC = 16^\\circ$.",
+          ru: "Решение:\n1) $\\angle EDC = 16^\\circ$.",
+          en: "Solution:\n1) $\\angle EDC = 16^\\circ$."
+        }
+      },
+      {
+        id: 29,
+        type: "mcq",
+        correct: "A",
+        image: "Ucbucagin_bucaqlar_Image0029.png",
+        options: { A: "67°", B: "55°", C: "70°", D: "50°", E: "83°" },
+        text: {
+          az: "$ABC$ üçbucağında $AB = BD, \\angle DAC = \\angle ABC$ və $\\angle C = 21^\\circ$ olarsa, $\\angle BAD$-ni tapın.",
+          ru: "В $\\triangle ABC$ $AB = BD, \\angle DAC = \\angle B$ и $\\angle C = 21^\\circ$. Найдите $\\angle BAD$.",
+          en: "In $\\triangle ABC$, $AB = BD, \\angle DAC = \\angle B$ and $\\angle C = 21^\\circ$. Find $\\angle BAD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle BAD = 67^\\circ$.",
+          ru: "Решение:\n1) $\\angle BAD = 67^\\circ$.",
+          en: "Solution:\n1) $\\angle BAD = 67^\\circ$."
+        }
+      },
+      {
+        id: 30,
+        type: "mcq",
+        correct: "D",
+        options: { A: "90°", B: "45°", C: "40°", D: "50°", E: "60°" },
+        text: {
+          az: "$ABC$ üçbucağının $C$ təpəsindən daxili və xarici bucaqların tənbölənləri çəkilmişdir. Daxili bucağın tənböləni $AB$ tərəfi ilə $40^\\circ$-li bucaq əmələ gətirir. Xarici bucağın tənböləninin $AB$ tərəfinin uzantısı ilə əmələ gətirdiyi bucağı tapın.",
+          ru: "Биссектрисы внутреннего и внешнего углов при вершине $C$ проведены к $AB$. Внутренняя биссектриса образует с $AB$ угол $40^\\circ$. Найдите угол внешней биссектрисы с продолжением $AB$.",
+          en: "Bisectors of interior and exterior angles at $C$ are drawn. The interior bisector makes a $40^\\circ$ angle with $AB$. Find the angle between the exterior bisector and the extension of $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Daxili və xarici bucaqların tənbölənləri perpendikulyardır ($90^\\circ$).\n2) Düzbucaqlı üçbucaqda: $90^\\circ - 40^\\circ = 50^\\circ$.",
+          ru: "Решение:\n1) Биссектрисы смежных углов перпендикулярны ($90^\\circ$).\n2) $90^\\circ - 40^\\circ = 50^\\circ$.",
+          en: "Solution:\n1) $90^\\circ - 40^\\circ = 50^\\circ$."
+        }
+      },
+      {
+        id: 31,
+        type: "mcq",
+        correct: "B",
+        options: { A: "45°", B: "35°", C: "55°", D: "90°", E: "170°" },
+        text: {
+          az: "$ABC$ üçbucağının $C$ təpəsindən daxili və xarici bucaqların tənbölənləri çəkilmişdir. Xarici bucağın tənböləni $AB$ tərəfinin uzantısı ilə $55^\\circ$-li bucaq əmələ gətirir. Daxili bucağın tənböləninin $AB$ tərəfi ilə əmələ gətirdiyi bucağı tapın.",
+          ru: "Внешняя биссектриса образует угол $55^\\circ$. Найдите угол внутренней биссектрисы с $AB$.",
+          en: "The exterior bisector makes a $55^\\circ$ angle. Find the angle made by the interior bisector with $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $90^\\circ - 55^\\circ = 35^\\circ$.",
+          ru: "Решение:\n1) $90^\\circ - 55^\\circ = 35^\\circ$.",
+          en: "Solution:\n1) $35^\\circ$."
+        }
+      },
+      {
+        id: 32,
+        type: "mcq",
+        correct: "E",
+        image: "Ucbucagin_bucaqlar_Image0032.png",
+        options: { A: "50°, 60°, 40°", B: "45°, 55°, 60°", C: "40°, 60°, 50°", D: "60°, 30°, 60°", E: "70°, 60°, 20°" },
+        text: {
+          az: "$(x-\\alpha):(x-\\beta):(x-\\gamma) = 8:9:13$ və $x = 150^\\circ$ olarsa, $\\alpha, \\beta, \\gamma$ bucaqlarını tapın.",
+          ru: "$(x-\\alpha):(x-\\beta):(x-\\gamma) = 8:9:13$ и $x = 150^\\circ$. Найдите углы $\\alpha, \\beta, \\gamma$.",
+          en: "$(x-\\alpha):(x-\\beta):(x-\\gamma) = 8:9:13$ and $x = 150^\\circ$. Find angles $\\alpha, \\beta, \\gamma$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $x = \\alpha + \\beta + \\gamma = 150^\\circ$.\n2) $3x - (\\alpha + \\beta + \\gamma) = 30k \\implies 450^\\circ - 150^\\circ = 300^\\circ = 30k \\implies k = 10^\\circ$.\n3) $150^\\circ - \\alpha = 80^\\circ \\implies \\alpha = 70^\\circ$.\n4) $150^\\circ - \\beta = 90^\\circ \\implies \\beta = 60^\\circ$.\n5) $150^\\circ - \\gamma = 130^\\circ \\implies \\gamma = 20^\\circ$.",
+          ru: "Решение:\n1) $k = 10^\\circ$.\n2) $\\alpha = 70^\\circ, \\beta = 60^\\circ, \\gamma = 20^\\circ$.",
+          en: "Solution:\n1) $\\alpha = 70^\\circ, \\beta = 60^\\circ, \\gamma = 20^\\circ$."
+        }
+      },
+      {
+        id: 33,
+        type: "open",
+        correct: "40",
+        image: "Ucbucagin_bucaqlar_Image0033.png",
+        text: {
+          az: "$ABC$ üçbucağında $\\angle A = 40^\\circ, BD \\perp AC, CK \\perp AB$ olarsa, $\\angle BOK$-nı tapın.",
+          ru: "В $\\triangle ABC$ $\\angle A = 40^\\circ, BD \\perp AC, CK \\perp AB$. Найдите $\\angle BOK$.",
+          en: "In $\\triangle ABC$, $\\angle A = 40^\\circ, BD \\perp AC, CK \\perp AB$. Find $\\angle BOK$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Düzbucaqlı $\\triangle ABD$-də: $\\angle ABD = 90^\\circ - 40^\\circ = 50^\\circ$.\n2) Düzbucaqlı $\\triangle BKO$-da: $\\angle BOK = 90^\\circ - 50^\\circ = 40^\\circ$.",
+          ru: "Решение:\n1) $\\angle ABD = 90^\\circ - 40^\\circ = 50^\\circ$.\n2) $\\angle BOK = 90^\\circ - 50^\\circ = 40^\\circ$.",
+          en: "Solution:\n1) $\\angle BOK = 40^\\circ$."
+        }
+      },
+      {
+        id: 34,
+        type: "open",
+        correct: "120",
+        image: "Ucbucagin_bucaqlar_Image0034.png",
+        text: {
+          az: "$ABC$ üçbucağında $\\angle C = 60^\\circ, BM \\perp AC, AN \\perp BC$ olarsa, $\\angle AOB$-ni tapın.",
+          ru: "В $\\triangle ABC$ $\\angle C = 60^\\circ, BM \\perp AC, AN \\perp BC$. Найдите $\\angle AOB$.",
+          en: "In $\\triangle ABC$, $\\angle C = 60^\\circ, BM \\perp AC, AN \\perp BC$. Find $\\angle AOB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle AOB = 180^\\circ - \\angle C = 180^\\circ - 60^\\circ = 120^\\circ$.",
+          ru: "Решение:\n1) $\\angle AOB = 180^\\circ - 60^\\circ = 120^\\circ$.",
+          en: "Solution:\n1) $\\angle AOB = 120^\\circ$."
+        }
+      },
+      {
+        id: 35,
+        type: "open",
+        correct: "160",
+        image: "Ucbucagin_bucaqlar_Image0035.png",
+        text: {
+          az: "$\\triangle ACN$ və $\\triangle MCB$-də $\\angle A = 40^\\circ, \\angle B = 30^\\circ, \\angle C = 90^\\circ$-dir. $\\angle MDN$-i tapın.",
+          ru: "В $\\triangle ACN$ и $\\triangle MCB$ $\\angle A = 40^\\circ, \\angle B = 30^\\circ, \\angle C = 90^\\circ$. Найдите $\\angle MDN$.",
+          en: "In $\\triangle ACN$ and $\\triangle MCB$, $\\angle A = 40^\\circ, \\angle B = 30^\\circ, \\angle C = 90^\\circ$. Find $\\angle MDN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle MDN = 90^\\circ + 40^\\circ + 30^\\circ = 160^\\circ$.",
+          ru: "Решение:\n1) $\\angle MDN = 90^\\circ + 40^\\circ + 30^\\circ = 160^\\circ$.",
+          en: "Solution:\n1) $\\angle MDN = 160^\\circ$."
+        }
+      }
+    ];
+
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    function init() {
+      renderApp();
+      updateScore();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `lang-${lang}`);
+      });
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) {
+        currentSlide = nextSlide;
+        renderApp();
+      }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        renderApp();
+      }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      const isCorrect = choice === q.correct;
+      userAnswers[qId] = { answer: choice, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+
+      const q = questionsData.find(item => item.id === qId);
+      
+      const cleanVal = val.toLowerCase().replace(/[\s°mм]/g, '').replace(/;/g, ',');
+      const cleanCorrect = q.correct.toLowerCase().replace(/[\s°mм]/g, '').replace(/;/g, ',');
+      const isCorrect = cleanVal === cleanCorrect || cleanVal.includes(cleanCorrect);
+
+      userAnswers[qId] = { answer: val, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-back').innerText = t.back;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+
+        if (userAnswers[q.id]) {
+          btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        }
+        if (currentMode === 'slide' && q.id === currentSlide) {
+          btn.classList.add('active');
+        }
+
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      const questionsToRender = currentMode === 'slide'
+        ? questionsData.filter(q => q.id === currentSlide)
+        : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang]}</div>
+        `;
+
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id}"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil tapılmadı: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}"
+                value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''}
+                onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang]}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>
