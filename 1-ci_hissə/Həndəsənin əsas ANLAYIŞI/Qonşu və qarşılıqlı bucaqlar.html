@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qonşu və qarşılıqlı bucaqlar</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      padding: 12px 20px;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topic-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #f1f5f9;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary);
+    }
+
+    .topic-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .btn-group button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .btn-group button.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .score-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .grid-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .grid-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .q-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 6px;
+    }
+
+    .q-btn {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .q-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .q-btn.active {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .q-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .q-btn.incorrect {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .q-type-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .q-image-container {
+      margin: 16px 0;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .q-image-container img {
+      max-width: 100%;
+      max-height: 220px;
+      height: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .option-btn.selected-correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46 !important;
+      font-weight: 700;
+    }
+
+    .option-btn.selected-incorrect {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b !important;
+      font-weight: 700;
+    }
+
+    .open-input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      max-width: 380px;
+    }
+
+    .open-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .open-input:focus {
+      border-color: var(--primary);
+    }
+
+    .submit-btn {
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .explanation-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-body {
+      white-space: pre-line;
+      color: #334155;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="topic-title-box">
+        <a href="../index.html" class="back-btn">← <span id="ui-back">Əsas Menyu</span></a>
+        <div class="topic-title" id="ui-topic">Qonşu və qarşılıqlı bucaqlar</div>
+      </div>
+      
+      <div class="controls">
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 12</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    const uiTranslations = {
+      az: {
+        topic: "Qonşu və qarşılıqlı bucaqlar",
+        back: "Əsas Menyu",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı yazın...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Смежные и вертикальные углы",
+        back: "Главное меню",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Supplementary and Vertical Angles",
+        back: "Main Menu",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended",
+        check: "Submit",
+        enterAnswer: "Enter answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    const questionsData = [
+      {
+        id: 1,
+        type: "mcq",
+        correct: "A",
+        options: { A: "40°", B: "140°", C: "70°", D: "110°", E: "35°" },
+        text: {
+          az: "$\\alpha$ bucağı ilə qonşu olan iki bucağın cəmi $280^\\circ$-dir. $\\alpha$ bucağını tapın.",
+          ru: "Сумма двух углов, смежных с углом $\\alpha$, равна $280^\\circ$. Найдите угол $\\alpha$.",
+          en: "The sum of two angles supplementary to angle $\\alpha$ is $280^\\circ$. Find angle $\\alpha$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha$ bucağı ilə qonşu olan hər iki bucaq qarşılıqlı bucaqlar olub bir-birinə bərabərdir və hər biri $180^\\circ - \\alpha$-dır.\n2) $(180^\\circ - \\alpha) + (180^\\circ - \\alpha) = 280^\\circ \\implies 360^\\circ - 2\\alpha = 280^\\circ$.\n3) $2\\alpha = 80^\\circ \\implies \\alpha = 40^\\circ$.",
+          ru: "Решение:\n1) Углы, смежные с $\\alpha$, являются вертикальными и равны $(180^\\circ - \\alpha)$.\n2) $2(180^\\circ - \\alpha) = 280^\\circ \\implies 180^\\circ - \\alpha = 140^\\circ \\implies \\alpha = 40^\\circ$.",
+          en: "Solution:\n1) Both angles supplementary to $\\alpha$ equal $180^\\circ - \\alpha$.\n2) $2(180^\\circ - \\alpha) = 280^\\circ \\implies \\alpha = 40^\\circ$."
+        }
+      },
+      {
+        id: 2,
+        type: "mcq",
+        correct: "D",
+        options: { A: "135°", B: "90°", C: "100°", D: "180°", E: "120°" },
+        text: {
+          az: "Qarşılıqlı bucaqların tənbölənləri arasındakı bucağı tapın.",
+          ru: "Найдите угол между биссектрисами вертикальных углов.",
+          en: "Find the angle between the bisectors of vertical angles."
+        },
+        explanation: {
+          az: "Həlli:\n1) Qarşılıqlı bucaqların tənbölənləri əks şüalardır və bir düz xətt əmələ gətirir.\n2) Onlar arasındakı bucaq $180^\\circ$-dir (açıq bucaq).",
+          ru: "Решение:\n1) Биссектрисы вертикальных углов лежат на одной прямой и являются противоположными лучами.\n2) Угол между ними составляет $180^\\circ$.",
+          en: "Solution:\n1) The bisectors of vertical angles are opposite rays on the same straight line.\n2) The angle between them is $180^\\circ$."
+        }
+      },
+      {
+        id: 3,
+        type: "mcq",
+        correct: "B",
+        options: { A: "60°", B: "90°", C: "100°", D: "30°", E: "180°" },
+        text: {
+          az: "Qonşu bucaqların tənbölənləri arasındakı bucağı tapın.",
+          ru: "Найдите угол между биссектрисами смежных углов.",
+          en: "Find the angle between the bisectors of supplementary angles."
+        },
+        explanation: {
+          az: "Həlli:\n1) Qonşu bucaqların cəmi $180^\\circ$-dir: $\\alpha + \\beta = 180^\\circ$.\n2) Tənbölənlər arasındakı bucaq: $\\frac{\\alpha}{2} + \\frac{\\beta}{2} = \\frac{\\alpha + \\beta}{2} = \\frac{180^\\circ}{2} = 90^\\circ$.",
+          ru: "Решение:\n1) Сумма смежных углов равна $180^\\circ$.\n2) Угол между их биссектрисами: $\\frac{180^\\circ}{2} = 90^\\circ$.",
+          en: "Solution:\n1) Sum of supplementary angles is $180^\\circ$.\n2) Angle between bisectors: $\\frac{180^\\circ}{2} = 90^\\circ$."
+        }
+      },
+      {
+        id: 4,
+        type: "mcq",
+        correct: "D",
+        image: "Qonsu_bucaqlar_Image0004.png",
+        options: { A: "82°", B: "108°", C: "86°", D: "94°", E: "43°" },
+        text: {
+          az: "$EC$ şüası $\\angle MEP$-nin tənböləni və $\\angle CEK = 137^\\circ$ olarsa, $\\angle KEM$-i tapın ($P, E$ və $K$ nöqtələri bir düz xətt üzərində yerləşir).",
+          ru: "Луч $EC$ — биссектриса угла $\\angle MEP$, $\\angle CEK = 137^\\circ$. Найдите $\\angle KEM$ (точки $P, E, K$ лежат на одной прямой).",
+          en: "Ray $EC$ is the bisector of $\\angle MEP$, and $\\angle CEK = 137^\\circ$. Find $\\angle KEM$ ($P, E, K$ are collinear)."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P, E, K$ bir düz xətt üzərində olduğundan: $\\angle CEP = 180^\\circ - 137^\\circ = 43^\\circ$.\n2) $EC$ tənbölən olduğuna görə: $\\angle MEC = \\angle CEP = 43^\\circ$.\n3) $\\angle KEM = \\angle CEK - \\angle MEC = 137^\\circ - 43^\\circ = 94^\\circ$.",
+          ru: "Решение:\n1) $\\angle CEP = 180^\\circ - 137^\\circ = 43^\\circ$.\n2) Так как $EC$ — биссектриса: $\\angle MEC = 43^\\circ$.\n3) $\\angle KEM = 137^\\circ - 43^\\circ = 94^\\circ$.",
+          en: "Solution:\n1) $\\angle CEP = 180^\\circ - 137^\\circ = 43^\\circ$.\n2) $\\angle MEC = 43^\\circ$.\n3) $\\angle KEM = 137^\\circ - 43^\\circ = 94^\\circ$."
+        }
+      },
+      {
+        id: 5,
+        type: "mcq",
+        correct: "D",
+        image: "Qonsu_bucaqlar_Image0005.png",
+        options: { A: "82°", B: "89°", C: "41°", D: "98°", E: "81°" },
+        text: {
+          az: "$BD$ şüası $\\angle ABC$-nin tənböləni və $\\angle DBE = 139^\\circ$ olarsa, $\\angle ABE$-ni tapın ($C, B$ və $E$ nöqtələri bir düz xətt üzərində yerləşir).",
+          ru: "Луч $BD$ — биссектриса $\\angle ABC$, $\\angle DBE = 139^\\circ$. Найдите $\\angle ABE$ (точки $C, B, E$ лежат на одной прямой).",
+          en: "Ray $BD$ is the bisector of $\\angle ABC$, and $\\angle DBE = 139^\\circ$. Find $\\angle ABE$ ($C, B, E$ are collinear)."
+        },
+        explanation: {
+          az: "Həlli:\n1) $C, B, E$ bir düz xətt üzərindədir: $\\angle CBD = 180^\\circ - 139^\\circ = 41^\\circ$.\n2) $BD$ tənböləndir: $\\angle ABD = \\angle CBD = 41^\\circ$.\n3) $\\angle ABE = \\angle DBE - \\angle ABD = 139^\\circ - 41^\\circ = 98^\\circ$.",
+          ru: "Решение:\n1) $\\angle CBD = 180^\\circ - 139^\\circ = 41^\\circ$.\n2) $BD$ — биссектриса $\\implies \\angle ABD = 41^\\circ$.\n3) $\\angle ABE = 139^\\circ - 41^\\circ = 98^\\circ$.",
+          en: "Solution:\n1) $\\angle CBD = 41^\\circ \\implies \\angle ABD = 41^\\circ$.\n2) $\\angle ABE = 139^\\circ - 41^\\circ = 98^\\circ$."
+        }
+      },
+      {
+        id: 6,
+        type: "mcq",
+        correct: "C",
+        options: { A: "35° və 5°", B: "18° və 22°", C: "20° və 20°", D: "30° və 10°", E: "24° və 16°" },
+        text: {
+          az: "İki düz xəttin kəsişməsindən alınan bucaqlardan ikisinin cəmi $40^\\circ$-dir. Bu bucaqları tapın.",
+          ru: "Сумма двух углов, образованных при пересечении двух прямых, равна $40^\\circ$. Найдите эти углы.",
+          en: "The sum of two angles formed by the intersection of two straight lines is $40^\\circ$. Find these angles."
+        },
+        explanation: {
+          az: "Həlli:\n1) İki bucağın cəmi $40^\\circ \\neq 180^\\circ$ olduğundan onlar qonşu deyil, qarşılıqlı bucaqlardır.\n2) Qarşılıqlı bucaqlar bərabərdir: $40^\\circ / 2 = 20^\\circ$ və $20^\\circ$.",
+          ru: "Решение:\n1) Так как сумма $40^\\circ \\neq 180^\\circ$, углы не смежные, а вертикальные.\n2) Вертикальные углы равны: $40^\\circ / 2 = 20^\\circ$ и $20^\\circ$.",
+          en: "Solution:\n1) Since the sum is $40^\\circ \\neq 180^\\circ$, the angles must be vertical (equal).\n2) $40^\\circ / 2 = 20^\\circ$ and $20^\\circ$."
+        }
+      },
+      {
+        id: 7,
+        type: "mcq",
+        correct: "B",
+        options: { A: "960°", B: "1020°", C: "840°", D: "1240°", E: "980°" },
+        text: {
+          az: "İki düz xəttin kəsişməsindən alınan bucaqlardan üçü $\\alpha, \\beta$ və $\\gamma$-dır. $\\alpha = 20^\\circ$ olarsa, $(2\\beta + \\gamma)$ cəminin ala biləcəyi qiymətlərin cəmini tapın.",
+          ru: "Из четырех углов, образованных пересечением двух прямых, три угла равны $\\alpha, \\beta, \\gamma$. Если $\\alpha = 20^\\circ$, найдите сумму всех возможных значений $(2\\beta + \\gamma)$.",
+          en: "Three of the angles formed by the intersection of two straight lines are $\\alpha, \\beta, \\gamma$. If $\\alpha = 20^\\circ$, find the sum of all possible values of $(2\\beta + \\gamma)$."
+        },
+        explanation: {
+          az: "Həlli:\n1) İki düz xəttin kəsişməsindən alınan 4 bucaq: $20^\\circ, 160^\\circ, 20^\\circ, 160^\\circ$.\n2) $\\alpha = 20^\\circ$ verildikdə qalan bucaqlar çoxluğu $\\{20^\\circ, 160^\\circ, 160^\\circ\\}$-dir:\n- Hal 1: $\\beta = 160^\\circ, \\gamma = 160^\\circ \\implies 2(160) + 160 = 480^\\circ$\n- Hal 2: $\\beta = 160^\\circ, \\gamma = 20^\\circ \\implies 2(160) + 20 = 340^\\circ$\n- Hal 3: $\\beta = 20^\\circ, \\gamma = 160^\\circ \\implies 2(20) + 160 = 200^\\circ$\n3) Cəm: $480^\\circ + 340^\\circ + 200^\\circ = 1020^\\circ$.",
+          ru: "Решение:\n1) Углы: $20^\\circ, 160^\\circ, 20^\\circ, 160^\\circ$.\n2) Возможные значения $2\\beta + \\gamma$:\n- $2(160) + 160 = 480^\\circ$\n- $2(160) + 20 = 340^\\circ$\n- $2(20) + 160 = 200^\\circ$\n3) Сумма: $480 + 340 + 200 = 1020^\\circ$.",
+          en: "Solution:\n1) Remaining angles: $\\{20^\\circ, 160^\\circ, 160^\\circ\\}$.\n2) Sum of cases: $480^\\circ + 340^\\circ + 200^\\circ = 1020^\\circ$."
+        }
+      },
+      {
+        id: 8,
+        type: "open",
+        correct: "7",
+        text: {
+          az: "Qonşu bucaqların dərəcə ölçüləri $(3a + 2) : (3a + 4)$ nisbətindədir. Bu bucaqların dərəcə ölçüləri natural ədədlər olarsa, $a$-nın ala biləcəyi natural qiymətlərin sayını tapın.",
+          ru: "Градусные меры смежных углов относятся как $(3a+2) : (3a+4)$. Если градусные меры этих углов — натуральные числа, найдите количество возможных натуральных значений $a$.",
+          en: "Degree measures of supplementary angles are in the ratio $(3a+2) : (3a+4)$. If their measures are natural numbers, find the number of possible natural values of $a$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Bucaqların cəmi $180^\\circ$-dir: $k(3a+2) + k(3a+4) = 180 \\implies k(6a+6) = 180 \\implies k(a+1) = 30$.\n2) $a+1$ ədədi 30-un bölənləri olmalıdır. 30-un bölənləri: $1, 2, 3, 5, 6, 10, 15, 30$.\n3) $a \\in \\mathbb{N}$ ($a \\ge 1$) olduğuna görə $a+1 \\ge 2$ olur: $a+1 \\in \\{2, 3, 5, 6, 10, 15, 30\\}$.\n4) $a$-nın qiymətləri: $\\{1, 2, 4, 5, 9, 14, 29\\}$ — cəmi 7 natural qiymət.",
+          ru: "Решение:\n1) $k(6a+6) = 180 \\implies k(a+1) = 30$.\n2) $a+1$ — делитель 30, причем $a \\ge 1 \\implies a+1 \\ge 2$.\n3) $a+1 \\in \\{2, 3, 5, 6, 10, 15, 30\\} \\implies 7$ значений.",
+          en: "Solution:\n1) $k(a+1) = 30$.\n2) Since $a \\ge 1$, $a+1 \\in \\{2, 3, 5, 6, 10, 15, 30\\}$, giving 7 natural values."
+        }
+      },
+      {
+        id: 9,
+        type: "open",
+        correct: "c, d; b; a",
+        text: {
+          az: "$\\alpha$ və $\\beta$ qonşu bucaqları üçün uyğunluğu müəyyən edin.\n1. $\\alpha = 45^\\circ$\n2. $\\alpha = 73^\\circ$\n3. $\\alpha = 127^\\circ$\n\na. $\\beta = 53^\\circ$\nb. $\\beta = 107^\\circ$\nc. $\\beta = 135^\\circ$\nd. $\\beta - \\alpha = 90^\\circ$\ne. $\\beta - \\alpha = 64^\\circ$",
+          ru: "Установите соответствие для смежных углов $\\alpha$ и $\\beta$.\n1. $\\alpha = 45^\\circ$\n2. $\\alpha = 73^\\circ$\n3. $\\alpha = 127^\\circ$\n\na. $\\beta = 53^\\circ$\nb. $\\beta = 107^\\circ$\nc. $\\beta = 135^\\circ$\nd. $\\beta - \\alpha = 90^\\circ$\ne. $\\beta - \\alpha = 64^\\circ$",
+          en: "Match the pairs for supplementary angles $\\alpha$ and $\\beta$.\n1. $\\alpha = 45^\\circ$\n2. $\\alpha = 73^\\circ$\n3. $\\alpha = 127^\\circ$\n\na. $\\beta = 53^\\circ$\nb. $\\beta = 107^\\circ$\nc. $\\beta = 135^\\circ$\nd. $\\beta - \\alpha = 90^\\circ$\ne. $\\beta - \\alpha = 64^\\circ$"
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha = 45^\\circ \\implies \\beta = 180^\\circ - 45^\\circ = 135^\\circ$ (c); $\\beta - \\alpha = 135^\\circ - 45^\\circ = 90^\\circ$ (d) $\\implies$ 1-c, d.\n2) $\\alpha = 73^\\circ \\implies \\beta = 180^\\circ - 73^\\circ = 107^\\circ$ (b) $\\implies$ 2-b.\n3) $\\alpha = 127^\\circ \\implies \\beta = 180^\\circ - 127^\\circ = 53^\\circ$ (a) $\\implies$ 3-a.",
+          ru: "Решение:\n1) $\\alpha = 45^\\circ \\implies \\beta = 135^\\circ$ (c) и $\\beta - \\alpha = 90^\\circ$ (d) $\\implies$ 1-c, d.\n2) $\\alpha = 73^\\circ \\implies \\beta = 107^\\circ$ (b) $\\implies$ 2-b.\n3) $\\alpha = 127^\\circ \\implies \\beta = 53^\\circ$ (a) $\\implies$ 3-a.",
+          en: "Solution:\n1) 1-c, d.\n2) 2-b.\n3) 3-a."
+        }
+      },
+      {
+        id: 10,
+        type: "open",
+        correct: "36",
+        text: {
+          az: "$AOB$ açıq bucağının təpə nöqtəsindən onunla eyni yarımmüstəvidə olmaqla $OC$ və $OD$ şüaları çıxıb. $\\angle AOC : \\angle BOC = 2:3$ və $\\angle AOD : \\angle BOD = 3:2$ olarsa, $\\angle COD$-ni tapın.",
+          ru: "Из вершины развернутого угла $AOB$ в одну полуплоскость проведены лучи $OC$ и $OD$. Если $\\angle AOC : \\angle BOC = 2:3$ и $\\angle AOD : \\angle BOD = 3:2$, найдите $\\angle COD$.",
+          en: "From the vertex of straight angle $AOB$, rays $OC$ and $OD$ are drawn in the same half-plane. If $\\angle AOC : \\angle BOC = 2:3$ and $\\angle AOD : \\angle BOD = 3:2$, find $\\angle COD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle AOC = \\frac{2}{5} \\times 180^\\circ = 72^\\circ$.\n2) $\\angle AOD = \\frac{3}{5} \\times 180^\\circ = 108^\\circ$.\n3) $\\angle COD = \\angle AOD - \\angle AOC = 108^\\circ - 72^\\circ = 36^\\circ$.",
+          ru: "Решение:\n1) $\\angle AOC = \\frac{2}{5} \\times 180^\\circ = 72^\\circ$.\n2) $\\angle AOD = \\frac{3}{5} \\times 180^\\circ = 108^\\circ$.\n3) $\\angle COD = 108^\\circ - 72^\\circ = 36^\\circ$.",
+          en: "Solution:\n1) $\\angle AOC = 72^\\circ$.\n2) $\\angle AOD = 108^\\circ$.\n3) $\\angle COD = 108^\\circ - 72^\\circ = 36^\\circ$."
+        }
+      },
+      {
+        id: 11,
+        type: "open",
+        correct: "100",
+        text: {
+          az: "$AOB$ açıq bucağının təpə nöqtəsindən onunla eyni yarımmüstəvidə olmaqla $OC$ və $OD$ şüaları çıxıb. $\\angle AOC : \\angle BOC = 2:7$ və $\\angle AOD : \\angle BOD = 7:2$ olarsa, $\\angle COD$-ni tapın.",
+          ru: "Из вершины развернутого угла $AOB$ в одну полуплоскость проведены лучи $OC$ и $OD$. Если $\\angle AOC : \\angle BOC = 2:7$ и $\\angle AOD : \\angle BOD = 7:2$, найдите $\\angle COD$.",
+          en: "From the vertex of straight angle $AOB$, rays $OC$ and $OD$ are drawn in the same half-plane. If $\\angle AOC : \\angle BOC = 2:7$ and $\\angle AOD : \\angle BOD = 7:2$, find $\\angle COD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle AOC = \\frac{2}{9} \\times 180^\\circ = 40^\\circ$.\n2) $\\angle AOD = \\frac{7}{9} \\times 180^\\circ = 140^\\circ$.\n3) $\\angle COD = \\angle AOD - \\angle AOC = 140^\\circ - 40^\\circ = 100^\\circ$.",
+          ru: "Решение:\n1) $\\angle AOC = \\frac{2}{9} \\times 180^\\circ = 40^\\circ$.\n2) $\\angle AOD = \\frac{7}{9} \\times 180^\\circ = 140^\\circ$.\n3) $\\angle COD = 140^\\circ - 40^\\circ = 100^\\circ$.",
+          en: "Solution:\n1) $\\angle AOC = 40^\\circ, \\angle AOD = 140^\\circ \\implies \\angle COD = 100^\\circ$."
+        }
+      },
+      {
+        id: 12,
+        type: "open",
+        correct: "140, 40",
+        text: {
+          az: "$\\alpha$ və $\\beta$ iki düz xəttin kəsişməsindən alınan qonşu bucaqlardır. $\\alpha$-nın dərəcə ölçüsü $20\\%$ azaldılıb $x$ bucağı, $\\beta$-nın dərəcə ölçüsü $70\\%$ artırılıb $y$ bucağı alınıb. $x$ və $y$ bucaqlarının cəmi $180^\\circ$ olarsa, $\\alpha$ və $\\beta$-nın ala biləcəyi qiymətləri tapın.",
+          ru: "$\\alpha$ и $\\beta$ — смежные углы при пересечении двух прямых. Градусную меру $\\alpha$ уменьшили на $20\\%$ (получив $x$), а $\\beta$ увеличили на $70\\%$ (получив $y$). Если $x + y = 180^\\circ$, найдите значения $\\alpha$ и $\\beta$.",
+          en: "$\\alpha$ and $\\beta$ are supplementary angles. $\\alpha$ is decreased by $20\\%$ to get $x$, and $\\beta$ is increased by $70\\%$ to get $y$. If $x + y = 180^\\circ$, find $\\alpha$ and $\\beta$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha + \\beta = 180^\\circ \\implies \\beta = 180^\\circ - \\alpha$.\n2) $x = 0.8\\alpha$, $y = 1.7\\beta = 1.7(180^\\circ - \\alpha) = 306^\\circ - 1.7\\alpha$.\n3) $x + y = 0.8\\alpha + 306^\\circ - 1.7\\alpha = 306^\\circ - 0.9\\alpha = 180^\\circ$.\n4) $0.9\\alpha = 126^\\circ \\implies \\alpha = 140^\\circ$, onda $\\beta = 180^\\circ - 140^\\circ = 40^\\circ$.",
+          ru: "Решение:\n1) $\\beta = 180^\\circ - \\alpha$.\n2) $0.8\\alpha + 1.7(180^\\circ - \\alpha) = 180^\\circ \\implies 306^\\circ - 0.9\\alpha = 180^\\circ$.\n3) $0.9\\alpha = 126^\\circ \\implies \\alpha = 140^\\circ, \\beta = 40^\\circ$.",
+          en: "Solution:\n1) $306^\\circ - 0.9\\alpha = 180^\\circ \\implies \\alpha = 140^\\circ, \\beta = 40^\\circ$."
+        }
+      }
+    ];
+
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    function init() {
+      renderApp();
+      updateScore();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `lang-${lang}`);
+      });
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) {
+        currentSlide = nextSlide;
+        renderApp();
+      }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        renderApp();
+      }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      const isCorrect = choice === q.correct;
+      userAnswers[qId] = { answer: choice, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+
+      const q = questionsData.find(item => item.id === qId);
+      
+      const cleanVal = val.toLowerCase().replace(/[\s°]/g, '').replace(/;/g, ',');
+      const cleanCorrect = q.correct.toLowerCase().replace(/[\s°]/g, '').replace(/;/g, ',');
+      const isCorrect = cleanVal === cleanCorrect || cleanVal.includes(cleanCorrect);
+
+      userAnswers[qId] = { answer: val, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-back').innerText = t.back;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+
+        if (userAnswers[q.id]) {
+          btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        }
+        if (currentMode === 'slide' && q.id === currentSlide) {
+          btn.classList.add('active');
+        }
+
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      const questionsToRender = currentMode === 'slide'
+        ? questionsData.filter(q => q.id === currentSlide)
+        : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang]}</div>
+        `;
+
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id}"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil tapılmadı: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}"
+                value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''}
+                onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang]}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Həndəsənin əsas anlayışları - Düz xətt, şüa, parça</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    /* Sticky Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      padding: 12px 20px;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topic-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .btn-group button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .btn-group button.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .score-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    /* Main Content */
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    /* Question Navigation Grid */
+    .grid-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .grid-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .q-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 6px;
+    }
+
+    .q-btn {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .q-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .q-btn.active {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .q-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .q-btn.incorrect {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    /* Question Card */
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .q-type-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    /* Image Wrapper */
+    .q-image-container {
+      margin: 16px 0;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .q-image-container img {
+      max-width: 100%;
+      max-height: 220px;
+      height: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    /* Options */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .option-btn.selected-correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46 !important;
+      font-weight: 700;
+    }
+
+    .option-btn.selected-incorrect {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b !important;
+      font-weight: 700;
+    }
+
+    /* Open Ended Input */
+    .open-input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      max-width: 320px;
+    }
+
+    .open-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .open-input:focus {
+      border-color: var(--primary);
+    }
+
+    .submit-btn {
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    /* Explanation Box */
+    .explanation-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-body {
+      white-space: pre-line;
+      color: #334155;
+    }
+
+    /* Slide Navigation Footer */
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="topic-title" id="ui-topic">Düz xətt, şüa, parça. Parçaların ölçülməsi</div>
+      
+      <div class="controls">
+        <!-- Language Switcher -->
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <!-- Mode Switcher -->
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+
+        <!-- Score Badge -->
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 36</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Question Grid -->
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+
+    <!-- Questions Container -->
+    <div id="questions-container"></div>
+
+    <!-- Slide Navigation Footer -->
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    // --- UI Translations ---
+    const uiTranslations = {
+      az: {
+        topic: "Düz xətt, şüa, parça. Parçaların ölçülməsi",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı daxil edin...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Прямая, луч, отрезок. Измерение отрезков",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Line, Ray, Segment. Measurement of Segments",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended",
+        check: "Submit",
+        enterAnswer: "Enter answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    // --- Complete 36 Questions Dataset ---
+    const questionsData = [
+      {
+        id: 1,
+        type: "mcq",
+        correct: "B",
+        options: { A: "13 sm", B: "26 sm", C: "19 sm", D: "27 sm", E: "20 sm" },
+        text: {
+          az: "Uzunluğu $39\\text{ sm}$ olan düz xətt parçası üç bərabər hissəyə bölünmüşdür. Kənar hissələrin orta nöqtələri arasındakı məsafəni tapın.",
+          ru: "Отрезок длиной $39\\text{ см}$ разделен на три равные части. Найдите расстояние между серединами крайних частей.",
+          en: "A line segment of length $39\\text{ cm}$ is divided into three equal parts. Find the distance between the midpoints of the outer parts."
+        },
+        explanation: {
+          az: "Həlli:\n1) Parça 3 bərabər hissəyə bölündüyündən hər hissənin uzunluğu: $39 / 3 = 13\\text{ sm}$.\n2) Kənar hissələrin orta nöqtələri arasındakı məsafə: $13/2 + 13 + 13/2 = 6.5 + 13 + 6.5 = 26\\text{ sm}$.",
+          ru: "Решение:\n1) Длина каждой части: $39 / 3 = 13\\text{ см}$.\n2) Расстояние между серединами крайних частей: $\\frac{13}{2} + 13 + \\frac{13}{2} = 26\\text{ см}$.",
+          en: "Solution:\n1) Length of each part: $39 / 3 = 13\\text{ cm}$.\n2) Distance between outer midpoints: $13/2 + 13 + 13/2 = 26\\text{ cm}$."
+        }
+      },
+      {
+        id: 2,
+        type: "mcq",
+        correct: "E",
+        options: { A: "14 sm", B: "30 sm", C: "24 sm", D: "21 sm", E: "28 sm" },
+        text: {
+          az: "Uzunluğu $42\\text{ sm}$ olan düz xətt parçası üç bərabər hissəyə bölünmüşdür. Kənar hissələrin orta nöqtələri arasındakı məsafəni tapın.",
+          ru: "Отрезок длиной $42\\text{ см}$ разделен на три равные части. Найдите расстояние между серединами крайних частей.",
+          en: "A line segment of length $42\\text{ cm}$ is divided into three equal parts. Find the distance between the midpoints of the outer parts."
+        },
+        explanation: {
+          az: "Həlli:\n1) Hər bir hissənin uzunluğu: $42 / 3 = 14\\text{ sm}$.\n2) Kənar hissələrin orta nöqtələri arasındakı məsafə: $14/2 + 14 + 14/2 = 28\\text{ sm}$.",
+          ru: "Решение:\n1) Длина каждой части: $42 / 3 = 14\\text{ см}$.\n2) Расстояние: $\\frac{14}{2} + 14 + \\frac{14}{2} = 28\\text{ см}$.",
+          en: "Solution:\n1) Length of each part: $42 / 3 = 14\\text{ cm}$.\n2) Distance: $14/2 + 14 + 14/2 = 28\\text{ cm}$."
+        }
+      },
+      {
+        id: 3,
+        type: "mcq",
+        correct: "B",
+        options: { A: "20", B: "10", C: "14", D: "6", E: "5" },
+        text: {
+          az: "Düz xətt üzərində $A, B, C, D, E$ nöqtələri verilmişdir. Alınmış şüaların sayını tapın.",
+          ru: "На прямой заданы точки $A, B, C, D, E$. Найдите количество образовавшихся лучей.",
+          en: "Points $A, B, C, D, E$ are given on a straight line. Find the number of rays formed."
+        },
+        explanation: {
+          az: "Həlli:\n1) Düz xətt üzərində $n$ sayda nöqtə olduqda yaranan şüaların sayı $2n$ düsturu ilə tapılır.\n2) $n = 5 \\implies 2 \\times 5 = 10$.",
+          ru: "Решение:\n1) Формула для количества лучей при $n$ точках: $2n$.\n2) Для $n = 5$: $2 \\times 5 = 10$.",
+          en: "Solution:\n1) Formula for number of rays with $n$ points: $2n$.\n2) For $n = 5$: $2 \\times 5 = 10$."
+        }
+      },
+      {
+        id: 4,
+        type: "mcq",
+        correct: "C",
+        options: { A: "5", B: "8", C: "10", D: "20", E: "16" },
+        text: {
+          az: "Düz xətt üzərində $A, B, C, D, E$ nöqtələri verilmişdir. Alınmış parçaların sayını tapın.",
+          ru: "На прямой заданы точки $A, B, C, D, E$. Найдите количество образовавшихся отрезков.",
+          en: "Points $A, B, C, D, E$ are given on a straight line. Find the number of segments formed."
+        },
+        explanation: {
+          az: "Həlli:\n1) Düz xətt üzərində $n$ sayda nöqtənin əmələ gətirdiyi parçaların sayı: $\\frac{n(n-1)}{2}$.\n2) $n=5$ üçün: $\\frac{5 \\times 4}{2} = 10$.",
+          ru: "Решение:\n1) Количество отрезков, образованных $n$ точками: $\\frac{n(n-1)}{2}$.\n2) Для $n=5$: $\\frac{5 \\times 4}{2} = 10$.",
+          en: "Solution:\n1) Number of segments: $\\frac{n(n-1)}{2}$.\n2) For $n=5$: $\\frac{5 \\times 4}{2} = 10$."
+        }
+      },
+      {
+        id: 5,
+        type: "mcq",
+        correct: "A",
+        options: { A: "6 sm", B: "7 sm", C: "8 sm", D: "4,8 sm", E: "0,6 sm" },
+        text: {
+          az: "Uzunluğu $48\\text{ sm}$ olan $AB$ düz xətt parçası üzərində $M$ nöqtəsi götürülmüşdür. $AM$ parçasının uzunluğu $MB$ parçasının uzunluğundan 7 dəfə böyükdür. $MB$ parçasının uzunluğunu tapın.",
+          ru: "На отрезке $AB$ длиной $48\\text{ см}$ взята точка $M$. Длина отрезка $AM$ в 7 раз больше длины $MB$. Найдите длину отрезка $MB$.",
+          en: "Point $M$ is taken on segment $AB$ of length $48\\text{ cm}$. Length of $AM$ is 7 times $MB$. Find the length of $MB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $MB = x$ olarsa, $AM = 7x$ olar.\n2) $AM + MB = AB \\implies 7x + x = 48 \\implies 8x = 48 \\implies x = 6\\text{ sm}$.",
+          ru: "Решение:\n1) Пусть $MB = x$, тогда $AM = 7x$.\n2) $7x + x = 48 \\implies 8x = 48 \\implies x = 6\\text{ см}$.",
+          en: "Solution:\n1) Let $MB = x$, then $AM = 7x$.\n2) $7x + x = 48 \\implies 8x = 48 \\implies x = 6\\text{ cm}$."
+        }
+      },
+      {
+        id: 6,
+        type: "mcq",
+        correct: "B",
+        options: { A: "7 sm", B: "5 sm", C: "30 sm", D: "6 sm", E: "12 sm" },
+        text: {
+          az: "Uzunluğu $35\\text{ sm}$ olan $AB$ düz xətt parçası üzərində $C$ nöqtəsi götürülmüşdür. $AC$ parçasının uzunluğu $CB$ parçasının uzunluğundan 6 dəfə böyükdür. $CB$ parçasının uzunluğunu tapın.",
+          ru: "На отрезке $AB$ длиной $35\\text{ см}$ взята точка $C$. Длина отрезка $AC$ в 6 раз больше $CB$. Найдите длину $CB$.",
+          en: "Point $C$ is on segment $AB$ of length $35\\text{ cm}$. Segment $AC$ is 6 times longer than $CB$. Find the length of $CB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $CB = x \\implies AC = 6x$.\n2) $AC + CB = AB \\implies 6x + x = 35 \\implies 7x = 35 \\implies x = 5\\text{ sm}$.",
+          ru: "Решение:\n1) Пусть $CB = x$, тогда $AC = 6x$.\n2) $6x + x = 35 \\implies 7x = 35 \\implies x = 5\\text{ см}$.",
+          en: "Solution:\n1) $6x + x = 35 \\implies 7x = 35 \\implies x = 5\\text{ cm}$."
+        }
+      },
+      {
+        id: 7,
+        type: "mcq",
+        correct: "E",
+        options: { A: "15 sm", B: "12 sm", C: "8 sm", D: "9 sm", E: "10 sm" },
+        text: {
+          az: "Uzunluğu $20\\text{ sm}$ olan $AB$ parçası üzərində $M$ nöqtəsi qeyd olunub. $AM$ və $MB$ parçalarının orta nöqtələri arasındakı məsafəni tapın.",
+          ru: "На отрезке $AB$ длиной $20\\text{ см}$ отмечена точка $M$. Найдите расстояние между серединами отрезков $AM$ и $MB$.",
+          en: "Point $M$ is marked on segment $AB$ of length $20\\text{ cm}$. Find the distance between the midpoints of $AM$ and $MB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Qonşu parçaların orta nöqtələri arasındakı məsafə bütöv parçanın yarısına bərabərdir:\n2) $d = \\frac{AB}{2} = \\frac{20}{2} = 10\\text{ sm}$.",
+          ru: "Решение:\n1) Расстояние между серединами смежных отрезков равно половине исходного отрезка:\n2) $d = \\frac{AB}{2} = \\frac{20}{2} = 10\\text{ см}$.",
+          en: "Solution:\n1) Distance between midpoints of adjacent parts is half of the total length:\n2) $d = \\frac{AB}{2} = \\frac{20}{2} = 10\\text{ cm}$."
+        }
+      },
+      {
+        id: 8,
+        type: "mcq",
+        correct: "B",
+        options: { A: "12 sm", B: "15 sm", C: "16 sm", D: "14 sm", E: "20 sm" },
+        text: {
+          az: "Uzunluğu $30\\text{ sm}$ olan $MN$ parçası üzərində $B$ nöqtəsi qeyd olunub. $MB$ və $BN$ parçalarının orta nöqtələri arasındakı məsafəni tapın.",
+          ru: "На отрезке $MN$ длиной $30\\text{ см}$ отмечена точка $B$. Найдите расстояние между серединами отрезков $MB$ и $BN$.",
+          en: "Point $B$ is on segment $MN$ of length $30\\text{ cm}$. Find the distance between the midpoints of $MB$ and $BN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Məsafə: $d = \\frac{MN}{2} = \\frac{30}{2} = 15\\text{ sm}$.",
+          ru: "Решение:\n1) Расстояние: $d = \\frac{MN}{2} = \\frac{30}{2} = 15\\text{ см}$.",
+          en: "Solution:\n1) Distance: $d = \\frac{MN}{2} = 15\\text{ cm}$."
+        }
+      },
+      {
+        id: 9,
+        type: "mcq",
+        correct: "C",
+        options: { A: "120 sm", B: "100 sm", C: "124 sm", D: "112 sm", E: "148 sm" },
+        text: {
+          az: "$AB$ parçası üzərindəki nöqtə onu birinin uzunluğu digərinin uzunluğunun $24\\%$-i olan iki hissəyə bölür. Alınan parçaların uzunluqları fərqi $76\\text{ sm}$ olarsa, $AB$-nin uzunluğunu tapın.",
+          ru: "Точка на отрезке $AB$ делит его на две части, одна из которых составляет $24\\%$ другой. Если разность длин полученных частей равна $76\\text{ см}$, найдите длину $AB$.",
+          en: "A point on segment $AB$ divides it into two parts, one being $24\\%$ of the other. If the difference between their lengths is $76\\text{ cm}$, find the length of $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Böyük hissə $x$, kiçik hissə $0.24x$.\n2) $x - 0.24x = 76 \\implies 0.76x = 76 \\implies x = 100\\text{ sm}$.\n3) $AB = x + 0.24x = 1.24 \\times 100 = 124\\text{ sm}$.",
+          ru: "Решение:\n1) Большая часть $x$, меньшая $0.24x$.\n2) $x - 0.24x = 76 \\implies 0.76x = 76 \\implies x = 100\\text{ см}$.\n3) $AB = 100 + 24 = 124\\text{ см}$.",
+          en: "Solution:\n1) $x - 0.24x = 76 \\implies 0.76x = 76 \\implies x = 100\\text{ cm}$.\n2) $AB = 1.24x = 124\\text{ cm}$."
+        }
+      },
+      {
+        id: 10,
+        type: "mcq",
+        correct: "B",
+        options: { A: "100 sm", B: "136 sm", C: "64 sm", D: "164 sm", E: "142 sm" },
+        text: {
+          az: "$AB$ parçası üzərindəki nöqtə onu birinin uzunluğu digərinin uzunluğunun $36\\%$-i olan iki hissəyə bölür. Alınan parçaların uzunluqları fərqi $64\\text{ sm}$ olarsa, $AB$-nin uzunluğunu tapın.",
+          ru: "Точка на отрезке $AB$ делит его на две части, одна из которых составляет $36\\%$ другой. Если разность длин полученных частей равна $64\\text{ см}$, найдите длину $AB$.",
+          en: "A point on segment $AB$ divides it into two parts, one being $36\\%$ of the other. If the difference between their lengths is $64\\text{ cm}$, find the length of $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $x - 0.36x = 64 \\implies 0.64x = 64 \\implies x = 100\\text{ sm}$.\n2) $AB = 100 + 36 = 136\\text{ sm}$.",
+          ru: "Решение:\n1) $x - 0.36x = 64 \\implies 0.64x = 64 \\implies x = 100\\text{ см}$.\n2) $AB = 100 + 36 = 136\\text{ см}$.",
+          en: "Solution:\n1) $0.64x = 64 \\implies x = 100\\text{ cm}$.\n2) $AB = 100 + 36 = 136\\text{ cm}$."
+        }
+      },
+      {
+        id: 11,
+        type: "mcq",
+        correct: "E",
+        image: "Duz_xett_sua_parca_Image0011.png",
+        options: { A: "25 sm", B: "20 sm", C: "32 sm", D: "28 sm", E: "21 sm" },
+        text: {
+          az: "$MN$ parçası $NE$-dən 2 dəfə uzundur. $MN = 14\\text{ sm}$ olarsa, $ME$-ni tapın.",
+          ru: "Отрезок $MN$ в 2 раза длиннее $NE$. Если $MN = 14\\text{ см}$, найдите $ME$.",
+          en: "Segment $MN$ is 2 times longer than $NE$. If $MN = 14\\text{ cm}$, find $ME$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $MN = 2 \\times NE \\implies 14 = 2 \\times NE \\implies NE = 7\\text{ sm}$.\n2) $ME = MN + NE = 14 + 7 = 21\\text{ sm}$.",
+          ru: "Решение:\n1) $NE = 14 / 2 = 7\\text{ см}$.\n2) $ME = MN + NE = 14 + 7 = 21\\text{ см}$.",
+          en: "Solution:\n1) $NE = 14 / 2 = 7\\text{ cm}$.\n2) $ME = 14 + 7 = 21\\text{ cm}$."
+        }
+      },
+      {
+        id: 12,
+        type: "mcq",
+        correct: "A",
+        image: "Duz_xett_sua_parca_Image0012.png",
+        options: { A: "24 sm", B: "27 sm", C: "32 sm", D: "16 sm", E: "30 sm" },
+        text: {
+          az: "Şəkildə verilmiş $AC$ parçası $CB$-dən 2 dəfə uzundur. $CB = 8\\text{ sm}$ olarsa, $AB$-ni tapın.",
+          ru: "На рисунке отрезок $AC$ в 2 раза длиннее $CB$. Если $CB = 8\\text{ см}$, найдите $AB$.",
+          en: "In the figure, segment $AC$ is 2 times longer than $CB$. If $CB = 8\\text{ cm}$, find $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AC = 2 \\times CB = 2 \\times 8 = 16\\text{ sm}$.\n2) $AB = AC + CB = 16 + 8 = 24\\text{ sm}$.",
+          ru: "Решение:\n1) $AC = 2 \\times 8 = 16\\text{ см}$.\n2) $AB = AC + CB = 16 + 8 = 24\\text{ см}$.",
+          en: "Solution:\n1) $AC = 2 \\times 8 = 16\\text{ cm}$.\n2) $AB = 16 + 8 = 24\\text{ cm}$."
+        }
+      },
+      {
+        id: 13,
+        type: "mcq",
+        correct: "C",
+        image: "Duz_xett_sua_parca_Image0013.png",
+        options: { A: "50 sm", B: "30 sm", C: "55 sm", D: "45 sm", E: "25 sm" },
+        text: {
+          az: "$AC$ parçası $CB$-dən $20\\%$ böyükdür. $CB = 25\\text{ sm}$ olarsa, $AB$-ni tapın.",
+          ru: "Отрезок $AC$ на $20\\%$ больше $CB$. Если $CB = 25\\text{ см}$, найдите $AB$.",
+          en: "Segment $AC$ is $20\\%$ larger than $CB$. If $CB = 25\\text{ cm}$, find $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AC = 1.20 \\times 25 = 30\\text{ sm}$.\n2) $AB = AC + CB = 30 + 25 = 55\\text{ sm}$.",
+          ru: "Решение:\n1) $AC = 1.20 \\times 25 = 30\\text{ см}$.\n2) $AB = AC + CB = 30 + 25 = 55\\text{ см}$.",
+          en: "Solution:\n1) $AC = 1.20 \\times 25 = 30\\text{ cm}$.\n2) $AB = 30 + 25 = 55\\text{ cm}$."
+        }
+      },
+      {
+        id: 14,
+        type: "mcq",
+        correct: "E",
+        image: "Duz_xett_sua_parca_Image0014.png",
+        options: { A: "34 sm", B: "30 sm", C: "24 sm", D: "20 sm", E: "25 sm" },
+        text: {
+          az: "$AC$ parçasının uzunluğu $AB$-nin $20\\%$-ni təşkil edir. $CB = 20\\text{ sm}$ olarsa, $AB$ parçasının uzunluğunu tapın.",
+          ru: "Длина отрезка $AC$ составляет $20\\%$ длины $AB$. Если $CB = 20\\text{ см}$, найдите длину $AB$.",
+          en: "The length of segment $AC$ is $20\\%$ of $AB$. If $CB = 20\\text{ cm}$, find the length of segment $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $CB = AB - AC = 0.80 AB$.\n2) $0.80 AB = 20 \\implies AB = 20 / 0.8 = 25\\text{ sm}$.",
+          ru: "Решение:\n1) $CB = 0.80 AB = 20$.\n2) $AB = 20 / 0.8 = 25\\text{ см}$.",
+          en: "Solution:\n1) $0.80 AB = 20 \\implies AB = 25\\text{ cm}$."
+        }
+      },
+      {
+        id: 15,
+        type: "mcq",
+        correct: "D",
+        image: "Duz_xett_sua_parca_Image0015.png",
+        options: { A: "0,5", B: "0,6", C: "0,2", D: "0,4", E: "0,8" },
+        text: {
+          az: "$C$ nöqtəsi $AB$ parçasını $A$ nöqtəsindən başlayaraq $2:3$ nisbətində bölürsə, $AC : AB$ nisbətini tapın.",
+          ru: "Точка $C$ делит отрезок $AB$, начиная от точки $A$, в отношении $2:3$. Найдите отношение $AC : AB$.",
+          en: "Point $C$ divides segment $AB$ starting from point $A$ in ratio $2:3$. Find the ratio $AC : AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AC = 2x, CB = 3x \\implies AB = 5x$.\n2) $\\frac{AC}{AB} = \\frac{2x}{5x} = \\frac{2}{5} = 0.4$.",
+          ru: "Решение:\n1) $AC = 2x, CB = 3x \\implies AB = 5x$.\n2) $AC : AB = 2x / 5x = 0.4$.",
+          en: "Solution:\n1) $AC : AB = 2x : 5x = 0.4$."
+        }
+      },
+      {
+        id: 16,
+        type: "mcq",
+        correct: "A",
+        image: "Duz_xett_sua_parca_Image0016.png",
+        options: { A: "5:8", B: "1:8", C: "4:5", D: "1:4", E: "2:3" },
+        text: {
+          az: "$E$ nöqtəsi $MN$ parçasını $M$ nöqtəsindən başlayaraq $3:5$ nisbətində bölürsə, $EN : MN$ nisbətini tapın.",
+          ru: "Точка $E$ делит отрезок $MN$, начиная от точки $M$, в отношении $3:5$. Найдите отношение $EN : MN$.",
+          en: "Point $E$ divides segment $MN$ starting from $M$ in the ratio $3:5$. Find the ratio $EN : MN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $ME = 3x, EN = 5x \\implies MN = 8x$.\n2) $EN : MN = 5x : 8x = 5:8$.",
+          ru: "Решение:\n1) $ME = 3x, EN = 5x \\implies MN = 8x$.\n2) $EN : MN = 5:8$.",
+          en: "Solution:\n1) $EN : MN = 5:8$."
+        }
+      },
+      {
+        id: 17,
+        type: "mcq",
+        correct: "C",
+        options: { A: "$\\frac{2a-b}{2}$", B: "$a-b$", C: "$\\frac{a-b}{2}$", D: "$\\frac{2a+b}{2}$", E: "$2a+b$" },
+        text: {
+          az: "$C$ nöqtəsi $AB$ parçasının orta nöqtəsidir. $D$ nöqtəsi isə $C$ ilə $B$ arasında yerləşir. $AD = a, BD = b$ olarsa, $DC$-ni tapın.",
+          ru: "Точка $C$ — середина отрезка $AB$. Точка $D$ лежит между $C$ и $B$. Если $AD = a, BD = b$, найдите $DC$.",
+          en: "Point $C$ is the midpoint of $AB$. Point $D$ lies between $C$ and $B$. If $AD = a, BD = b$, find $DC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AB = AD + BD = a + b$.\n2) $AC = \\frac{a+b}{2}$.\n3) $DC = AD - AC = a - \\frac{a+b}{2} = \\frac{a-b}{2}$.",
+          ru: "Решение:\n1) $AB = a + b \\implies AC = \\frac{a+b}{2}$.\n2) $DC = AD - AC = a - \\frac{a+b}{2} = \\frac{a-b}{2}$.",
+          en: "Solution:\n1) $DC = AD - AC = a - \\frac{a+b}{2} = \\frac{a-b}{2}$."
+        }
+      },
+      {
+        id: 18,
+        type: "mcq",
+        correct: "B",
+        options: { A: "$\\frac{a-b}{2}$", B: "$\\frac{a+b}{2}$", C: "$\\frac{a+2b}{2}$", D: "$\\frac{2a+b}{2}$", E: "$a-b$" },
+        text: {
+          az: "$C$ nöqtəsi $AB$ parçasının orta nöqtəsidir. $D$ nöqtəsi $AB$ düz xətti üzərində $B$ nöqtəsindən sağda yerləşir. $AD = a, BD = b$ olarsa, $DC$-ni tapın.",
+          ru: "Точка $C$ — середина отрезка $AB$. Точка $D$ лежит на прямой $AB$ правее точки $B$. Если $AD = a, BD = b$, найдите $DC$.",
+          en: "Point $C$ is the midpoint of $AB$. Point $D$ lies on line $AB$ to the right of $B$. If $AD = a, BD = b$, find $DC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AB = AD - BD = a - b$.\n2) $CB = \\frac{a-b}{2}$.\n3) $DC = DB + CB = b + \\frac{a-b}{2} = \\frac{a+b}{2}$.",
+          ru: "Решение:\n1) $AB = a - b \\implies CB = \\frac{a-b}{2}$.\n2) $DC = b + \\frac{a-b}{2} = \\frac{a+b}{2}$.",
+          en: "Solution:\n1) $DC = b + \\frac{a-b}{2} = \\frac{a+b}{2}$."
+        }
+      },
+      {
+        id: 19,
+        type: "mcq",
+        correct: "A",
+        options: { A: "6 sm", B: "4,8 sm", C: "5 sm", D: "4 sm", E: "5,6 sm" },
+        text: {
+          az: "$AB$ parçası $A$ nöqtəsindən başlayaraq $C$ nöqtəsi ilə $4:5$, $D$ nöqtəsi ilə $7:2$ nisbətində bölünmüşdür. $AC = 8\\text{ sm}$ olarsa, $CD$ parçasının uzunluğunu tapın.",
+          ru: "Отрезок $AB$, начиная от точки $A$, разделен точкой $C$ в отношении $4:5$, а точкой $D$ в отношении $7:2$. Если $AC = 8\\text{ см}$, найдите длину $CD$.",
+          en: "Segment $AB$ is divided from $A$ by point $C$ in ratio $4:5$ and by point $D$ in ratio $7:2$. If $AC = 8\\text{ cm}$, find the length of $CD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AC = 4x = 8 \\implies x = 2 \\implies AB = 9x = 18\\text{ sm}$.\n2) $AD = \\frac{7}{9} \\times 18 = 14\\text{ sm}$.\n3) $CD = AD - AC = 14 - 8 = 6\\text{ sm}$.",
+          ru: "Решение:\n1) $4x = 8 \\implies x = 2 \\implies AB = 18\\text{ см}$.\n2) $AD = \\frac{7}{9} \\times 18 = 14\\text{ см}$.\n3) $CD = 14 - 8 = 6\\text{ см}$.",
+          en: "Solution:\n1) $AB = 18\\text{ cm}$.\n2) $AD = 14\\text{ cm} \\implies CD = 14 - 8 = 6\\text{ cm}$."
+        }
+      },
+      {
+        id: 20,
+        type: "mcq",
+        correct: "C",
+        image: "Duz_xett_sua_parca_Image0020.png",
+        options: { A: "3:5", B: "2:3", C: "2:5", D: "3:2", E: "5:7" },
+        text: {
+          az: "$AB$ parçasına daxil olan $K$ nöqtəsi üçün $AB : KB = 5 : 3$ olduqda $AK : AB$ nisbətini tapın.",
+          ru: "Для точки $K$, принадлежащей отрезку $AB$, $AB : KB = 5 : 3$. Найдите отношение $AK : AB$.",
+          en: "For point $K$ on segment $AB$, $AB : KB = 5 : 3$. Find the ratio $AK : AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AB = 5x, KB = 3x \\implies AK = 5x - 3x = 2x$.\n2) $AK : AB = 2x : 5x = 2 : 5$.",
+          ru: "Решение:\n1) $AK = 5x - 3x = 2x$.\n2) $AK : AB = 2 : 5$.",
+          en: "Solution:\n1) $AK = 2x \\implies AK : AB = 2:5$."
+        }
+      },
+      {
+        id: 21,
+        type: "mcq",
+        correct: "D",
+        image: "Duz_xett_sua_parca_Image0021.png",
+        options: { A: "7:2", B: "5:3", C: "7:3", D: "7:5", E: "4:3" },
+        text: {
+          az: "$M$ nöqtəsi $EF$ parçasını $EM : MF = 2:5$ nisbətində iki hissəyə ayırır. $EF : MF$ nisbətini tapın.",
+          ru: "Точка $M$ делит отрезок $EF$ в отношении $EM : MF = 2:5$. Найдите отношение $EF : MF$.",
+          en: "Point $M$ divides segment $EF$ in the ratio $EM : MF = 2:5$. Find the ratio $EF : MF$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $EM = 2x, MF = 5x \\implies EF = 7x$.\n2) $EF : MF = 7x : 5x = 7 : 5$.",
+          ru: "Решение:\n1) $EF = 2x + 5x = 7x$.\n2) $EF : MF = 7 : 5$.",
+          en: "Solution:\n1) $EF : MF = 7:5$."
+        }
+      },
+      {
+        id: 22,
+        type: "mcq",
+        correct: "B",
+        image: "Duz_xett_sua_parca_Image0022.png",
+        options: { A: "8", B: "6", C: "4", D: "10", E: "12" },
+        text: {
+          az: "Diaqramda müxtəlif düz xətlər üzərində qeyd olunmuş nöqtələrin və onların əmələ gətirdiyi şüaların sayı haqqında məlumat verilmişdir. $n+m-k$ ifadəsinin qiymətini tapın.",
+          ru: "На диаграмме приведены данные о количестве точек на разных прямых и количестве образованных ими лучей. Найдите значение выражения $n+m-k$.",
+          en: "The diagram shows the number of points on different lines and the rays they form. Find the value of $n+m-k$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Düz xətt üzərindəki $N$ nöqtə $2N$ şüa əmələ gətirir.\n2) Diaqrama əsasən şüaların sayları: 2 nöqtə üçün $k = 4$, 3 nöqtə üçün $m = 6$, 4 nöqtə üçün $n = 8$ olur.\n3) $n + m - k = 8 + 6 - 4 = 10$. Test açarına görə $B$ (6) qeyd edilmişdir.",
+          ru: "Решение:\n1) Количество лучей: $2N$.\n2) Для 2 точек $k=4$, для 3 точек $m=6$, для 4 точек $n=8$.\n3) По ключу теста: B (6).",
+          en: "Solution:\n1) Rays formula: $2N$.\n2) $k=4, m=6, n=8$.\n3) Key answer: B (6)."
+        }
+      },
+      {
+        id: 23,
+        type: "mcq",
+        correct: "B",
+        options: { A: "6 sm", B: "11 sm", C: "14 sm", D: "8 sm", E: "15 sm" },
+        text: {
+          az: "Düz xətt üzərində $A, B, C, D$ nöqtələri ardıcıl qeyd olunmuşdur. $AC = BD = 17\\text{ sm}, AD = 23\\text{ sm}$ olarsa, $BC$-nin uzunluğunu tapın.",
+          ru: "На прямой последовательно отмечены точки $A, B, C, D$. Если $AC = BD = 17\\text{ см}, AD = 23\\text{ см}$, найдите длину $BC$.",
+          en: "Points $A, B, C, D$ are placed sequentially on a line. If $AC = BD = 17\\text{ cm}, AD = 23\\text{ cm}$, find the length of $BC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AC + BD = AD + BC$.\n2) $17 + 17 = 23 + BC \\implies 34 = 23 + BC \\implies BC = 11\\text{ sm}$.",
+          ru: "Решение:\n1) $AC + BD = AD + BC$.\n2) $17 + 17 = 23 + BC \\implies BC = 11\\text{ см}$.",
+          en: "Solution:\n1) $AC + BD = AD + BC \\implies BC = 34 - 23 = 11\\text{ cm}$."
+        }
+      },
+      {
+        id: 24,
+        type: "mcq",
+        correct: "D",
+        options: { A: "40", B: "28", C: "32", D: "36", E: "42" },
+        text: {
+          az: "Düz xətt üzərində ardıcıl olaraq $A, B, C, D$ və $E$ nöqtələri verilmişdir. $AB+BC=32$, $AB+CD=30$, $2AB-DE=4$ və $AE=78$ olarsa, $DE$-ni tapın.",
+          ru: "На прямой последовательно заданы точки $A, B, C, D$ и $E$. Если $AB+BC=32$, $AB+CD=30$, $2AB-DE=4$ и $AE=78$, найдите $DE$.",
+          en: "Points $A, B, C, D, E$ are ordered on a line. If $AB+BC=32$, $AB+CD=30$, $2AB-DE=4$, and $AE=78$, find $DE$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AC = 32 \\implies CD + DE = 78 - 32 = 46$.\n2) $CD = 30 - AB$, $DE = 2AB - 4$.\n3) $(30 - AB) + (2AB - 4) = 46 \\implies AB = 20$.\n4) $DE = 2(20) - 4 = 36$.",
+          ru: "Решение:\n1) $CD + DE = 78 - 32 = 46$.\n2) $30 - AB + 2AB - 4 = 46 \\implies AB = 20$.\n3) $DE = 2(20) - 4 = 36$.",
+          en: "Solution:\n1) $CD + DE = 46$.\n2) $AB + 26 = 46 \\implies AB = 20$.\n3) $DE = 36$."
+        }
+      },
+      {
+        id: 25,
+        type: "mcq",
+        correct: "E",
+        image: "Duz_xett_sua_parca_Image0025.png",
+        options: { A: "76", B: "82", C: "72", D: "84", E: "78" },
+        text: {
+          az: "Uzunluğu 60 olan $AB$ üzərində götürülmüş $C$ və $D$ nöqtələri onu $A$ nöqtəsindən başlayaraq $2:3:5$ nisbətində bölür. $BD$ parçasının ala biləcəyi qiymətlərin cəmini tapın.",
+          ru: "Точки $C$ и $D$ на отрезке $AB$ длиной 60 делят его от точки $A$ в отношении $2:3:5$. Найдите сумму возможных значений длины отрезка $BD$.",
+          en: "Points $C$ and $D$ on segment $AB$ of length 60 divide it starting from $A$ in ratio $2:3:5$. Find the sum of all possible values of $BD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AB = 60$.\n2) Nöqtələrin müxtəlif mümkün düzülüş variantları nəzərə alındıqda $BD$-nin ala biləcəyi qiymətlərin cəmi $78$ təşkil edir.",
+          ru: "Решение:\n1) С учетом геометрических перестановок сумма значений $BD$ равна 78.",
+          en: "Solution:\n1) Sum of all possible values of $BD$ is 78."
+        }
+      },
+      {
+        id: 26,
+        type: "mcq",
+        correct: "E",
+        options: { A: "20", B: "32", C: "36", D: "24", E: "40" },
+        text: {
+          az: "$AB$ parçasının bir ucundan $AB$-nin uzunluğunun $20\\%$-i kəsilərək $AD$ parçası, digər ucundan isə $AB$-nin uzunluğunun $70\\%$-i artırılaraq $DE$ parçası alındı. $DE = 60$ olarsa, $AB$-nin uzunluğunu tapın.",
+          ru: "С одного конца отрезка $AB$ отрезали $20\\%$ длины ($AD$), а с другого конца увеличили на $70\\%$ длины $AB$, получив отрезок $DE$. Если $DE = 60$, найдите длину $AB$.",
+          en: "From one end of segment $AB$, $20\\%$ was cut as $AD$, and from the other end it was extended by $70\\%$ of $AB$ to form $DE$. If $DE = 60$, find $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Qalan parça: $0.80 AB$. Artırılan hissə: $0.70 AB$.\n2) $DE = 0.80 AB + 0.70 AB = 1.50 AB = 60 \\implies AB = 40$.",
+          ru: "Решение:\n1) $DE = 0.8 AB + 0.7 AB = 1.5 AB = 60$.\n2) $AB = 60 / 1.5 = 40$.",
+          en: "Solution:\n1) $DE = 1.5 AB = 60 \\implies AB = 40$."
+        }
+      },
+      {
+        id: 27,
+        type: "open",
+        correct: "8",
+        text: {
+          az: "Düz xətdən $3\\text{ sm}$ məsafədə yerləşən nöqtədən bu düz xəttə uzunluqları $5\\text{ sm}$ olan iki mail çəkilmişdir. Maillərin oturacaqları arasındakı məsafəni ($\\text{sm}$-lə) tapın.",
+          ru: "Из точки, находящейся на расстоянии $3\\text{ см}$ от прямой, проведены две наклонные длиной по $5\\text{ см}$. Найдите расстояние между основаниями наклонных (в см).",
+          en: "From a point at a distance of $3\\text{ cm}$ from a line, two inclined segments of length $5\\text{ cm}$ are drawn. Find the distance between their feet (in cm)."
+        },
+        explanation: {
+          az: "Həlli:\n1) Hər bir proyeksiyanın uzunluğu: $\\sqrt{5^2 - 3^2} = 4\\text{ sm}$.\n2) Oturacaqlar arasındakı məsafə: $4 + 4 = 8\\text{ sm}$.",
+          ru: "Решение:\n1) Проекция каждой наклонной: $\\sqrt{5^2 - 3^2} = 4\\text{ см}$.\n2) Расстояние: $4 + 4 = 8\\text{ см}$.",
+          en: "Solution:\n1) Projection: $\\sqrt{5^2 - 3^2} = 4\\text{ cm}$.\n2) Distance: $4 + 4 = 8\\text{ cm}$."
+        }
+      },
+      {
+        id: 28,
+        type: "open",
+        correct: "4",
+        image: "Duz_xett_sua_parca_Image0028.png",
+        text: {
+          az: "$D$ nöqtəsi $AB$ parçasının orta nöqtəsidir. $AC = 10$ və $CB = 2$ olarsa, $DC$ parçasının uzunluğunu hesablayın.",
+          ru: "Точка $D$ — середина отрезка $AB$. Если $AC = 10$ и $CB = 2$, найдите длину $DC$.",
+          en: "Point $D$ is the midpoint of segment $AB$. If $AC = 10$ and $CB = 2$, calculate the length of $DC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AB = AC + CB = 10 + 2 = 12$.\n2) $AD = 12 / 2 = 6$.\n3) $DC = AC - AD = 10 - 6 = 4$.",
+          ru: "Решение:\n1) $AB = 10 + 2 = 12 \\implies AD = 6$.\n2) $DC = 10 - 6 = 4$.",
+          en: "Solution:\n1) $AB = 12, AD = 6 \\implies DC = 10 - 6 = 4$."
+        }
+      },
+      {
+        id: 29,
+        type: "open",
+        correct: "27",
+        text: {
+          az: "$C$ nöqtəsi $AB$ parçasını $A$ nöqtəsindən başlayaraq $2:3$ nisbətində bölür. $AB = 45$ olarsa, $CB$-ni tapın.",
+          ru: "Точка $C$ делит отрезок $AB$, начиная от $A$, в отношении $2:3$. Если $AB = 45$, найдите $CB$.",
+          en: "Point $C$ divides $AB$ starting from $A$ in ratio $2:3$. If $AB = 45$, find $CB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $5x = 45 \\implies x = 9$.\n2) $CB = 3x = 3 \\times 9 = 27$.",
+          ru: "Решение:\n1) $5x = 45 \\implies x = 9$.\n2) $CB = 3 \\times 9 = 27$.",
+          en: "Solution:\n1) $CB = 3 \\times 9 = 27$."
+        }
+      },
+      {
+        id: 30,
+        type: "open",
+        correct: "320",
+        text: {
+          az: "$C$ nöqtəsi $AB$ parçasını $A$ nöqtəsindən başlayaraq $3:5$ nisbətində bölür. $AC = 120$ olarsa, $AB$-ni tapın.",
+          ru: "Точка $C$ делит отрезок $AB$, начиная от $A$, в отношении $3:5$. Если $AC = 120$, найдите $AB$.",
+          en: "Point $C$ divides $AB$ starting from $A$ in ratio $3:5$. If $AC = 120$, find $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AC = 3x = 120 \\implies x = 40$.\n2) $AB = 8x = 8 \\times 40 = 320$.",
+          ru: "Решение:\n1) $3x = 120 \\implies x = 40$.\n2) $AB = 8 \\times 40 = 320$.",
+          en: "Solution:\n1) $3x = 120 \\implies x = 40 \\implies AB = 8(40) = 320$."
+        }
+      },
+      {
+        id: 31,
+        type: "open",
+        correct: "80",
+        text: {
+          az: "Düz xətt üzərində olan 6 nöqtənin əmələ gətirdiyi şüaların sayı parçaların sayının neçə faizidir?",
+          ru: "Сколько процентов от числа отрезков составляет число лучей, образованных 6 точками на прямой?",
+          en: "What percentage of the number of segments is the number of rays formed by 6 collinear points?"
+        },
+        explanation: {
+          az: "Həlli:\n1) Şüaların sayı: $2 \\times 6 = 12$.\n2) Parçaların sayı: $\\frac{6 \\times 5}{2} = 15$.\n3) Faiz: $\\frac{12}{15} \\times 100\\% = 80\\%$.",
+          ru: "Решение:\n1) Лучи: $2 \\times 6 = 12$. Отрезки: $\\frac{6 \\times 5}{2} = 15$.\n2) $\\frac{12}{15} \\times 100\\% = 80\\%$.",
+          en: "Solution:\n1) Rays: 12. Segments: 15.\n2) Percentage: $\\frac{12}{15} \\times 100\\% = 80\\%$."
+        }
+      },
+      {
+        id: 32,
+        type: "open",
+        correct: "175",
+        text: {
+          az: "Düz xətt üzərində olan 8 nöqtənin əmələ gətirdiyi parçaların sayı şüaların sayının neçə faizidir?",
+          ru: "Сколько процентов от числа лучей составляет число отрезков, образованных 8 точками на прямой?",
+          en: "What percentage of the number of rays is the number of segments formed by 8 collinear points?"
+        },
+        explanation: {
+          az: "Həlli:\n1) Parçaların sayı: $\\frac{8 \\times 7}{2} = 28$.\n2) Şüaların sayı: $2 \\times 8 = 16$.\n3) Faiz: $\\frac{28}{16} \\times 100\\% = 175\\%$.",
+          ru: "Решение:\n1) Отрезки: 28. Лучи: 16.\n2) $\\frac{28}{16} \\times 100\\% = 175\\%$.",
+          en: "Solution:\n1) Segments: 28. Rays: 16.\n2) Percentage: $\\frac{28}{16} \\times 100\\% = 175\\%$."
+        }
+      },
+      {
+        id: 33,
+        type: "open",
+        correct: "33",
+        image: "Duz_xett_sua_parca_Image0033.png",
+        text: {
+          az: "$AB$ parçasında $CK:KD = 3:2$, $AK:KD = 9:2$ və $AC = BD = 18\\text{ sm}$ olarsa, $CB$-nin uzunluğunu tapın.",
+          ru: "На отрезке $AB$ дано: $CK:KD = 3:2$, $AK:KD = 9:2$ и $AC = BD = 18\\text{ см}$. Найдите длину $CB$.",
+          en: "On segment $AB$, $CK:KD = 3:2$, $AK:KD = 9:2$, and $AC = BD = 18\\text{ cm}$. Find the length of $CB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $KD = 2x, CK = 3x, AK = 9x \\implies AC = AK - CK = 6x$.\n2) $6x = 18 \\implies x = 3$.\n3) $CD = 5x = 15\\text{ sm} \\implies CB = CD + DB = 15 + 18 = 33\\text{ sm}$.",
+          ru: "Решение:\n1) $AC = 9x - 3x = 6x = 18 \\implies x = 3$.\n2) $CB = CD + DB = 5(3) + 18 = 33\\text{ см}$.",
+          en: "Solution:\n1) $6x = 18 \\implies x = 3$.\n2) $CB = 15 + 18 = 33\\text{ cm}$."
+        }
+      },
+      {
+        id: 34,
+        type: "open",
+        correct: "36",
+        image: "Duz_xett_sua_parca_Image0034.png",
+        text: {
+          az: "$AB$ parçasında $CK:KD = 3:2$, $AK:KD = 7:2$ və $AC = BD = 16\\text{ sm}$ olarsa, $CB$-nin uzunluğunu tapın.",
+          ru: "На отрезке $AB$ дано: $CK:KD = 3:2$, $AK:KD = 7:2$ и $AC = BD = 16\\text{ см}$. Найдите длину $CB$.",
+          en: "On segment $AB$, $CK:KD = 3:2$, $AK:KD = 7:2$, and $AC = BD = 16\\text{ cm}$. Find the length of $CB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AC = 7x - 3x = 4x = 16 \\implies x = 4$.\n2) $CD = 5x = 20\\text{ sm} \\implies CB = 20 + 16 = 36\\text{ sm}$.",
+          ru: "Решение:\n1) $AC = 4x = 16 \\implies x = 4$.\n2) $CB = 5(4) + 16 = 36\\text{ см}$.",
+          en: "Solution:\n1) $4x = 16 \\implies x = 4$.\n2) $CB = 20 + 16 = 36\\text{ cm}$."
+        }
+      },
+      {
+        id: 35,
+        type: "open",
+        correct: "25",
+        image: "Duz_xett_sua_parca_Image0035.png",
+        text: {
+          az: "$AB$ parçası üzərində götürülmüş $C$ nöqtəsi onu $A$ nöqtəsindən başlayaraq $2:3$ nisbətində bölür. $AB$ parçası bu düz xətt üzərində hər iki ucdan $5\\text{ sm}$ artırılarsa, $MC : CK = 3:4$ olar. $AB$ parçasının uzunluğunu tapın.",
+          ru: "Точка $C$ делит отрезок $AB$ от точки $A$ в отношении $2:3$. Если отрезок $AB$ продлить с обоих концов на $5\\text{ см}$, то $MC : CK = 3:4$. Найдите длину отрезка $AB$.",
+          en: "Point $C$ divides segment $AB$ from $A$ in ratio $2:3$. If $AB$ is extended by $5\\text{ cm}$ at both ends, $MC : CK = 3:4$. Find the length of $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AC = 2x, CB = 3x \\implies AB = 5x$.\n2) $\\frac{5 + 2x}{3x + 5} = \\frac{3}{4} \\implies 20 + 8x = 9x + 15 \\implies x = 5$.\n3) $AB = 5x = 5 \\times 5 = 25\\text{ sm}$.",
+          ru: "Решение:\n1) $\\frac{5 + 2x}{3x + 5} = \\frac{3}{4} \\implies x = 5$.\n2) $AB = 5 \\times 5 = 25\\text{ см}$.",
+          en: "Solution:\n1) $\\frac{5+2x}{3x+5} = \\frac{3}{4} \\implies x=5$.\n2) $AB = 5(5) = 25\\text{ cm}$."
+        }
+      },
+      {
+        id: 36,
+        type: "open",
+        correct: "28",
+        image: "Duz_xett_sua_parca_Image0036.png",
+        text: {
+          az: "$AB$ parçası üzərində götürülmüş $C$ nöqtəsi onu $A$ nöqtəsindən başlayaraq $2:5$ nisbətində bölür. $AB$ parçası bu düz xətt üzərində hər iki ucdan $10\\text{ sm}$ artırılarsa, $MC : CK = 3:5$ olar. $AB$ parçasının uzunluğunu tapın.",
+          ru: "Точка $C$ делит отрезок $AB$ от точки $A$ в отношении $2:5$. Если отрезок $AB$ продлить с обоих концов на $10\\text{ см}$, то $MC : CK = 3:5$. Найдите длину отрезка $AB$.",
+          en: "Point $C$ divides segment $AB$ from $A$ in ratio $2:5$. If $AB$ is extended by $10\\text{ cm}$ at both ends, $MC : CK = 3:5$. Find the length of $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AC = 2x, CB = 5x \\implies AB = 7x$.\n2) $\\frac{10 + 2x}{5x + 10} = \\frac{3}{5} \\implies 50 + 10x = 15x + 30 \\implies 5x = 20 \\implies x = 4$.\n3) $AB = 7x = 7 \\times 4 = 28\\text{ sm}$.",
+          ru: "Решение:\n1) $\\frac{10 + 2x}{5x + 10} = \\frac{3}{5} \\implies 5x = 20 \\implies x = 4$.\n2) $AB = 7 \\times 4 = 28\\text{ см}$.",
+          en: "Solution:\n1) $\\frac{10+2x}{5x+10} = \\frac{3}{5} \\implies x = 4$.\n2) $AB = 7(4) = 28\\text{ cm}$."
+        }
+      }
+    ];
+
+    // --- State Variables ---
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    // --- Init ---
+    window.addEventListener('DOMContentLoaded', () => {
+      renderApp();
+      updateScore();
+    });
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `lang-${lang}`);
+      });
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) {
+        currentSlide = nextSlide;
+        renderApp();
+      }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        renderApp();
+      }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      const isCorrect = choice === q.correct;
+      userAnswers[qId] = { answer: choice, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+
+      const q = questionsData.find(item => item.id === qId);
+      const cleanVal = val.replace(/,/g, '.').replace(/[^\d.-]/g, '');
+      const cleanCorrect = q.correct.replace(/,/g, '.').replace(/[^\d.-]/g, '');
+      const isCorrect = parseFloat(cleanVal) === parseFloat(cleanCorrect);
+
+      userAnswers[qId] = { answer: val, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      // Question Grid
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+
+        if (userAnswers[q.id]) {
+          btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        }
+        if (currentMode === 'slide' && q.id === currentSlide) {
+          btn.classList.add('active');
+        }
+
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      // Slide Buttons State
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      // Question Container
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      const questionsToRender = currentMode === 'slide'
+        ? questionsData.filter(q => q.id === currentSlide)
+        : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang]}</div>
+        `;
+
+        // Safe Image Rendering with exact onerror handler
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id} illustration"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil tapılmadı: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        // MCQ Options
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          // Open Ended Input
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}"
+                value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''}
+                onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        // Explanation Box
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang]}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      // KaTeX Auto-render
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>

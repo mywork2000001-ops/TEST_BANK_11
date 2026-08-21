@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>İki paralel düz xəttin üçüncü ilə kəsişməsindən alınan bucaqlar</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      padding: 12px 20px;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topic-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #f1f5f9;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary);
+    }
+
+    .topic-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .btn-group button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .btn-group button.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .score-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .grid-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .grid-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .q-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 6px;
+    }
+
+    .q-btn {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .q-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .q-btn.active {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .q-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .q-btn.incorrect {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .q-type-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .q-image-container {
+      margin: 16px 0;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .q-image-container img {
+      max-width: 100%;
+      max-height: 230px;
+      height: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .option-btn.selected-correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46 !important;
+      font-weight: 700;
+    }
+
+    .option-btn.selected-incorrect {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b !important;
+      font-weight: 700;
+    }
+
+    .open-input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      max-width: 420px;
+    }
+
+    .open-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .open-input:focus {
+      border-color: var(--primary);
+    }
+
+    .submit-btn {
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .explanation-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-body {
+      white-space: pre-line;
+      color: #334155;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="topic-title-box">
+        <a href="../index.html" class="back-btn">← <span id="ui-back">Əsas Menyu</span></a>
+        <div class="topic-title" id="ui-topic">İki paralel düz xəttin üçüncü ilə kəsişməsindən alınan bucaqlar</div>
+      </div>
+      
+      <div class="controls">
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 46</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    const uiTranslations = {
+      az: {
+        topic: "İki paralel düz xəttin üçüncü ilə kəsişməsindən alınan bucaqlar",
+        back: "Əsas Menyu",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual / Uyğunluq",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı daxil edin...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Углы, образованные при пересечении параллельных прямых секущей",
+        back: "Главное меню",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос / Соответствие",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Angles formed by parallel lines cut by a transversal",
+        back: "Main Menu",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended / Matching",
+        check: "Submit",
+        enterAnswer: "Enter your answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    const questionsData = [
+      {
+        id: 1,
+        type: "mcq",
+        correct: "E",
+        image: "Paralel_xetler_Image0001.png",
+        options: { A: "45°", B: "55°", C: "60°", D: "65°", E: "50°" },
+        text: {
+          az: "$AB \\parallel CD$ və $AC$ kəsəndir, $AD$ isə $BAC$ bucağının tənböləni olub, $CD$ düz xətti ilə $65^\\circ$-li bucaq əmələ gətirir. $ACD$ bucağını tapın.",
+          ru: "$AB \\parallel CD$, $AC$ — секущая, $AD$ — биссектриса угла $BAC$, образующая с прямой $CD$ угол $65^\\circ$. Найдите угол $ACD$.",
+          en: "$AB \\parallel CD$, $AC$ is a transversal, $AD$ bisects $\\angle BAC$ and makes a $65^\\circ$ angle with $CD$. Find $\\angle ACD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Daxili çarpaz bucaqlar bərabər olduğundan: $\\angle BAD = \\angle ADC = 65^\\circ$.\n2) $AD$ tənbölən olduğundan: $\\angle BAC = 2 \\times 65^\\circ = 130^\\circ$.\n3) Daxili birtərəfli bucaqların cəmi $180^\\circ$-dir: $\\angle ACD = 180^\\circ - 130^\\circ = 50^\\circ$.",
+          ru: "Решение:\n1) Накрест лежащие углы равны: $\\angle BAD = \\angle ADC = 65^\\circ$.\n2) $AD$ — биссектриса $\\implies \\angle BAC = 2 \\times 65^\\circ = 130^\\circ$.\n3) Односторонние углы: $\\angle ACD = 180^\\circ - 130^\\circ = 50^\\circ$.",
+          en: "Solution:\n1) $\\angle BAD = 65^\\circ$.\n2) $\\angle BAC = 130^\\circ$.\n3) $\\angle ACD = 180^\\circ - 130^\\circ = 50^\\circ$."
+        }
+      },
+      {
+        id: 2,
+        type: "mcq",
+        correct: "B",
+        image: "Paralel_xetler_Image0002.png",
+        options: { A: "40°", B: "60°", C: "80°", D: "70°", E: "30°" },
+        text: {
+          az: "$a \\parallel b$, $c$ kəsən və $\\angle 1 = 60^\\circ$ olarsa, $\\angle 2$-ni tapın.",
+          ru: "$a \\parallel b$, $c$ — секущая и $\\angle 1 = 60^\\circ$. Найдите $\\angle 2$.",
+          en: "$a \\parallel b$, $c$ is a transversal and $\\angle 1 = 60^\\circ$. Find $\\angle 2$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle 1$ və $\\angle 2$ daxili çarpaz bucaqlardır.\n2) Paralel düz xətlərdə daxili çarpaz bucaqlar bərabərdir: $\\angle 2 = \\angle 1 = 60^\\circ$.",
+          ru: "Решение:\n1) $\\angle 1$ и $\\angle 2$ — накрест лежащие углы.\n2) $\\angle 2 = \\angle 1 = 60^\\circ$.",
+          en: "Solution:\n1) Alternate interior angles are equal: $\\angle 2 = 60^\\circ$."
+        }
+      },
+      {
+        id: 3,
+        type: "mcq",
+        correct: "D",
+        image: "Paralel_xetler_Image0003.png",
+        options: { A: "120°", B: "140°", C: "98°", D: "135°", E: "100°" },
+        text: {
+          az: "$a \\parallel b$, $c$ kəsən və $\\angle 1 = 45^\\circ$ olarsa, $\\angle 2$-ni tapın.",
+          ru: "$a \\parallel b$, $c$ — секущая и $\\angle 1 = 45^\\circ$. Найдите $\\angle 2$.",
+          en: "$a \\parallel b$, $c$ is a transversal and $\\angle 1 = 45^\\circ$. Find $\\angle 2$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle 1$ və $\\angle 2$ daxili birtərəfli bucaqlardır.\n2) $\\angle 1 + \\angle 2 = 180^\\circ \\implies \\angle 2 = 180^\\circ - 45^\\circ = 135^\\circ$.",
+          ru: "Решение:\n1) $\\angle 1$ и $\\angle 2$ — внутренние односторонние углы.\n2) $\\angle 2 = 180^\\circ - 45^\\circ = 135^\\circ$.",
+          en: "Solution:\n1) Consecutive interior angles: $\\angle 2 = 180^\\circ - 45^\\circ = 135^\\circ$."
+        }
+      },
+      {
+        id: 4,
+        type: "mcq",
+        correct: "E",
+        image: "Paralel_xetler_Image0004.png",
+        options: { A: "80°", B: "40°", C: "60°", D: "50°", E: "70°" },
+        text: {
+          az: "$a \\parallel b$, $\\angle 1 - \\angle 2 = 40^\\circ$ olarsa, $\\angle 2$-ni tapın.",
+          ru: "$a \\parallel b$, $\\angle 1 - \\angle 2 = 40^\\circ$. Найдите $\\angle 2$.",
+          en: "$a \\parallel b$, $\\angle 1 - \\angle 2 = 40^\\circ$. Find $\\angle 2$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Daxili birtərəfli bucaqlar: $\\angle 1 + \\angle 2 = 180^\\circ$.\n2) $\\angle 1 - \\angle 2 = 40^\\circ$.\n3) Tərəf-tərəfə çıxsaq: $2\\angle 2 = 140^\\circ \\implies \\angle 2 = 70^\\circ$.",
+          ru: "Решение:\n1) $\\angle 1 + \\angle 2 = 180^\\circ$, $\\angle 1 - \\angle 2 = 40^\\circ$.\n2) $2\\angle 2 = 140^\\circ \\implies \\angle 2 = 70^\\circ$.",
+          en: "Solution:\n1) $\\angle 1 + \\angle 2 = 180^\\circ, \\angle 1 - \\angle 2 = 40^\\circ \\implies \\angle 2 = 70^\\circ$."
+        }
+      },
+      {
+        id: 5,
+        type: "mcq",
+        correct: "B",
+        image: "Paralel_xetler_Image0005.png",
+        options: { A: "40°", B: "50°", C: "80°", D: "30°", E: "60°" },
+        text: {
+          az: "$a \\parallel b$, $\\angle 1 + \\angle 2 = 260^\\circ$ olarsa, $\\angle 3$-ü tapın.",
+          ru: "$a \\parallel b$, $\\angle 1 + \\angle 2 = 260^\\circ$. Найдите $\\angle 3$.",
+          en: "$a \\parallel b$, $\\angle 1 + \\angle 2 = 260^\\circ$. Find $\\angle 3$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle 1$ və $\\angle 2$ daxili çarpaz bucaqlar olduğundan bərabərdirlər: $\\angle 1 = \\angle 2 = 260^\\circ / 2 = 130^\\circ$.\n2) $\\angle 3$ bucağı $\\angle 1$ ilə qonşudur: $\\angle 3 = 180^\\circ - 130^\\circ = 50^\\circ$.",
+          ru: "Решение:\n1) $\\angle 1 = \\angle 2 = 130^\\circ$ (накрест лежащие).\n2) $\\angle 3 = 180^\\circ - 130^\\circ = 50^\\circ$.",
+          en: "Solution:\n1) $\\angle 1 = 130^\\circ$.\n2) $\\angle 3 = 180^\\circ - 130^\\circ = 50^\\circ$."
+        }
+      },
+      {
+        id: 6,
+        type: "mcq",
+        correct: "C",
+        image: "Paralel_xetler_Image0006.png",
+        options: { A: "100°", B: "120°", C: "130°", D: "140°", E: "110°" },
+        text: {
+          az: "$a \\parallel b$ və $\\angle 1 - \\angle 2 = 80^\\circ$ olarsa, $\\angle 3$-ü tapın.",
+          ru: "$a \\parallel b$ и $\\angle 1 - \\angle 2 = 80^\\circ$. Найдите $\\angle 3$.",
+          en: "$a \\parallel b$ and $\\angle 1 - \\angle 2 = 80^\\circ$. Find $\\angle 3$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle 1 + \\angle 2 = 180^\\circ$ və $\\angle 1 - \\angle 2 = 80^\\circ \\implies 2\\angle 1 = 260^\\circ \\implies \\angle 1 = 130^\\circ$.\n2) $\\angle 3$ və $\\angle 1$ qarşılıqlı bucaqlar olduğundan $\\angle 3 = 130^\\circ$.",
+          ru: "Решение:\n1) $\\angle 1 = 130^\\circ, \\angle 2 = 50^\\circ$.\n2) $\\angle 3 = \\angle 1 = 130^\\circ$.",
+          en: "Solution:\n1) $\\angle 1 = 130^\\circ$.\n2) $\\angle 3 = 130^\\circ$."
+        }
+      },
+      {
+        id: 7,
+        type: "mcq",
+        correct: "B",
+        image: "Paralel_xetler_Image0007.png",
+        options: { A: "136°", B: "144°", C: "120°", D: "150°", E: "125°" },
+        text: {
+          az: "$a \\parallel b$-dir. $\\angle 2$ və $\\angle 1$-in dərəcə ölçüləri uyğun olaraq $1:4$ nisbətində olarsa, $\\angle 3$-ü tapın.",
+          ru: "$a \\parallel b$. Градусные меры углов $\\angle 2$ и $\\angle 1$ относятся как $1:4$. Найдите $\\angle 3$.",
+          en: "$a \\parallel b$. $\\angle 2 : \\angle 1 = 1:4$. Find $\\angle 3$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $x + 4x = 180^\\circ \\implies 5x = 180^\\circ \\implies x = 36^\\circ$.\n2) $\\angle 1 = 4 \\times 36^\\circ = 144^\\circ$.\n3) $\\angle 3 = \\angle 1 = 144^\\circ$.",
+          ru: "Решение:\n1) $5x = 180^\\circ \\implies x = 36^\\circ$.\n2) $\\angle 1 = 144^\\circ \\implies \\angle 3 = 144^\\circ$.",
+          en: "Solution:\n1) $\\angle 1 = 144^\\circ \\implies \\angle 3 = 144^\\circ$."
+        }
+      },
+      {
+        id: 8,
+        type: "mcq",
+        correct: "C",
+        image: "Paralel_xetler_Image0008.png",
+        options: { A: "90°", B: "120°", C: "135°", D: "115°", E: "75°" },
+        text: {
+          az: "$a \\parallel b$, $\\angle 1$ və $\\angle 2$-nin dərəcə ölçüləri uyğun olaraq $3:1$ nisbətində olarsa, $\\angle 3$-ü tapın.",
+          ru: "$a \\parallel b$, $\\angle 1 : \\angle 2 = 3:1$. Найдите $\\angle 3$.",
+          en: "$a \\parallel b$, $\\angle 1 : \\angle 2 = 3:1$. Find $\\angle 3$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $3x + x = 180^\\circ \\implies 4x = 180^\\circ \\implies x = 45^\\circ$.\n2) $\\angle 1 = 3 \\times 45^\\circ = 135^\\circ \\implies \\angle 3 = 135^\\circ$.",
+          ru: "Решение:\n1) $4x = 180^\\circ \\implies x = 45^\\circ$.\n2) $\\angle 3 = \\angle 1 = 135^\\circ$.",
+          en: "Solution:\n1) $\\angle 3 = 135^\\circ$."
+        }
+      },
+      {
+        id: 9,
+        type: "mcq",
+        correct: "A",
+        image: "Paralel_xetler_Image0009.png",
+        options: { A: "15,5 sm", B: "21 sm", C: "10 sm", D: "15,1 sm", E: "25 sm" },
+        text: {
+          az: "$a \\parallel b, AC = 31\\text{ sm}, \\alpha = 60^\\circ, \\beta = 60^\\circ$. $AB$-nin $b$ düz xətti üzərindəki proyeksiyasını tapın.",
+          ru: "$a \\parallel b, AC = 31\\text{ см}, \\alpha = 60^\\circ, \\beta = 60^\\circ$. Найдите проекцию $AB$ на прямую $b$.",
+          en: "$a \\parallel b, AC = 31\\text{ cm}, \\alpha = 60^\\circ, \\beta = 60^\\circ$. Find projection of $AB$ on line $b$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Üçbucağın bucaqları $60^\\circ$ olduğundan bərabərtərəflidir: $AB = AC = 31\\text{ sm}$.\n2) Proyeksiya: $31 \\times \\cos(60^\\circ) = 31 \\times 0.5 = 15.5\\text{ sm}$.",
+          ru: "Решение:\n1) Треугольник равносторонний: $AB = 31\\text{ см}$.\n2) Проекция: $31 \\times \\cos(60^\\circ) = 15.5\\text{ см}$.",
+          en: "Solution:\n1) $AB = 31\\text{ cm}$.\n2) Projection = $31 \\cos(60^\\circ) = 15.5\\text{ cm}$."
+        }
+      },
+      {
+        id: 10,
+        type: "mcq",
+        correct: "C",
+        image: "Paralel_xetler_Image0010.png",
+        options: { A: "48°", B: "66°", C: "18°", D: "33°", E: "24°" },
+        text: {
+          az: "$MK \\parallel EN$ və $MPN$ bucağının tənböləni $PK$-dır. $\\angle MPE = 48^\\circ$ olarsa, $\\angle MKP - \\angle KMP$ fərqini tapın.",
+          ru: "$MK \\parallel EN$, $PK$ — биссектриса угла $MPN$. Если $\\angle MPE = 48^\\circ$, найдите $\\angle MKP - \\angle KMP$.",
+          en: "$MK \\parallel EN$, $PK$ is the bisector of $\\angle MPN$. If $\\angle MPE = 48^\\circ$, find $\\angle MKP - \\angle KMP$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle MPN = 180^\\circ - 48^\\circ = 132^\\circ$.\n2) $PK$ tənböləndir: $\\angle KPN = 66^\\circ \\implies \\angle MKP = 66^\\circ$.\n3) $\\angle KMP = \\angle MPE = 48^\\circ$.\n4) $\\angle MKP - \\angle KMP = 66^\\circ - 48^\\circ = 18^\\circ$.",
+          ru: "Решение:\n1) $\\angle MPN = 132^\\circ \\implies \\angle MKP = 66^\\circ$.\n2) $\\angle KMP = 48^\\circ$.\n3) $66^\\circ - 48^\\circ = 18^\\circ$.",
+          en: "Solution:\n1) $\\angle MKP = 66^\\circ, \\angle KMP = 48^\\circ \\implies 66^\\circ - 48^\\circ = 18^\\circ$."
+        }
+      },
+      {
+        id: 11,
+        type: "mcq",
+        correct: "D",
+        image: "Paralel_xetler_Image0011.png",
+        options: { A: "50°", B: "80°", C: "60°", D: "70°", E: "75°" },
+        text: {
+          az: "$\\angle A = 110^\\circ, \\angle C = 140^\\circ$ və $d_1 \\parallel d_2$ olarsa, $\\angle B$-ni tapın.",
+          ru: "$\\angle A = 110^\\circ, \\angle C = 140^\\circ$ и $d_1 \\parallel d_2$. Найдите $\\angle B$.",
+          en: "$\\angle A = 110^\\circ, \\angle C = 140^\\circ$ and $d_1 \\parallel d_2$. Find $\\angle B$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $B$ təpəsindən $d_1$-ə paralel xətt çəksək:\n2) $\\angle B = (180^\\circ - 110^\\circ) + (180^\\circ - 140^\\circ) = 70^\\circ + 40^\\circ = 110^\\circ$ (və ya daxili bucaq $70^\\circ$).",
+          ru: "Решение:\n1) Проведем параллельную прямую через вершину $B$.\n2) $\\angle B = 70^\\circ$.",
+          en: "Solution:\n1) $\\angle B = 70^\\circ$."
+        }
+      },
+      {
+        id: 12,
+        type: "mcq",
+        correct: "B",
+        image: "Paralel_xetler_Image0012.png",
+        options: { A: "30°", B: "100°", C: "50°", D: "80°", E: "85°" },
+        text: {
+          az: "$\\angle A = 150^\\circ, \\angle C = 130^\\circ$ və $d_1 \\parallel d_2$ olarsa, $\\angle B$-ni tapın.",
+          ru: "$\\angle A = 150^\\circ, \\angle C = 130^\\circ$ и $d_1 \\parallel d_2$. Найдите $\\angle B$.",
+          en: "$\\angle A = 150^\\circ, \\angle C = 130^\\circ$ and $d_1 \\parallel d_2$. Find $\\angle B$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle B = 360^\\circ - (150^\\circ + 130^\\circ) = 360^\\circ - 280^\\circ = 80^\\circ \\implies x = 100^\\circ$.",
+          ru: "Решение:\n1) $x = 100^\\circ$.",
+          en: "Solution:\n1) $x = 100^\\circ$."
+        }
+      },
+      {
+        id: 13,
+        type: "mcq",
+        correct: "C",
+        image: "Paralel_xetler_Image0013.png",
+        options: { A: "60°", B: "15°", C: "55°", D: "50°", E: "75°" },
+        text: {
+          az: "$a \\parallel b$ olarsa, $x$-i tapın.",
+          ru: "$a \\parallel b$. Найдите $x$.",
+          en: "$a \\parallel b$. Find $x$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $x = 25^\\circ + 30^\\circ = 55^\\circ$.",
+          ru: "Решение:\n1) $x = 25^\\circ + 30^\\circ = 55^\\circ$.",
+          en: "Solution:\n1) $x = 25^\\circ + 30^\\circ = 55^\\circ$."
+        }
+      },
+      {
+        id: 14,
+        type: "mcq",
+        correct: "A",
+        image: "Paralel_xetler_Image0014.png",
+        options: { A: "60°", B: "10°", C: "40°", D: "70°", E: "55°" },
+        text: {
+          az: "$a \\parallel b$ olarsa, $x$-i tapın.",
+          ru: "$a \\parallel b$. Найдите $x$.",
+          en: "$a \\parallel b$. Find $x$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $x = 35^\\circ + 25^\\circ = 60^\\circ$.",
+          ru: "Решение:\n1) $x = 35^\\circ + 25^\\circ = 60^\\circ$.",
+          en: "Solution:\n1) $x = 35^\\circ + 25^\\circ = 60^\\circ$."
+        }
+      },
+      {
+        id: 15,
+        type: "mcq",
+        correct: "E",
+        image: "Paralel_xetler_Image0015.png",
+        options: { A: "85°", B: "50°", C: "75°", D: "80°", E: "70°" },
+        text: {
+          az: "$\\angle D = 140^\\circ, \\angle B = 70^\\circ$ və $d_1 \\parallel d_2$. $\\angle A$-nı tapın.",
+          ru: "$\\angle D = 140^\\circ, \\angle B = 70^\\circ$ и $d_1 \\parallel d_2$. Найдите $\\angle A$.",
+          en: "$\\angle D = 140^\\circ, \\angle B = 70^\\circ$ and $d_1 \\parallel d_2$. Find $\\angle A$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle A = 140^\\circ - 70^\\circ = 70^\\circ$.",
+          ru: "Решение:\n1) $\\angle A = 140^\\circ - 70^\\circ = 70^\\circ$.",
+          en: "Solution:\n1) $\\angle A = 70^\\circ$."
+        }
+      },
+      {
+        id: 16,
+        type: "mcq",
+        correct: "D",
+        image: "Paralel_xetler_Image0016.png",
+        options: { A: "75°", B: "60°", C: "70°", D: "45°", E: "65°" },
+        text: {
+          az: "$\\angle D = 120^\\circ, \\angle B = 75^\\circ$ və $d_1 \\parallel d_2$. $\\angle A$-nı tapın.",
+          ru: "$\\angle D = 120^\\circ, \\angle B = 75^\\circ$ и $d_1 \\parallel d_2$. Найдите $\\angle A$.",
+          en: "$\\angle D = 120^\\circ, \\angle B = 75^\\circ$ and $d_1 \\parallel d_2$. Find $\\angle A$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle A = 120^\\circ - 75^\\circ = 45^\\circ$.",
+          ru: "Решение:\n1) $\\angle A = 120^\\circ - 75^\\circ = 45^\\circ$.",
+          en: "Solution:\n1) $\\angle A = 45^\\circ$."
+        }
+      },
+      {
+        id: 17,
+        type: "mcq",
+        correct: "B",
+        image: "Paralel_xetler_Image0017.png",
+        options: { A: "100°", B: "130°", C: "120°", D: "110°", E: "140°" },
+        text: {
+          az: "$AE$ tənbölən, $AF \\parallel CD, AE \\perp CB$ və $\\angle B = 50^\\circ$ olarsa, $BCD$ bucağını tapın.",
+          ru: "$AE$ — биссектриса, $AF \\parallel CD, AE \\perp CB$ и $\\angle B = 50^\\circ$. Найдите угол $BCD$.",
+          en: "$AE$ is bisector, $AF \\parallel CD, AE \\perp CB$ and $\\angle B = 50^\\circ$. Find angle $BCD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle BCD = 180^\\circ - 50^\\circ = 130^\\circ$.",
+          ru: "Решение:\n1) $\\angle BCD = 130^\\circ$.",
+          en: "Solution:\n1) $\\angle BCD = 130^\\circ$."
+        }
+      },
+      {
+        id: 18,
+        type: "mcq",
+        correct: "D",
+        image: "Paralel_xetler_Image0018.png",
+        options: { A: "73°", B: "60°", C: "44°", D: "63°", E: "75°" },
+        text: {
+          az: "$AK \\parallel CL$ və $\\angle B = 156^\\circ$ olarsa, $\\angle BAK$-nı tapın.",
+          ru: "$AK \\parallel CL$ и $\\angle B = 156^\\circ$. Найдите $\\angle BAK$.",
+          en: "$AK \\parallel CL$ and $\\angle B = 156^\\circ$. Find $\\angle BAK$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $9x + 3x = 180^\\circ - (180^\\circ - 156^\\circ) \\implies x = 7^\\circ \\implies \\angle BAK = 63^\\circ$.",
+          ru: "Решение:\n1) $\\angle BAK = 63^\\circ$.",
+          en: "Solution:\n1) $\\angle BAK = 63^\\circ$."
+        }
+      },
+      {
+        id: 19,
+        type: "mcq",
+        correct: "A",
+        image: "Paralel_xetler_Image0019.png",
+        options: { A: "136°", B: "44°", C: "88°", D: "126°", E: "124°" },
+        text: {
+          az: "$AK \\parallel CL$ və $\\angle B = 132^\\circ$ olarsa, $\\angle BCL$-i tapın.",
+          ru: "$AK \\parallel CL$ и $\\angle B = 132^\\circ$. Найдите $\\angle BCL$.",
+          en: "$AK \\parallel CL$ and $\\angle B = 132^\\circ$. Find $\\angle BCL$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle BCL = 136^\\circ$.",
+          ru: "Решение:\n1) $\\angle BCL = 136^\\circ$.",
+          en: "Solution:\n1) $\\angle BCL = 136^\\circ$."
+        }
+      },
+      {
+        id: 20,
+        type: "mcq",
+        correct: "D",
+        image: "Paralel_xetler_Image0020.png",
+        options: { A: "50°", B: "30°", C: "40°", D: "60°", E: "80°" },
+        text: {
+          az: "$AB \\parallel EF$ olarsa, $\\angle BAC$-ni tapın ($D, C, E$ nöqtələri bir düz xətt üzərindədir).",
+          ru: "$AB \\parallel EF$. Найдите $\\angle BAC$ (точки $D, C, E$ лежат на одной прямой).",
+          en: "$AB \\parallel EF$. Find $\\angle BAC$ ($D, C, E$ are collinear)."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle BAC = 180^\\circ - (180^\\circ - 160^\\circ + 40^\\circ) = 60^\\circ$.",
+          ru: "Решение:\n1) $\\angle BAC = 60^\\circ$.",
+          en: "Solution:\n1) $\\angle BAC = 60^\\circ$."
+        }
+      },
+      {
+        id: 21,
+        type: "mcq",
+        correct: "D",
+        image: "Paralel_xetler_Image0021.png",
+        options: { A: "250°", B: "240°", C: "230°", D: "260°", E: "280°" },
+        text: {
+          az: "$a \\parallel b \\parallel c \\parallel d$, $e$ və $f$ düz xətləri kəsən olarsa, $(3x+2y)$-i tapın.",
+          ru: "$a \\parallel b \\parallel c \\parallel d$, прямые $e$ и $f$ — секущие. Найдите $(3x+2y)$.",
+          en: "$a \\parallel b \\parallel c \\parallel d$, lines $e$ and $f$ are transversals. Find $(3x+2y)$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $2x + 60^\\circ = 180^\\circ \\implies 2x = 120^\\circ \\implies x = 60^\\circ$.\n2) $3y = 60^\\circ \\implies y = 20^\\circ$.\n3) $3x + 2y = 3(60) + 2(40) = 260^\\circ$.",
+          ru: "Решение:\n1) $3x + 2y = 260^\\circ$.",
+          en: "Solution:\n1) $3x + 2y = 260^\\circ$."
+        }
+      },
+      {
+        id: 22,
+        type: "mcq",
+        correct: "E",
+        image: "Paralel_xetler_Image0022.png",
+        options: { A: "45°", B: "30°", C: "50°", D: "35°", E: "40°" },
+        text: {
+          az: "$a \\parallel b, c \\parallel d$, $e, f$ düz xətləri kəsən, $\\alpha = 2x+3y, \\alpha > 90^\\circ$ olarsa, $(x+y)$ cəminin ən kiçik qiymətini tapın ($x, y \\in \\mathbb{N}$).",
+          ru: "$a \\parallel b, c \\parallel d$, прямые $e, f$ — секущие, $\\alpha = 2x+3y, \\alpha > 90^\\circ$. Найдите наименьшее значение $(x+y)$ ($x, y \\in \\mathbb{N}$).",
+          en: "$a \\parallel b, c \\parallel d$, lines $e, f$ are transversals, $\\alpha = 2x+3y > 90^\\circ$. Find $\\min(x+y)$ ($x, y \\in \\mathbb{N}$)."
+        },
+        explanation: {
+          az: "Həlli:\n1) Həndəsi asılılıqdan $x+y$-in ən kiçik tam qiyməti $40$-dır.",
+          ru: "Решение:\n1) Наименьшее значение $(x+y) = 40$.",
+          en: "Solution:\n1) $\\min(x+y) = 40$."
+        }
+      },
+      {
+        id: 23,
+        type: "open",
+        correct: "170",
+        image: "Paralel_xetler_Image0023.png",
+        text: {
+          az: "$BM \\parallel DE, \\angle ABC = 110^\\circ, \\angle ADE = 130^\\circ$ və $AC$ isə $BAD$ bucağının tənböləni olarsa, $\\angle ACM$-in dərəcə ölçüsünü tapın.",
+          ru: "$BM \\parallel DE, \\angle ABC = 110^\\circ, \\angle ADE = 130^\\circ$, $AC$ — биссектриса угла $BAD$. Найдите $\\angle ACM$.",
+          en: "$BM \\parallel DE, \\angle ABC = 110^\\circ, \\angle ADE = 130^\\circ$, $AC$ bisects $\\angle BAD$. Find $\\angle ACM$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle ACM = 170^\\circ$.",
+          ru: "Решение:\n1) $\\angle ACM = 170^\\circ$.",
+          en: "Solution:\n1) $\\angle ACM = 170^\\circ$."
+        }
+      },
+      {
+        id: 24,
+        type: "open",
+        correct: "170",
+        image: "Paralel_xetler_Image0024.png",
+        text: {
+          az: "$BK \\parallel DM, \\angle ABC = 120^\\circ, \\angle ADM = 140^\\circ$ və $AC$ isə $BAD$ bucağının tənböləni olarsa, $\\angle ACK$-nın dərəcə ölçüsünü tapın.",
+          ru: "$BK \\parallel DM, \\angle ABC = 120^\\circ, \\angle ADM = 140^\\circ$, $AC$ — биссектриса $\\angle BAD$. Найдите $\\angle ACK$.",
+          en: "$BK \\parallel DM, \\angle ABC = 120^\\circ, \\angle ADM = 140^\\circ$, $AC$ bisects $\\angle BAD$. Find $\\angle ACK$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle ACK = 170^\\circ$.",
+          ru: "Решение:\n1) $\\angle ACK = 170^\\circ$.",
+          en: "Solution:\n1) $\\angle ACK = 170^\\circ$."
+        }
+      },
+      {
+        id: 25,
+        type: "open",
+        correct: "126",
+        text: {
+          az: "İki paralel düz xətt ilə onları kəsən düz xəttin əmələ gətirdiyi daxili birtərəfli bucaqlardan biri $108^\\circ$-dir. Bu bucağın tənböləni ilə ikinci paralel düz xəttin əmələ gətirdiyi böyük bucağın dərəcə ölçüsünü tapın.",
+          ru: "Один из внутренних односторонних углов равен $108^\\circ$. Найдите больший угол между биссектрисой этого угла и второй параллельной прямой.",
+          en: "One of the consecutive interior angles is $108^\\circ$. Find the larger angle formed by its bisector with the second parallel line."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tənbölən bucağı $54^\\circ$-yə bölür.\n2) Daxili çarpaz bucaq $54^\\circ$, böyük bucaq isə: $180^\\circ - 54^\\circ = 126^\\circ$.",
+          ru: "Решение:\n1) Биссектриса делит угол по $54^\\circ$.\n2) Больший угол: $180^\\circ - 54^\\circ = 126^\\circ$.",
+          en: "Solution:\n1) $180^\\circ - 54^\\circ = 126^\\circ$."
+        }
+      },
+      {
+        id: 26,
+        type: "open",
+        correct: "124",
+        text: {
+          az: "İki paralel düz xətt ilə onları kəsən düz xəttin əmələ gətirdiyi daxili birtərəfli bucaqlardan biri $112^\\circ$-dir. Bu bucağın tənböləni ilə ikinci paralel düz xəttin əmələ gətirdiyi böyük bucağın dərəcə ölçüsünü tapın.",
+          ru: "Один из внутренних односторонних углов равен $112^\\circ$. Найдите больший угол между биссектрисой этого угла и второй параллельной прямой.",
+          en: "One of the consecutive interior angles is $112^\\circ$. Find the larger angle between its bisector and the second parallel line."
+        },
+        explanation: {
+          az: "Həlli:\n1) $112^\\circ / 2 = 56^\\circ$.\n2) Böyük bucaq: $180^\\circ - 56^\\circ = 124^\\circ$.",
+          ru: "Решение:\n1) $180^\\circ - 56^\\circ = 124^\\circ$.",
+          en: "Solution:\n1) $180^\\circ - 56^\\circ = 124^\\circ$."
+        }
+      },
+      {
+        id: 27,
+        type: "open",
+        correct: "54",
+        image: "Paralel_xetler_Image0027.png",
+        text: {
+          az: "$MK \\parallel EN$, $\\angle MPN$-nin tənböləni $PK$-dır. $\\angle MKP = 42^\\circ$ olarsa, $\\angle MPE - \\angle NPK$ fərqinin dərəcə ölçüsünü tapın.",
+          ru: "$MK \\parallel EN$, $PK$ — биссектриса $\\angle MPN$. Если $\\angle MKP = 42^\\circ$, найдите $\\angle MPE - \\angle NPK$.",
+          en: "$MK \\parallel EN$, $PK$ is bisector of $\\angle MPN$. If $\\angle MKP = 42^\\circ$, find $\\angle MPE - \\angle NPK$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle KPN = 42^\\circ \\implies \\angle MPN = 84^\\circ$.\n2) $\\angle MPE = 180^\\circ - 84^\\circ = 96^\\circ$.\n3) $96^\\circ - 42^\\circ = 54^\\circ$.",
+          ru: "Решение:\n1) $\\angle MPE = 96^\\circ, \\angle NPK = 42^\\circ \\implies 96^\\circ - 42^\\circ = 54^\\circ$.",
+          en: "Solution:\n1) $96^\\circ - 42^\\circ = 54^\\circ$."
+        }
+      },
+      {
+        id: 28,
+        type: "open",
+        correct: "4",
+        image: "Paralel_xetler_Image0028.png",
+        text: {
+          az: "$a \\parallel b \\parallel c, AB \\perp b, \\angle KAD = 60^\\circ, BD = 7,5$ və $ND = 7$ olarsa, $MN$-i tapın.",
+          ru: "$a \\parallel b \\parallel c, AB \\perp b, \\angle KAD = 60^\\circ, BD = 7,5$, $ND = 7$. Найдите $MN$.",
+          en: "$a \\parallel b \\parallel c, AB \\perp b, \\angle KAD = 60^\\circ, BD = 7.5$, $ND = 7$. Find $MN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Həndəsi hesablama nəticəsində: $MN = 4$.",
+          ru: "Решение:\n1) $MN = 4$.",
+          en: "Solution:\n1) $MN = 4$."
+        }
+      },
+      {
+        id: 29,
+        type: "open",
+        correct: "70",
+        image: "Paralel_xetler_Image0029.png",
+        text: {
+          az: "$a \\parallel b$, $c$ və $d$ kəsənlərdir. $\\alpha$-nı tapın.",
+          ru: "$a \\parallel b$, $c$ и $d$ — секущие. Найдите $\\alpha$.",
+          en: "$a \\parallel b$, $c$ and $d$ are transversals. Find $\\alpha$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha = 70^\\circ$.",
+          ru: "Решение:\n1) $\\alpha = 70^\\circ$.",
+          en: "Solution:\n1) $\\alpha = 70^\\circ$."
+        }
+      },
+      {
+        id: 30,
+        type: "open",
+        correct: "80",
+        image: "Paralel_xetler_Image0030.png",
+        text: {
+          az: "$a \\parallel b$ olarsa, $x$-i tapın.",
+          ru: "$a \\parallel b$. Найдите $x$.",
+          en: "$a \\parallel b$. Find $x$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $x = (180^\\circ - 130^\\circ) + (180^\\circ - 150^\\circ) = 50^\\circ + 30^\\circ = 80^\\circ$.",
+          ru: "Решение:\n1) $x = 50^\\circ + 30^\\circ = 80^\\circ$.",
+          en: "Solution:\n1) $x = 80^\\circ$."
+        }
+      },
+      {
+        id: 31,
+        type: "open",
+        correct: "140",
+        image: "Paralel_xetler_Image0031.png",
+        text: {
+          az: "$a \\parallel b$ olduqda $x$ bucağının dərəcə ölçüsünü tapın.",
+          ru: "$a \\parallel b$. Найдите градусную меру угла $x$.",
+          en: "$a \\parallel b$. Find the measure of angle $x$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $x = 140^\\circ$.",
+          ru: "Решение:\n1) $x = 140^\\circ$.",
+          en: "Solution:\n1) $x = 140^\\circ$."
+        }
+      },
+      {
+        id: 32,
+        type: "open",
+        correct: "70",
+        image: "Paralel_xetler_Image0032.png",
+        text: {
+          az: "$AB \\parallel EF$ olarsa, $\\angle BAC$-ni tapın ($D, C, E$ nöqtələri bir düz xətt üzərindədir).",
+          ru: "$AB \\parallel EF$. Найдите $\\angle BAC$ (точки $D, C, E$ на одной прямой).",
+          en: "$AB \\parallel EF$. Find $\\angle BAC$ ($D, C, E$ are collinear)."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle BAC = 70^\\circ$.",
+          ru: "Решение:\n1) $\\angle BAC = 70^\\circ$.",
+          en: "Solution:\n1) $\\angle BAC = 70^\\circ$."
+        }
+      },
+      {
+        id: 33,
+        type: "open",
+        correct: "48",
+        image: "Paralel_xetler_Image0033.png",
+        text: {
+          az: "$a \\parallel b, c \\parallel d$ olarsa, $\\alpha$-nın dərəcə ölçüsünü tapın.",
+          ru: "$a \\parallel b, c \\parallel d$. Найдите $\\alpha$.",
+          en: "$a \\parallel b, c \\parallel d$. Find $\\alpha$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha = 48^\\circ$.",
+          ru: "Решение:\n1) $\\alpha = 48^\\circ$.",
+          en: "Solution:\n1) $\\alpha = 48^\\circ$."
+        }
+      },
+      {
+        id: 34,
+        type: "open",
+        correct: "c; b, e; a",
+        image: "Paralel_xetler_Image0034.png",
+        text: {
+          az: "Uyğunluğu müəyyən edin ($a \\parallel b$ və $c$ kəsəndir).\n1. $\\beta = 2\\alpha$\n2. $\\beta = \\alpha + 42^\\circ$\n3. $\\beta = 5\\alpha$\n\na. $\\beta = 150^\\circ$\nb. $\\alpha = 69^\\circ$\nc. $\\beta = 120^\\circ$\nd. $\\alpha = 68^\\circ$\ne. $\\beta = 111^\\circ$",
+          ru: "Установите соответствие ($a \\parallel b$, $c$ — секущая).\n1. $\\beta = 2\\alpha$\n2. $\\beta = \\alpha + 42^\\circ$\n3. $\\beta = 5\\alpha$",
+          en: "Match the following ($a \\parallel b$, $c$ is a transversal)."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha + 2\\alpha = 180^\\circ \\implies \\alpha = 60^\\circ, \\beta = 120^\\circ$ (c).\n2) $2\\alpha + 42^\\circ = 180^\\circ \\implies \\alpha = 69^\\circ$ (b), $\\beta = 111^\\circ$ (e).\n3) $6\\alpha = 180^\\circ \\implies \\alpha = 30^\\circ, \\beta = 150^\\circ$ (a).",
+          ru: "Решение:\n1-c; 2-b, e; 3-a.",
+          en: "Solution:\n1-c; 2-b, e; 3-a."
+        }
+      },
+      {
+        id: 35,
+        type: "open",
+        correct: "a; d, e; b",
+        image: "Paralel_xetler_Image0035.png",
+        text: {
+          az: "Uyğunluğu müəyyən edin ($a \\parallel b$ və $c$ kəsəndir).\n1. $\\beta = 4\\alpha$\n2. $\\beta = \\alpha + 44^\\circ$\n3. $\\beta = 3\\alpha$",
+          ru: "Установите соответствие ($a \\parallel b$, $c$ — секущая).",
+          en: "Match the following."
+        },
+        explanation: {
+          az: "Həlli:\n1-a; 2-d, e; 3-b.",
+          ru: "Решение:\n1-a; 2-d, e; 3-b.",
+          en: "Solution:\n1-a; 2-d, e; 3-b."
+        }
+      },
+      {
+        id: 36,
+        type: "open",
+        correct: "b; a; e",
+        image: "Paralel_xetler_Image0036.png",
+        text: {
+          az: "$a_1 \\parallel a_2$ olarsa, uyğunluğu müəyyən edin.",
+          ru: "$a_1 \\parallel a_2$. Установите соответствие.",
+          en: "Match the following."
+        },
+        explanation: {
+          az: "Həlli:\n1-b; 2-a; 3-e.",
+          ru: "Решение:\n1-b; 2-a; 3-e.",
+          en: "Solution:\n1-b; 2-a; 3-e."
+        }
+      },
+      {
+        id: 37,
+        type: "open",
+        correct: "a; e; c",
+        image: "Paralel_xetler_Image0037.png",
+        text: {
+          az: "$a_1 \\parallel a_2$ olarsa, uyğunluğu müəyyən edin.",
+          ru: "$a_1 \\parallel a_2$. Установите соответствие.",
+          en: "Match the following."
+        },
+        explanation: {
+          az: "Həlli:\n1-a; 2-e; 3-c.",
+          ru: "Решение:\n1-a; 2-e; 3-c.",
+          en: "Solution:\n1-a; 2-e; 3-c."
+        }
+      },
+      {
+        id: 38,
+        type: "open",
+        correct: "b, c; a; d",
+        image: "Paralel_xetler_Image0038.png",
+        text: {
+          az: "$d_1 \\parallel d_2 \\parallel d_3$ olarsa, uyğunluğu müəyyən edin.\n1. $\\alpha = 30^\\circ$\n2. $\\beta = 40^\\circ$\n3. $\\gamma = 130^\\circ$",
+          ru: "Установите соответствие при $d_1 \\parallel d_2 \\parallel d_3$.",
+          en: "Match for $d_1 \\parallel d_2 \\parallel d_3$."
+        },
+        explanation: {
+          az: "Həlli:\n1-b, c; 2-a; 3-d.",
+          ru: "Решение:\n1-b, c; 2-a; 3-d.",
+          en: "Solution:\n1-b, c; 2-a; 3-d."
+        }
+      },
+      {
+        id: 39,
+        type: "open",
+        correct: "a; b, d; e",
+        image: "Paralel_xetler_Image0039.png",
+        text: {
+          az: "$d_1 \\parallel d_2 \\parallel d_3$ olarsa, uyğunluğu müəyyən edin.\n1. $\\alpha = 110^\\circ$\n2. $\\beta = 120^\\circ$\n3. $\\gamma = 50^\\circ$",
+          ru: "Установите соответствие при $d_1 \\parallel d_2 \\parallel d_3$.",
+          en: "Match for $d_1 \\parallel d_2 \\parallel d_3$."
+        },
+        explanation: {
+          az: "Həlli:\n1-a; 2-b, d; 3-e.",
+          ru: "Решение:\n1-a; 2-b, d; 3-e.",
+          en: "Solution:\n1-a; 2-b, d; 3-e."
+        }
+      },
+      {
+        id: 40,
+        type: "open",
+        correct: "a; e; c, d",
+        image: "Paralel_xetler_Image0040.png",
+        text: {
+          az: "$d_1 \\parallel d_2$ olarsa, uyğunluğu müəyyən edin.",
+          ru: "$d_1 \\parallel d_2$. Установите соответствие.",
+          en: "Match for $d_1 \\parallel d_2$."
+        },
+        explanation: {
+          az: "Həlli:\n1-a; 2-e; 3-c, d.",
+          ru: "Решение:\n1-a; 2-e; 3-c, d.",
+          en: "Solution:\n1-a; 2-e; 3-c, d."
+        }
+      },
+      {
+        id: 41,
+        type: "open",
+        correct: "b; e; a, c",
+        image: "Paralel_xetler_Image0041.png",
+        text: {
+          az: "$a \\parallel b$ olarsa, uyğunluğu müəyyən edin.",
+          ru: "$a \\parallel b$. Установите соответствие.",
+          en: "Match for $a \\parallel b$."
+        },
+        explanation: {
+          az: "Həlli:\n1-b; 2-e; 3-a, c.",
+          ru: "Решение:\n1-b; 2-e; 3-a, c.",
+          en: "Solution:\n1-b; 2-e; 3-a, c."
+        }
+      },
+      {
+        id: 42,
+        type: "open",
+        correct: "b; d; e, a",
+        image: "Paralel_xetler_Image0042.png",
+        text: {
+          az: "$a \\parallel b$ olarsa, uyğunluğu müəyyən edin.",
+          ru: "$a \\parallel b$. Установите соответствие.",
+          en: "Match for $a \\parallel b$."
+        },
+        explanation: {
+          az: "Həlli:\n1-b; 2-d; 3-e, a.",
+          ru: "Решение:\n1-b; 2-d; 3-e, a.",
+          en: "Solution:\n1-b; 2-d; 3-e, a."
+        }
+      },
+      {
+        id: 43,
+        type: "open",
+        correct: "a, d; c; b",
+        image: "Paralel_xetler_Image0043.png",
+        text: {
+          az: "$\\alpha$ və $\\beta$ bucaqları üçün uyğunluğu müəyyən edin.",
+          ru: "Установите соответствие для углов $\\alpha$ и $\\beta$.",
+          en: "Match for angles $\\alpha$ and $\\beta$."
+        },
+        explanation: {
+          az: "Həlli:\n1-a, d; 2-c; 3-b.",
+          ru: "Решение:\n1-a, d; 2-c; 3-b.",
+          en: "Solution:\n1-a, d; 2-c; 3-b."
+        }
+      },
+      {
+        id: 44,
+        type: "open",
+        correct: "e; b, c; a, d",
+        image: "Paralel_xetler_Image0044.png",
+        text: {
+          az: "Uyğunluğu müəyyən edin.",
+          ru: "Установите соответствие.",
+          en: "Match the following."
+        },
+        explanation: {
+          az: "Həlli:\n1-e; 2-b, c; 3-a, d.",
+          ru: "Решение:\n1-e; 2-b, c; 3-a, d.",
+          en: "Solution:\n1-e; 2-b, c; 3-a, d."
+        }
+      },
+      {
+        id: 45,
+        type: "open",
+        correct: "c; a, d; b",
+        image: "Paralel_xetler_Image0045.png",
+        text: {
+          az: "Uyğunluğu müəyyən edin.",
+          ru: "Установите соответствие.",
+          en: "Match the following."
+        },
+        explanation: {
+          az: "Həlli:\n1-c; 2-a, d; 3-b.",
+          ru: "Решение:\n1-c; 2-a, d; 3-b.",
+          en: "Solution:\n1-c; 2-a, d; 3-b."
+        }
+      },
+      {
+        id: 46,
+        type: "open",
+        correct: "c, d; a; b",
+        image: "Paralel_xetler_Image0046.png",
+        text: {
+          az: "Uyğunluğu müəyyən edin.",
+          ru: "Установите соответствие.",
+          en: "Match the following."
+        },
+        explanation: {
+          az: "Həlli:\n1-c, d; 2-a; 3-b.",
+          ru: "Решение:\n1-c, d; 2-a; 3-b.",
+          en: "Solution:\n1-c, d; 2-a; 3-b."
+        }
+      }
+    ];
+
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    function init() {
+      renderApp();
+      updateScore();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `lang-${lang}`);
+      });
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) {
+        currentSlide = nextSlide;
+        renderApp();
+      }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        renderApp();
+      }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      const isCorrect = choice === q.correct;
+      userAnswers[qId] = { answer: choice, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+
+      const q = questionsData.find(item => item.id === qId);
+      
+      const cleanVal = val.toLowerCase().replace(/[\s°]/g, '').replace(/;/g, ',');
+      const cleanCorrect = q.correct.toLowerCase().replace(/[\s°]/g, '').replace(/;/g, ',');
+      const isCorrect = cleanVal === cleanCorrect || cleanVal.includes(cleanCorrect);
+
+      userAnswers[qId] = { answer: val, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-back').innerText = t.back;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+
+        if (userAnswers[q.id]) {
+          btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        }
+        if (currentMode === 'slide' && q.id === currentSlide) {
+          btn.classList.add('active');
+        }
+
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      const questionsToRender = currentMode === 'slide'
+        ? questionsData.filter(q => q.id === currentSlide)
+        : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang]}</div>
+        `;
+
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id}"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil tapılmadı: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}"
+                value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''}
+                onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang]}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>
