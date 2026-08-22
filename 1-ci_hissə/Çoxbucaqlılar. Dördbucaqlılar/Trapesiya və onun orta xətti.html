@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trapesiya və onun orta xətti</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      padding: 12px 20px;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topic-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #f1f5f9;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary);
+    }
+
+    .topic-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .btn-group button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .btn-group button.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .score-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .grid-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .grid-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .q-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 6px;
+    }
+
+    .q-btn {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .q-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .q-btn.active {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .q-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .q-btn.incorrect {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .q-type-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .q-image-container {
+      margin: 16px 0;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .q-image-container img {
+      max-width: 100%;
+      max-height: 230px;
+      height: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .option-btn.selected-correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46 !important;
+      font-weight: 700;
+    }
+
+    .option-btn.selected-incorrect {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b !important;
+      font-weight: 700;
+    }
+
+    .open-input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      max-width: 440px;
+    }
+
+    .open-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .open-input:focus {
+      border-color: var(--primary);
+    }
+
+    .submit-btn {
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .explanation-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-body {
+      white-space: pre-line;
+      color: #334155;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="topic-title-box">
+        <a href="../../index.html" class="back-btn">← <span id="ui-back">Əsas Menyu</span></a>
+        <div class="topic-title" id="ui-topic">Trapesiya və onun orta xətti</div>
+      </div>
+      
+      <div class="controls">
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 70</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    const uiTranslations = {
+      az: {
+        topic: "Trapesiya və onun orta xətti",
+        back: "Əsas Menyu",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual / Uyğunluq",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı daxil edin...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Трапеция и ее средняя линия",
+        back: "Главное меню",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос / Соответствие",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Trapezoid and Its Midsegment",
+        back: "Main Menu",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended / Matching",
+        check: "Submit",
+        enterAnswer: "Enter answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    const questionsData = [
+      {
+        id: 1,
+        type: "mcq",
+        correct: "B",
+        image: "Trapesiya_Image0001.png",
+        options: { A: "7 sm", B: "8 sm", C: "3 sm", D: "6 sm", E: "9 sm" },
+        text: {
+          az: "$ABCD$ trapesiyasında $MK$ orta xətdir. $MK = 5\\text{ sm}, BC = 2\\text{ sm}$ olarsa, $AD$-ni tapın.",
+          ru: "В трапеции $ABCD$ отрезок $MK$ является средней линией. Если $MK = 5\\text{ см}, BC = 2\\text{ см}$, найдите $AD$.",
+          en: "In trapezoid $ABCD$, $MK$ is the midsegment. If $MK = 5\\text{ cm}, BC = 2\\text{ cm}$, find $AD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Trapesiyanın orta xətt düsturu: $MK = \\frac{BC + AD}{2}$.\n2) $5 = \\frac{2 + AD}{2} \\implies 2 + AD = 10 \\implies AD = 8\\text{ sm}$.",
+          ru: "Решение:\n1) $MK = \\frac{BC + AD}{2} \\implies 5 = \\frac{2 + AD}{2} \\implies AD = 8\\text{ см}$.",
+          en: "Solution:\n1) $MK = \\frac{BC + AD}{2} \\implies 5 = \\frac{2 + AD}{2} \\implies AD = 8\\text{ cm}$."
+        }
+      },
+      {
+        id: 2,
+        type: "mcq",
+        correct: "D",
+        options: { A: "10 sm", B: "16 sm", C: "18 sm", D: "20 sm", E: "14 sm" },
+        text: {
+          az: "Orta xətti $6\\text{ sm}$, yan tərəfi $4\\text{ sm}$ olan bərabəryanlı trapesiyanın perimetrini tapın.",
+          ru: "Найдите периметр равнобедренной трапеции, если ее средняя линия равна $6\\text{ см}$, а боковая сторона — $4\\text{ см}$.",
+          en: "Find the perimeter of an isosceles trapezoid if its midsegment is $6\\text{ cm}$ and a leg is $4\\text{ cm}$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Oturacaqlar cəmi: $a + b = 2m = 2 \\times 6 = 12\\text{ sm}$.\n2) Bərabəryanlı trapesiyanın perimetri: $P = a + b + 2c = 12 + 2 \\times 4 = 20\\text{ sm}$.",
+          ru: "Решение:\n1) Сумма оснований: $a + b = 2 \\times 6 = 12\\text{ см}$.\n2) Периметр: $P = 12 + 2 \\times 4 = 20\\text{ см}$.",
+          en: "Solution:\n1) Sum of bases: $a + b = 2(6) = 12\\text{ cm}$.\n2) Perimeter: $P = 12 + 2(4) = 20\\text{ cm}$."
+        }
+      },
+      {
+        id: 3,
+        type: "mcq",
+        correct: "E",
+        options: { A: "45 sm", B: "35 sm", C: "56 sm", D: "37,5 sm", E: "42 sm" },
+        text: {
+          az: "Bərabəryanlı trapesiyada kor bucaq təpəsindən çəkilmiş hündürlük böyük oturacağı $7\\text{ sm}$ və $49\\text{ sm}$ uzunluğunda parçalara bölür. Trapesiyanın kiçik oturacağını tapın.",
+          ru: "Высота, проведенная из вершины тупого угла равнобедренной трапеции, делит большее основание на отрезки длиной $7\\text{ см}$ и $49\\text{ см}$. Найдите меньшее основание трапеции.",
+          en: "The altitude drawn from the obtuse angle of an isosceles trapezoid divides the larger base into segments of lengths $7\\text{ cm}$ and $49\\text{ cm}$. Find the smaller base."
+        },
+        explanation: {
+          az: "Həlli:\n1) Bərabəryanlı trapesiyanın hündürlüyünün böyük oturacaqdan ayırdığı kiçik parça $\\frac{a - b}{2} = 7\\text{ sm}$, böyük parça isə $\\frac{a + b}{2} = 49\\text{ sm}$-dir.\n2) Tərəf-tərəfə çıxsaq: $b = 49 - 7 = 42\\text{ sm}$.",
+          ru: "Решение:\n1) Меньшее основание равно разности отрезков: $b = 49 - 7 = 42\\text{ см}$.",
+          en: "Solution:\n1) Smaller base $b = 49 - 7 = 42\\text{ cm}$."
+        }
+      },
+      {
+        id: 4,
+        type: "mcq",
+        correct: "C",
+        options: { A: "12 sm", B: "1 sm", C: "9 sm", D: "6 sm", E: "4 sm" },
+        text: {
+          az: "Oturacaqları $AD$ və $BC$ olan $ABCD$ trapesiyasında $MN \\parallel AD$, belə ki, $M$ nöqtəsi $AB$ tərəfi üzərində, $N$ nöqtəsi $CD$ tərəfi üzərindədir. $AB = 16\\text{ sm}, BM = 4\\text{ sm}, CN = 3\\text{ sm}$ olduğunu bilərək, $ND$-ni tapın.",
+          ru: "В трапеции $ABCD$ с основаниями $AD$ и $BC$ проведена прямая $MN \\parallel AD$ ($M \\in AB, N \\in CD$). Зная, что $AB = 16\\text{ см}, BM = 4\\text{ см}, CN = 3\\text{ см}$, найдите $ND$.",
+          en: "In trapezoid $ABCD$ with bases $AD$ and $BC$, $MN \\parallel AD$ ($M \\in AB, N \\in CD$). Given $AB = 16\\text{ cm}, BM = 4\\text{ cm}, CN = 3\\text{ cm}$, find $ND$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AM = AB - BM = 16 - 4 = 12\\text{ sm}$.\n2) Fales teoreminə görə: $\\frac{BM}{AM} = \\frac{CN}{ND} \\implies \\frac{4}{12} = \\frac{3}{ND} \\implies ND = \\frac{12 \\times 3}{4} = 9\\text{ sm}$.",
+          ru: "Решение:\n1) $AM = 16 - 4 = 12\\text{ см}$.\n2) По теореме Фалеса: $\\frac{4}{12} = \\frac{3}{ND} \\implies ND = 9\\text{ см}$.",
+          en: "Solution:\n1) $AM = 16 - 4 = 12\\text{ cm}$.\n2) By Thales's Theorem: $\\frac{4}{12} = \\frac{3}{ND} \\implies ND = 9\\text{ cm}$."
+        }
+      },
+      {
+        id: 5,
+        type: "mcq",
+        correct: "B",
+        options: { A: "10 sm", B: "5 sm", C: "2,5 sm", D: "7,5 sm", E: "15 sm" },
+        text: {
+          az: "Yan tərəfi $5\\text{ sm}$ olan bərabəryanlı trapesiyanın diaqonalı iti bucağının tənbölənidir. Trapesiyanın kiçik oturacağını tapın.",
+          ru: "Боковая сторона равнобедренной трапеции равна $5\\text{ см}$, а ее диагональ является биссектрисой острого угла. Найдите меньшее основание трапеции.",
+          en: "The leg of an isosceles trapezoid is $5\\text{ cm}$, and its diagonal is the bisector of an acute angle. Find the smaller base."
+        },
+        explanation: {
+          az: "Həlli:\n1) İti bucağın tənböləni olan diaqonal daxili birtərəfli və daxili çarpaz bucaqların bərabərliyinə görə trapesiyadan bərabəryanlı üçbucaq ($AB = BC$) ayırır.\n2) Kiçik oturacaq: $BC = AB = 5\\text{ sm}$.",
+          ru: "Решение:\n1) Диагональ-биссектриса отсекает равнобедренный треугольник: $BC = AB = 5\\text{ см}$.",
+          en: "Solution:\n1) The bisector diagonal creates an isosceles triangle with the smaller base: $BC = AB = 5\\text{ cm}$."
+        }
+      },
+      {
+        id: 6,
+        type: "mcq",
+        correct: "C",
+        options: { A: "16 sm", B: "4 sm", C: "8 sm", D: "12 sm", E: "6 sm" },
+        text: {
+          az: "Bərabəryanlı trapesiyanın kiçik oturacağı $8\\text{ sm}$-dir. Onun diaqonalı iti bucağının tənbölənidir. Trapesiyanın yan tərəfini tapın.",
+          ru: "Меньшее основание равнобедренной трапеции равно $8\\text{ см}$. Диагональ является биссектрисой острого угла. Найдите боковую сторону трапеции.",
+          en: "The smaller base of an isosceles trapezoid is $8\\text{ cm}$. Its diagonal is the bisector of an acute angle. Find the leg."
+        },
+        explanation: {
+          az: "Həlli:\n1) Eyni xassəyə görə yan tərəf kiçik oturacağa bərabərdir: $c = b = 8\\text{ sm}$.",
+          ru: "Решение:\n1) Боковая сторона равна меньшему основанию: $c = 8\\text{ см}$.",
+          en: "Solution:\n1) The leg equals the smaller base: $c = 8\\text{ cm}$."
+        }
+      },
+      {
+        id: 7,
+        type: "mcq",
+        correct: "D",
+        options: { A: "15 sm", B: "10 sm", C: "9 sm", D: "12 sm", E: "8 sm" },
+        text: {
+          az: "Orta xətti $16\\text{ sm}$, oturacaqlarının nisbəti $3:5$ olan trapesiyanın kiçik oturacağını tapın.",
+          ru: "Средняя линия трапеции равна $16\\text{ см}$, а основания относятся как $3:5$. Найдите меньшее основание.",
+          en: "The midsegment of a trapezoid is $16\\text{ cm}$, and the ratio of its bases is $3:5$. Find the smaller base."
+        },
+        explanation: {
+          az: "Həlli:\n1) Oturacaqlar cəmi: $a + b = 2m = 2 \\times 16 = 32\\text{ sm}$.\n2) $3x + 5x = 32 \\implies 8x = 32 \\implies x = 4$.\n3) Kiçik oturacaq: $b = 3x = 3 \\times 4 = 12\\text{ sm}$.",
+          ru: "Решение:\n1) $3x + 5x = 32 \\implies 8x = 32 \\implies x = 4$.\n2) $b = 3 \\times 4 = 12\\text{ см}$.",
+          en: "Solution:\n1) $8x = 32 \\implies x = 4$.\n2) Smaller base: $b = 3(4) = 12\\text{ cm}$."
+        }
+      },
+      {
+        id: 8,
+        type: "mcq",
+        correct: "A",
+        options: { A: "18 sm", B: "14 sm", C: "16 sm", D: "20 sm", E: "24 sm" },
+        text: {
+          az: "Orta xətti $15\\text{ sm}$, oturacaqlarının nisbəti isə $3:2$ olan trapesiyanın böyük oturacağını tapın.",
+          ru: "Средняя линия трапеции равна $15\\text{ см}$, а основания относятся как $3:2$. Найдите большее основание трапеции.",
+          en: "The midsegment of a trapezoid is $15\\text{ cm}$, and the ratio of its bases is $3:2$. Find the larger base."
+        },
+        explanation: {
+          az: "Həlli:\n1) $a + b = 2 \\times 15 = 30\\text{ sm}$.\n2) $3x + 2x = 30 \\implies 5x = 30 \\implies x = 6$.\n3) Böyük oturacaq: $a = 3x = 3 \\times 6 = 18\\text{ sm}$.",
+          ru: "Решение:\n1) $5x = 30 \\implies x = 6 \\implies a = 3 \\times 6 = 18\\text{ см}$.",
+          en: "Solution:\n1) $5x = 30 \\implies x = 6 \\implies a = 3(6) = 18\\text{ cm}$."
+        }
+      },
+      {
+        id: 9,
+        type: "mcq",
+        correct: "D",
+        options: { A: "130°", B: "65°", C: "135°", D: "115°", E: "90°" },
+        text: {
+          az: "Bərabəryanlı trapesiyanın diaqonalı onun iti bucağını $25^\\circ$ və $40^\\circ$-li iki bucağa ayırır. Trapesiyanın böyük bucağını hesablayın.",
+          ru: "Диагональ равнобедренной трапеции делит ее острый угол на углы $25^\\circ$ и $40^\\circ$. Найдите больший угол трапеции.",
+          en: "The diagonal of an isosceles trapezoid divides its acute angle into angles of $25^\\circ$ and $40^\\circ$. Calculate the larger angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Trapesiyanın iti bucağı: $\\alpha = 25^\\circ + 40^\\circ = 65^\\circ$.\n2) Bir tərəfə bitişik bucaqların cəmi $180^\\circ$ olduğundan, böyük bucaq: $\\beta = 180^\\circ - 65^\\circ = 115^\\circ$.",
+          ru: "Решение:\n1) Острый угол: $25^\\circ + 40^\\circ = 65^\\circ$.\n2) Больший угол: $180^\\circ - 65^\\circ = 115^\\circ$.",
+          en: "Solution:\n1) Acute angle $= 65^\\circ$.\n2) Larger angle: $180^\\circ - 65^\\circ = 115^\\circ$."
+        }
+      },
+      {
+        id: 10,
+        type: "mcq",
+        correct: "C",
+        options: { A: "115°", B: "45°", C: "65°", D: "10°", E: "55°" },
+        text: {
+          az: "Bərabəryanlı trapesiyanın diaqonalı onun kor bucağını $35^\\circ$ və $80^\\circ$-li iki bucağa ayırır. Trapesiyanın kiçik bucağını hesablayın.",
+          ru: "Диагональ равнобедренной трапеции делит ее тупой угол на углы $35^\\circ$ и $80^\\circ$. Найдите меньший угол трапеции.",
+          en: "The diagonal of an isosceles trapezoid divides its obtuse angle into angles of $35^\\circ$ and $80^\\circ$. Calculate the smaller angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Kor bucaq: $\\beta = 35^\\circ + 80^\\circ = 115^\\circ$.\n2) Kiçik bucaq: $\\alpha = 180^\\circ - 115^\\circ = 65^\\circ$.",
+          ru: "Решение:\n1) Тупой угол: $35^\\circ + 80^\\circ = 115^\\circ$.\n2) Меньший угол: $180^\\circ - 115^\\circ = 65^\\circ$.",
+          en: "Solution:\n1) Obtuse angle $= 115^\\circ$.\n2) Smaller angle: $180^\\circ - 115^\\circ = 65^\\circ$."
+        }
+      },
+      {
+        id: 11,
+        type: "mcq",
+        correct: "C",
+        image: "Trapesiya_Image0011.png",
+        options: { A: "3 sm", B: "5,5 sm", C: "8 sm", D: "2,5 sm", E: "11 sm" },
+        text: {
+          az: "$MNKP$ trapesiyasında $NE \\parallel KP, ME = 6\\text{ sm}, EP = 5\\text{ sm}$ olarsa, trapesiyanın orta xəttini tapın.",
+          ru: "В трапеции $MNKP$ $NE \\parallel KP, ME = 6\\text{ см}, EP = 5\\text{ см}$. Найдите среднюю линию трапеции.",
+          en: "In trapezoid $MNKP$, $NE \\parallel KP, ME = 6\\text{ cm}, EP = 5\\text{ cm}$. Find the midsegment."
+        },
+        explanation: {
+          az: "Həlli:\n1) $NEKP$ paraleloqramdır $\\implies NK = EP = 5\\text{ sm}$.\n2) Böyük oturacaq: $MP = ME + EP = 6 + 5 = 11\\text{ sm}$.\n3) Orta xətt: $m = \\frac{NK + MP}{2} = \\frac{5 + 11}{2} = 8\\text{ sm}$.",
+          ru: "Решение:\n1) $NK = EP = 5\\text{ см}, MP = 6 + 5 = 11\\text{ см}$.\n2) $m = \\frac{5 + 11}{2} = 8\\text{ см}$.",
+          en: "Solution:\n1) $NK = 5\\text{ cm}, MP = 11\\text{ cm}$.\n2) Midsegment $m = \\frac{5 + 11}{2} = 8\\text{ cm}$."
+        }
+      },
+      {
+        id: 12,
+        type: "mcq",
+        correct: "E",
+        image: "Trapesiya_Image0012.png",
+        options: { A: "3 sm", B: "3,5 sm", C: "4 sm", D: "11 sm", E: "9 sm" },
+        text: {
+          az: "$ABCD$ trapesiyasında $AB \\parallel CE, BC = 7\\text{ sm}, ED = 4\\text{ sm}$ olarsa, trapesiyanın orta xəttini tapın.",
+          ru: "В трапеции $ABCD$ $AB \\parallel CE, BC = 7\\text{ см}, ED = 4\\text{ см}$. Найдите среднюю линию трапеции.",
+          en: "In trapezoid $ABCD$, $AB \\parallel CE, BC = 7\\text{ cm}, ED = 4\\text{ cm}$. Find the midsegment."
+        },
+        explanation: {
+          az: "Həlli:\n1) $ABCE$ paraleloqram olduğundan $AE = BC = 7\\text{ sm}$.\n2) $AD = AE + ED = 7 + 4 = 11\\text{ sm}$.\n3) Orta xətt: $m = \\frac{7 + 11}{2} = 9\\text{ sm}$.",
+          ru: "Решение:\n1) $AE = BC = 7\\text{ см}, AD = 7 + 4 = 11\\text{ см}$.\n2) $m = \\frac{7 + 11}{2} = 9\\text{ см}$.",
+          en: "Solution:\n1) $AD = 7 + 4 = 11\\text{ cm}$.\n2) Midsegment $m = \\frac{7 + 11}{2} = 9\\text{ cm}$."
+        }
+      },
+      {
+        id: 13,
+        type: "mcq",
+        correct: "A",
+        options: { A: "40 sm", B: "15 sm", C: "24 sm", D: "30 sm", E: "52 sm" },
+        text: {
+          az: "Trapesiyanın diaqonalı onun orta xəttini $6\\text{ sm}$ və $20\\text{ sm}$ olan hissələrə bölür. Trapesiyanın böyük oturacağını tapın.",
+          ru: "Диагональ трапеции делит ее среднюю линию на отрезки длиной $6\\text{ см}$ и $20\\text{ см}$. Найдите большее основание трапеции.",
+          en: "The diagonal of a trapezoid divides its midsegment into parts of lengths $6\\text{ cm}$ and $20\\text{ cm}$. Find the larger base."
+        },
+        explanation: {
+          az: "Həlli:\n1) Diaqonalın böyük üçbucaqdan ayırdığı orta xətt parçası böyük oturacağın yarısına bərabərdir:\n2) $\\frac{a}{2} = 20 \\implies a = 40\\text{ sm}$.",
+          ru: "Решение:\n1) Большее основание равно удвоенному большему отрезку средней линии: $a = 2 \\times 20 = 40\\text{ см}$.",
+          en: "Solution:\n1) Larger base: $a = 2(20) = 40\\text{ cm}$."
+        }
+      },
+      {
+        id: 14,
+        type: "mcq",
+        correct: "E",
+        image: "Trapesiya_Image0014.png",
+        options: { A: "25°", B: "15°", C: "55°", D: "35°", E: "20°" },
+        text: {
+          az: "$ABCD$ bərabəryanlı trapesiyasında $AC$ diaqonalı yan tərəfə perpendikulyar olub $AD$ tərəfi ilə $35^\\circ$-li bucaq əmələ gətirir. $\\angle BAC$-ni tapın.",
+          ru: "В равнобедренной трапеции $ABCD$ диагональ $AC$ перпендикулярна боковой стороне $CD$ и образует со стороной $AD$ угол $35^\\circ$. Найдите $\\angle BAC$.",
+          en: "In isosceles trapezoid $ABCD$, diagonal $AC$ is perpendicular to leg $CD$ and makes a $35^\\circ$ angle with base $AD$. Find $\\angle BAC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Düzbucaqlı $\\triangle ACD$-də: $\\angle D = 90^\\circ - 35^\\circ = 55^\\circ$.\n2) Trapesiyanın bərabəryanlı olmasına görə: $\\angle BAD = \\angle D = 55^\\circ$.\n3) $\\angle BAC = \\angle BAD - \\angle CAD = 55^\\circ - 35^\\circ = 20^\\circ$.",
+          ru: "Решение:\n1) $\\angle D = 90^\\circ - 35^\\circ = 55^\\circ$.\n2) $\\angle BAD = 55^\\circ \\implies \\angle BAC = 55^\\circ - 35^\\circ = 20^\\circ$.",
+          en: "Solution:\n1) $\\angle D = 55^\\circ$.\n2) $\\angle BAC = 55^\\circ - 35^\\circ = 20^\\circ$."
+        }
+      },
+      {
+        id: 15,
+        type: "mcq",
+        correct: "C",
+        options: { A: "27 sm və 9 sm", B: "15 sm və 8 sm", C: "42 sm və 12 sm", D: "30 sm və 15 sm", E: "54 sm və 18 sm" },
+        text: {
+          az: "$ABCD$ trapesiyasında ($AB \\parallel CD$) $AC$ diaqonalı trapesiyasının orta xəttini $6\\text{ sm}$ və $21\\text{ sm}$-ə bərabər hissələrə bölür. Trapesiyanın oturacaqlarını tapın.",
+          ru: "В трапеции $ABCD$ ($AB \\parallel CD$) диагональ $AC$ делит среднюю линию на части $6\\text{ см}$ и $21\\text{ см}$. Найдите основания трапеции.",
+          en: "In trapezoid $ABCD$ ($AB \\parallel CD$), diagonal $AC$ divides the midsegment into parts of $6\\text{ cm}$ and $21\\text{ cm}$. Find the bases."
+        },
+        explanation: {
+          az: "Həlli:\n1) Kiçik oturacaq: $2 \\times 6 = 12\\text{ sm}$.\n2) Böyük oturacaq: $2 \\times 21 = 42\\text{ sm}$.",
+          ru: "Решение:\n1) Основания: $2 \\times 6 = 12\\text{ см}$ и $2 \\times 21 = 42\\text{ см}$.",
+          en: "Solution:\n1) Bases: $12\\text{ cm}$ and $42\\text{ cm}$."
+        }
+      },
+      {
+        id: 16,
+        type: "mcq",
+        correct: "C",
+        options: { A: "8 sm", B: "6 sm", C: "12 sm", D: "4 sm", E: "9 sm" },
+        text: {
+          az: "Bərabəryanlı trapesiyanın yan tərəfi onun orta xəttinə bərabərdir. Trapesiyanın perimetri $48\\text{ sm}$ olarsa, onun yan tərəfini tapın.",
+          ru: "Боковая сторона равнобедренной трапеции равна ее средней линии. Если периметр трапеции равен $48\\text{ см}$, найдите боковую сторону.",
+          en: "The leg of an isosceles trapezoid is equal to its midsegment. If the perimeter is $48\\text{ cm}$, find the leg."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P = a + b + 2c = 2m + 2c$. Şərtdən $m = c \\implies P = 4c = 48 \\implies c = 12\\text{ sm}$.",
+          ru: "Решение:\n1) $P = 2m + 2c = 4c = 48 \\implies c = 12\\text{ см}$.",
+          en: "Solution:\n1) $P = 4c = 48 \\implies c = 12\\text{ cm}$."
+        }
+      },
+      {
+        id: 17,
+        type: "mcq",
+        correct: "D",
+        options: { A: "3,5 sm", B: "2,5 sm", C: "2 sm", D: "3 sm", E: "4 sm" },
+        text: {
+          az: "Trapesiyanın orta xətti onun kiçik oturacağından $3\\text{ sm}$ böyükdür. Orta xəttin böyük oturacaqdan nə qədər kiçik olduğunu tapın.",
+          ru: "Средняя линия трапеции на $3\\text{ см}$ больше ее меньшего основания. На сколько средняя линия меньше большего основания?",
+          en: "The midsegment of a trapezoid is $3\\text{ cm}$ greater than its smaller base. How much is the midsegment smaller than the larger base?"
+        },
+        explanation: {
+          az: "Həlli:\n1) $m = \\frac{a + b}{2} \\implies 2m = a + b \\implies a - m = m - b$.\n2) $m - b = 3\\text{ sm}$ olduğundan $a - m = 3\\text{ sm}$.",
+          ru: "Решение:\n1) Так как $m$ — среднее арифметическое, $a - m = m - b = 3\\text{ см}$.",
+          en: "Solution:\n1) Since $m = (a+b)/2$, $a - m = m - b = 3\\text{ cm}$."
+        }
+      },
+      {
+        id: 18,
+        type: "mcq",
+        correct: "E",
+        options: { A: "7:13", B: "6:13", C: "13:7", D: "13:6", E: "7:6" },
+        text: {
+          az: "Trapesiyanın diaqonallarından biri onun $MN$ orta xəttini $M$ nöqtəsindən başlayaraq $6:7$ nisbətində bölür. İkinci diaqonalın orta xətti $M$ nöqtəsindən başlayaraq hansı nisbətdə böldüyünü tapın.",
+          ru: "Одна из диагоналей делит среднюю линию $MN$ трапеции в отношении $6:7$, считая от $M$. В каком отношении делит ее вторая диагональ, считая от $M$?",
+          en: "One diagonal divides the midsegment $MN$ starting from $M$ in the ratio $6:7$. In what ratio does the second diagonal divide it starting from $M$?"
+        },
+        explanation: {
+          az: "Həlli:\n1) Diaqonallar orta xətt üzərindəki parçaları simmetrik böldüyü üçün ikinci diaqonal orta xətti $M$-dən başlayaraq $7:6$ nisbətində bölər.",
+          ru: "Решение:\n1) По свойству симметрии отрезков средней линии: $7:6$.",
+          en: "Solution:\n1) By symmetry of midsegment sections: $7:6$."
+        }
+      },
+      {
+        id: 19,
+        type: "mcq",
+        correct: "C",
+        options: { A: "24 sm", B: "34 sm", C: "22 sm", D: "20 sm", E: "11 sm" },
+        text: {
+          az: "Trapesiyanın diaqonalları $10\\text{ sm}$ və $12\\text{ sm}$-dir. Təpələri onun tərəflərinin orta nöqtələri olan dördbucaqlının perimetrini tapın.",
+          ru: "Диагонали трапеции равны $10\\text{ см}$ и $12\\text{ см}$. Найдите периметр четырехугольника, вершинами которого являются середины сторон трапеции.",
+          en: "The diagonals of a trapezoid are $10\\text{ cm}$ and $12\\text{ cm}$. Find the perimeter of the quadrilateral whose vertices are the midpoints of the sides."
+        },
+        explanation: {
+          az: "Həlli:\n1) Orta nöqtələrin birləşməsindən alınan dördbucaqlının (Varinyon paraleloqramı) perimetri diaqonalların cəminə bərabərdir:\n2) $P = d_1 + d_2 = 10 + 12 = 22\\text{ sm}$.",
+          ru: "Решение:\n1) Периметр параллелограмма Вариньона: $P = d_1 + d_2 = 10 + 12 = 22\\text{ см}$.",
+          en: "Solution:\n1) Perimeter $= d_1 + d_2 = 10 + 12 = 22\\text{ cm}$."
+        }
+      },
+      {
+        id: 20,
+        type: "mcq",
+        correct: "C",
+        image: "Trapesiya_Image0020.png",
+        options: { A: "55°", B: "65°", C: "40°", D: "35°", E: "80°" },
+        text: {
+          az: "$ABCD$ bərabəryanlı trapesiyasında $AC$ diaqonalı yan tərəfə perpendikulyar olub $AD$ tərəfi ilə $\\angle CAD = 25^\\circ$-li bucaq əmələ gətirir. $\\angle BAC$-ni tapın.",
+          ru: "В равнобедренной трапеции $ABCD$ диагональ $AC$ перпендикулярна боковой стороне и образует угол $\\angle CAD = 25^\\circ$ с $AD$. Найдите $\\angle BAC$.",
+          en: "In isosceles trapezoid $ABCD$, diagonal $AC$ is perpendicular to leg and makes $\\angle CAD = 25^\\circ$ with $AD$. Find $\\angle BAC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle D = 90^\\circ - 25^\\circ = 65^\\circ$.\n2) $\\angle BAD = \\angle D = 65^\\circ \\implies \\angle BAC = 65^\\circ - 25^\\circ = 40^\\circ$.",
+          ru: "Решение:\n1) $\\angle D = 65^\\circ \\implies \\angle BAC = 65^\\circ - 25^\\circ = 40^\\circ$.",
+          en: "Solution:\n1) $\\angle D = 65^\\circ \\implies \\angle BAC = 40^\\circ$."
+        }
+      },
+      {
+        id: 21,
+        type: "mcq",
+        correct: "E",
+        options: { A: "128 sm", B: "100 sm", C: "104 sm", D: "136 sm", E: "124 sm" },
+        text: {
+          az: "Bərabəryanlı trapesiyanın oturacaqları $50\\text{ sm}$ və $14\\text{ sm}$, diaqonalı $40\\text{ sm}$-dir. Onun perimetrini tapın.",
+          ru: "Основания равнобедренной трапеции равны $50\\text{ см}$ и $14\\text{ см}$, диагональ — $40\\text{ см}$. Найдите ее периметр.",
+          en: "The bases of an isosceles trapezoid are $50\\text{ cm}$ and $14\\text{ cm}$, and diagonal is $40\\text{ cm}$. Find its perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) Hündürlük proyeksiyası: $\\frac{a + b}{2} = 32\\text{ sm}$.\n2) Hündürlük: $h = \\sqrt{40^2 - 32^2} = 24\\text{ sm}$.\n3) Yan parça: $\\frac{50 - 14}{2} = 18\\text{ sm}$.\n4) Yan tərəf: $c = \\sqrt{24^2 + 18^2} = 30\\text{ sm}$.\n5) $P = 50 + 14 + 2(30) = 124\\text{ sm}$.",
+          ru: "Решение:\n1) $h = \\sqrt{40^2 - 32^2} = 24\\text{ см}, c = \\sqrt{24^2 + 18^2} = 30\\text{ см}$.\n2) $P = 50 + 14 + 60 = 124\\text{ см}$.",
+          en: "Solution:\n1) Leg $c = 30\\text{ cm} \\implies P = 50 + 14 + 60 = 124\\text{ cm}$."
+        }
+      },
+      {
+        id: 22,
+        type: "mcq",
+        correct: "D",
+        image: "Trapesiya_Image0022.png",
+        options: { A: "8 sm", B: "4 sm", C: "7 sm", D: "3 sm", E: "6 sm" },
+        text: {
+          az: "$ABCD$ trapesiyasında $MN \\parallel AD, AB = 12\\text{ sm}, DN = 12\\text{ sm}$ və $CN = 4\\text{ sm}$ olarsa, $MB$-ni tapın.",
+          ru: "В трапеции $ABCD$ $MN \\parallel AD, AB = 12\\text{ см}, DN = 12\\text{ см}, CN = 4\\text{ см}$. Найдите $MB$.",
+          en: "In trapezoid $ABCD$, $MN \\parallel AD, AB = 12\\text{ cm}, DN = 12\\text{ cm}, CN = 4\\text{ cm}$. Find $MB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $CD = 12 + 4 = 16\\text{ sm}$.\n2) $\\frac{MB}{AB} = \\frac{CN}{CD} \\implies \\frac{MB}{12} = \\frac{4}{16} \\implies MB = 3\\text{ sm}$.",
+          ru: "Решение:\n1) $\\frac{MB}{12} = \\frac{4}{16} \\implies MB = 3\\text{ см}$.",
+          en: "Solution:\n1) $\\frac{MB}{12} = \\frac{4}{16} \\implies MB = 3\\text{ cm}$."
+        }
+      },
+      {
+        id: 23,
+        type: "mcq",
+        correct: "D",
+        options: { A: "30 sm", B: "34 sm", C: "15 sm", D: "17 sm", E: "16 sm" },
+        text: {
+          az: "Bərabəryanlı trapesiyanın kor bucaq təpəsindən çəkilmiş hündürlüyü orta xətti $2\\text{ sm}$ və $11\\text{ sm}$ uzunluqda iki parçaya bölür. Böyük oturacağın uzunluğunu tapın.",
+          ru: "Высота равнобедренной трапеции делит среднюю линию на отрезки $2\\text{ см}$ и $11\\text{ см}$. Найдите большее основание.",
+          en: "The altitude of an isosceles trapezoid divides the midsegment into segments of $2\\text{ cm}$ and $11\\text{ cm}$. Find the larger base."
+        },
+        explanation: {
+          az: "Həlli:\n1) Kiçik parça $\\frac{a-b}{4} = 2 \\implies a - b = 8\\text{ sm}$.\n2) Orta xətt $m = 2 + 11 = 13 \\implies a + b = 26\\text{ sm}$.\n3) $a = \\frac{26 + 8}{2} = 17\\text{ sm}$.",
+          ru: "Решение:\n1) $m = 13 \\implies a+b=26$, $a-b=8 \\implies a = 17\\text{ см}$.",
+          en: "Solution:\n1) $a+b=26, a-b=8 \\implies a = 17\\text{ cm}$."
+        }
+      },
+      {
+        id: 24,
+        type: "mcq",
+        correct: "D",
+        image: "Trapesiya_Image0024.png",
+        options: { A: "1,3 m", B: "0,5 m", C: "2 m", D: "1,5 m", E: "1,6 m" },
+        text: {
+          az: "Verilir: $ABCD$ trapesiyasında $BC \\parallel AD, AC = CD, BC = 1\\text{ m}$ və $\\angle A = 90^\\circ$. $MN$ orta xəttin uzunluğunu tapın.",
+          ru: "Дано: в трапеции $ABCD$ $BC \\parallel AD, AC = CD, BC = 1\\text{ м}, \\angle A = 90^\\circ$. Найдите среднюю линию $MN$.",
+          en: "Given: in trapezoid $ABCD$, $BC \\parallel AD, AC = CD, BC = 1\\text{ m}, \\angle A = 90^\\circ$. Find midsegment $MN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AC = CD$ bərabəryanlı üçbucağında $AD = 2BC = 2\\text{ m}$.\n2) $MN = \\frac{1 + 2}{2} = 1,5\\text{ m}$.",
+          ru: "Решение:\n1) $AD = 2\\text{ м} \\implies MN = \\frac{1 + 2}{2} = 1,5\\text{ м}$.",
+          en: "Solution:\n1) $AD = 2\\text{ m} \\implies MN = 1.5\\text{ m}$."
+        }
+      },
+      {
+        id: 25,
+        type: "mcq",
+        correct: "B",
+        image: "Trapesiya_Image0025.png",
+        options: { A: "22 sm", B: "28 sm", C: "24 sm", D: "20 sm", E: "30 sm" },
+        text: {
+          az: "$ABCD$ trapesiyasında $AK$ və $BK$ tənbölənlərdir. $DC = 8\\text{ sm}, AB = 12\\text{ sm}$ olarsa, trapesiyanın perimetrini tapın.",
+          ru: "В трапеции $ABCD$ $AK$ и $BK$ — биссектрисы. $DC = 8\\text{ см}, AB = 12\\text{ см}$. Найдите периметр трапеции.",
+          en: "In trapezoid $ABCD$, $AK$ and $BK$ are bisectors. $DC = 8\\text{ см}, AB = 12\\text{ см}$. Find perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AK$ və $BK$ tənbölənləri $DC$ tərəfi üzərində kəsişdiyindən yan tərəflər cəmi $AD + BC = DC = 8\\text{ sm}$.\n2) $P = AB + DC + (AD + BC) = 12 + 8 + 8 = 28\\text{ sm}$.",
+          ru: "Решение:\n1) Сумма боковых сторон равна основанию $DC = 8\\text{ см}$.\n2) $P = 12 + 8 + 8 = 28\\text{ см}$.",
+          en: "Solution:\n1) Sum of legs $= DC = 8\\text{ cm}$.\n2) $P = 12 + 8 + 8 = 28\\text{ cm}$."
+        }
+      },
+      {
+        id: 26,
+        type: "mcq",
+        correct: "E",
+        options: { A: "3/2", B: "1/2", C: "3/4", D: "1/3", E: "2/3" },
+        text: {
+          az: "Trapesiyanın bir oturacağı digərindən 3 dəfə böyükdür. Bu trapesiyanın orta xətti onun böyük oturacağının hansı hissəsini təşkil edir?",
+          ru: "Одно основание трапеции в 3 раза больше другого. Какую часть большего основания составляет средняя линия?",
+          en: "One base of a trapezoid is 3 times larger than the other. What fraction of the larger base is the midsegment?"
+        },
+        explanation: {
+          az: "Həlli:\n1) $b = x, a = 3x \\implies m = \\frac{x + 3x}{2} = 2x$.\n2) Nisbət: $\\frac{m}{a} = \\frac{2x}{3x} = \\frac{2}{3}$.",
+          ru: "Решение:\n1) $m = 2x \\implies \\frac{m}{a} = \\frac{2}{3}$.",
+          en: "Solution:\n1) $m = 2x \\implies \\frac{m}{a} = \\frac{2}{3}$."
+        }
+      },
+      {
+        id: 27,
+        type: "mcq",
+        correct: "A",
+        options: { A: "2", B: "3", C: "1,5", D: "2,5", E: "3,5" },
+        text: {
+          az: "Trapesiyanın bir oturacağı digərindən 3 dəfə kiçikdir. Bu trapesiyanın orta xətti kiçik oturacaqdan neçə dəfə böyükdür?",
+          ru: "Одно основание трапеции в 3 раза меньше другого. Во сколько раз средняя линия больше меньшего основания?",
+          en: "One base of a trapezoid is 3 times smaller than the other. How many times larger is the midsegment than the smaller base?"
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\frac{m}{b} = \\frac{2x}{x} = 2$.",
+          ru: "Решение:\n1) $m / b = 2x / x = 2$.",
+          en: "Solution:\n1) $m / b = 2$."
+        }
+      },
+      {
+        id: 28,
+        type: "mcq",
+        correct: "A",
+        options: { A: "33 sm", B: "35 sm", C: "32 sm", D: "30 sm", E: "34 sm" },
+        text: {
+          az: "Bərabəryanlı trapesiyanın oturacaqları $6\\text{ sm}$ və $15\\text{ sm}$ və diaqonalı onun iti bucağını yarıya bölür. Trapesiyanın perimetrini tapın.",
+          ru: "Основания равнобедренной трапеции равны $6\\text{ см}$ и $15\\text{ см}$, диагональ делит острый угол пополам. Найдите периметр.",
+          en: "Bases of an isosceles trapezoid are $6\\text{ cm}$ and $15\\text{ cm}$, diagonal bisects acute angle. Find perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $c = b = 6\\text{ sm}$.\n2) $P = 6 + 15 + 2 \\times 6 = 33\\text{ sm}$.",
+          ru: "Решение:\n1) $c = 6\\text{ см} \\implies P = 6 + 15 + 12 = 33\\text{ см}$.",
+          en: "Solution:\n1) $c = 6\\text{ cm} \\implies P = 33\\text{ cm}$."
+        }
+      },
+      {
+        id: 29,
+        type: "mcq",
+        correct: "D",
+        options: { A: "70,5 sm", B: "60 sm", C: "80 sm", D: "70 sm", E: "80,5 sm" },
+        text: {
+          az: "Bərabəryanlı trapesiyanın diaqonalı iti bucağın tənbölənidir və orta xətti $7,5\\text{ sm}$ və $12,5\\text{ sm}$ uzunluğunda parçalara bölür. Trapesiyanın perimetrini tapın.",
+          ru: "Диагональ делит среднюю линию на отрезки $7,5\\text{ см}$ и $12,5\\text{ см}$ и является биссектрисой. Найдите периметр.",
+          en: "Diagonal is angle bisector and divides midsegment into $7.5\\text{ cm}$ and $12.5\\text{ cm}$. Find perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $b = 2 \\times 7,5 = 15\\text{ sm}$, $a = 2 \\times 12,5 = 25\\text{ sm}$.\n2) $c = b = 15\\text{ sm}$.\n3) $P = 15 + 25 + 2 \\times 15 = 70\\text{ sm}$.",
+          ru: "Решение:\n1) $b = 15, a = 25, c = 15 \\implies P = 70\\text{ см}$.",
+          en: "Solution:\n1) $b = 15, a = 25, c = 15 \\implies P = 70\\text{ cm}$."
+        }
+      },
+      {
+        id: 30,
+        type: "mcq",
+        correct: "A",
+        options: { A: "8 sm", B: "4 sm", C: "5 sm", D: "6 sm", E: "9 sm" },
+        text: {
+          az: "Müstəvi üzərində düz xətti kəsməyən parçanın ucları bu düz xətdən $6\\text{ sm}$ və $10\\text{ sm}$-lik məsafədədir. Parçanın orta nöqtəsi bu düz xətdən hansı məsafədədir?",
+          ru: "Концы отрезка, не пересекающего прямую, удалены от нее на $6\\text{ см}$ и $10\\text{ см}$. Найдите расстояние от середины отрезка до прямой.",
+          en: "Endpoints of a segment not intersecting a line are at distances $6\\text{ cm}$ and $10\\text{ cm}$. Find distance of midpoint."
+        },
+        explanation: {
+          az: "Həlli:\n1) Düz xətti kəsmədikdə orta nöqtənin məsafəsi məsafələrin ədədi ortasıdır: $d = \\frac{6 + 10}{2} = 8\\text{ sm}$.",
+          ru: "Решение:\n1) $d = \\frac{6 + 10}{2} = 8\\text{ см}$.",
+          en: "Solution:\n1) $d = \\frac{6 + 10}{2} = 8\\text{ cm}$."
+        }
+      },
+      {
+        id: 31,
+        type: "mcq",
+        correct: "B",
+        options: { A: "15/2 sm", B: "15/4 sm", C: "16/3 sm", D: "9/2 sm", E: "16/5 sm" },
+        text: {
+          az: "$ABCD$ düzbucaqlı trapesiyasında $DB$ diaqonalı $AB$ yan tərəfinə perpendikulyardır. $DC = 3\\text{ sm}, BC = 4\\text{ sm}$ olarsa, $AB$ tərəfini tapın.",
+          ru: "В прямоугольной трапеции $ABCD$ диагональ $DB \\perp AB$. $DC = 3\\text{ см}, BC = 4\\text{ см}$. Найдите сторону $AB$.",
+          en: "In right trapezoid $ABCD$, diagonal $DB \\perp AB$. $DC = 3\\text{ cm}, BC = 4\\text{ cm}$. Find side $AB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Düzbucaqlı üçbucaqların oxşarlığından: $AB = \\frac{15}{4}\\text{ sm}$.",
+          ru: "Решение:\n1) Из подобия: $AB = \\frac{15}{4}\\text{ см}$.",
+          en: "Solution:\n1) By similarity: $AB = \\frac{15}{4}\\text{ cm}$."
+        }
+      },
+      {
+        id: 32,
+        type: "mcq",
+        correct: "B",
+        options: { A: "10 sm", B: "5 sm", C: "7 sm", D: "14 sm", E: "9 sm" },
+        text: {
+          az: "Trapesiyanın diaqonalları $6\\text{ sm}$ və $8\\text{ sm}$ olub qarşılıqlı perpendikulyardır. Trapesiyanın orta xəttini tapın.",
+          ru: "Диагонали трапеции равны $6\\text{ см}$ и $8\\text{ см}$ и взаимно перпендикулярны. Найдите среднюю линию.",
+          en: "Diagonals of a trapezoid are $6\\text{ cm}$ and $8\\text{ cm}$ and perpendicular. Find midsegment."
+        },
+        explanation: {
+          az: "Həlli:\n1) Qarşılıqlı perpendikulyar diaqonallarda oturacaqlar cəmi: $a + b = \\sqrt{d_1^2 + d_2^2} = \\sqrt{36 + 64} = 10\\text{ sm}$.\n2) Orta xətt: $m = \\frac{10}{2} = 5\\text{ sm}$.",
+          ru: "Решение:\n1) $a + b = \\sqrt{6^2 + 8^2} = 10\\text{ см} \\implies m = 5\\text{ см}$.",
+          en: "Solution:\n1) $a + b = 10\\text{ cm} \\implies m = 5\\text{ cm}$."
+        }
+      },
+      {
+        id: 33,
+        type: "mcq",
+        correct: "D",
+        options: { A: "$\\sqrt{13}$", B: "1,5", C: "$2\\sqrt{5}$", D: "3", E: "1" },
+        text: {
+          az: "Diaqonalları perpendikulyar olan trapesiyanın diaqonalları $\\sqrt{5}$ və 2 olarsa, onun oturacaqlarının uzunluqları cəmini tapın.",
+          ru: "Найдите сумму оснований трапеции с взаимно перпендикулярными диагоналями $\\sqrt{5}$ и 2.",
+          en: "Find the sum of bases of a trapezoid with perpendicular diagonals of $\\sqrt{5}$ and 2."
+        },
+        explanation: {
+          az: "Həlli:\n1) $a + b = \\sqrt{(\\sqrt{5})^2 + 2^2} = \\sqrt{5 + 4} = 3$.",
+          ru: "Решение:\n1) $a + b = \\sqrt{5 + 4} = 3$.",
+          en: "Solution:\n1) $a + b = \\sqrt{5 + 4} = 3$."
+        }
+      },
+      {
+        id: 34,
+        type: "mcq",
+        correct: "E",
+        options: { A: "40", B: "65", C: "45", D: "55", E: "50" },
+        text: {
+          az: "$ABCD$ trapesiyasında $\\angle C = 130^\\circ, BC$ kiçik oturacağı $5\\text{ sm}, AD$ böyük oturacağı $14\\text{ sm}, CD = 9\\text{ sm}$ olarsa, $\\angle B - \\angle A$-nın dərəcə ölçüsünü tapın.",
+          ru: "В трапеции $ABCD$ $\\angle C = 130^\\circ, BC = 5, AD = 14, CD = 9$. Найдите $\\angle B - \\angle A$.",
+          en: "In trapezoid $ABCD$, $\\angle C = 130^\\circ, BC = 5, AD = 14, CD = 9$. Find $\\angle B - \\angle A$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle B - \\angle A = 50^\\circ$.",
+          ru: "Решение:\n1) $\\angle B - \\angle A = 50^\\circ$.",
+          en: "Solution:\n1) $\\angle B - \\angle A = 50^\\circ$."
+        }
+      },
+      {
+        id: 35,
+        type: "mcq",
+        correct: "E",
+        options: { A: "$\\sqrt{3}+1\\text{ sm}$", B: "$2\\sqrt{3}\\text{ sm}$", C: "$\\sqrt{3}\\text{ sm}$", D: "$2(\\sqrt{3}+1)\\text{ sm}$", E: "$2(\\sqrt{3}-1)\\text{ sm}$" },
+        text: {
+          az: "Düzbucaqlı $ABCD$ trapesiyasında $AD \\parallel BC, CD \\perp AD, AC = 2CD, CD = 2\\text{ sm}, \\angle BAC = 15^\\circ$. $BC$-ni tapın.",
+          ru: "В прямоугольной трапеции $ABCD$ $AC = 2CD, CD = 2\\text{ см}, \\angle BAC = 15^\\circ$. Найдите $BC$.",
+          en: "In right trapezoid $ABCD$, $AC = 2CD, CD = 2\\text{ cm}, \\angle BAC = 15^\\circ$. Find $BC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $BC = 2(\\sqrt{3} - 1)\\text{ sm}$.",
+          ru: "Решение:\n1) $BC = 2(\\sqrt{3} - 1)\\text{ см}$.",
+          en: "Solution:\n1) $BC = 2(\\sqrt{3} - 1)\\text{ cm}$."
+        }
+      },
+      {
+        id: 36,
+        type: "mcq",
+        correct: "B",
+        options: { A: "$(2\\sqrt{2}+1)\\text{ sm}$", B: "$(2\\sqrt{2}-1)\\text{ sm}$", C: "7 sm", D: "$2\\sqrt{2}\\text{ sm}$", E: "1 sm" },
+        text: {
+          az: "Perimetri $7\\text{ sm}$ olan düzbucaqlı trapesiyanın kor bucaq təpəsindən çəkilmiş diaqonalı onu iki oxşar bərabəryanlı üçbucağa bölür. Həmin diaqonalın uzunluğunu tapın.",
+          ru: "Периметр прямоугольной трапеции равен $7\\text{ см}$. Диагональ делит ее на два подобных равнобедренных треугольника. Найдите диагональ.",
+          en: "Perimeter is $7\\text{ cm}$. Diagonal divides it into two similar isosceles triangles. Find diagonal."
+        },
+        explanation: {
+          az: "Həlli:\n1) $d = (2\\sqrt{2} - 1)\\text{ sm}$.",
+          ru: "Решение:\n1) $d = 2\\sqrt{2} - 1\\text{ см}$.",
+          en: "Solution:\n1) $d = 2\\sqrt{2} - 1\\text{ cm}$."
+        }
+      },
+      {
+        id: 37,
+        type: "mcq",
+        correct: "D",
+        options: { A: "1 sm", B: "$\\sqrt{2}\\text{ sm}$", C: "5/8 sm", D: "7/8 sm", E: "3/8 sm" },
+        text: {
+          az: "Düzbucaqlı trapesiyanın diaqonalı $\\frac{2\\sqrt{2}-1}{8}\\text{ sm}$ olub onu iki oxşar bərabəryanlı düzbucaqlı üçbucağa ayırır. Trapesiyanın perimetrini tapın.",
+          ru: "Диагональ прямоугольной трапеции равна $\\frac{2\\sqrt{2}-1}{8}\\text{ см}$ и делит ее на два подобных треугольника. Найдите периметр.",
+          en: "Diagonal is $\\frac{2\\sqrt{2}-1}{8}\\text{ cm}$. Find perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P = \\frac{7}{8}\\text{ sm}$.",
+          ru: "Решение:\n1) $P = 7/8\\text{ см}$.",
+          en: "Solution:\n1) $P = 7/8\\text{ cm}$."
+        }
+      },
+      {
+        id: 38,
+        type: "mcq",
+        correct: "E",
+        options: { A: "1 sm", B: "$\\sqrt{2}\\text{ sm}$", C: "$3\\sqrt{2}\\text{ sm}$", D: "4 sm", E: "$2\\sqrt{2}\\text{ sm}$" },
+        text: {
+          az: "Düzbucaqlı trapesiyanın kor bucaq təpəsindən çıxan diaqonalı onu iki oxşar bərabəryanlı üçbucağa ayırır. Trapesiyanın perimetri $(8+2\\sqrt{2})\\text{ sm}$ olarsa, bu diaqonalın uzunluğunu tapın.",
+          ru: "Периметр трапеции равен $(8+2\\sqrt{2})\\text{ см}$. Найдите диагональ.",
+          en: "Perimeter is $(8+2\\sqrt{2})\\text{ cm}$. Find diagonal."
+        },
+        explanation: {
+          az: "Həlli:\n1) $d = 2\\sqrt{2}\\text{ sm}$.",
+          ru: "Решение:\n1) $d = 2\\sqrt{2}\\text{ см}$.",
+          en: "Solution:\n1) $d = 2\\sqrt{2}\\text{ cm}$."
+        }
+      },
+      {
+        id: 39,
+        type: "mcq",
+        correct: "D",
+        image: "Trapesiya_Image0039.png",
+        options: { A: "13/5", B: "2/3", C: "5/13", D: "3/2", E: "1" },
+        text: {
+          az: "Oturacaqları 10 və 26 olan bərabəryanlı trapesiyanın diaqonalı yan tərəfə perpendikulyardır. Trapesiyanın iti bucağının tangensini tapın.",
+          ru: "Основания равнобедренной трапеции 10 и 26, диагональ перпендикулярна боковой стороне. Найдите тангенс острого угла.",
+          en: "Bases are 10 and 26, diagonal is perpendicular to leg. Find tangent of acute angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AH = \\frac{26 - 10}{2} = 8, HD = 26 - 8 = 18$.\n2) $h = \\sqrt{8 \\times 18} = 12$.\n3) $\\operatorname{tg}\\alpha = \\frac{h}{AH} = \\frac{12}{8} = \\frac{3}{2}$.",
+          ru: "Решение:\n1) $h = 12 \\implies \\operatorname{tg}\\alpha = 12/8 = 3/2$.",
+          en: "Solution:\n1) $h = 12 \\implies \\tan\\alpha = 3/2$."
+        }
+      },
+      {
+        id: 40,
+        type: "mcq",
+        correct: "A",
+        options: { A: "14 sm", B: "11 sm", C: "7 sm", D: "10 sm", E: "8 sm" },
+        text: {
+          az: "Kiçik oturacağı $BC = 4\\text{ sm}$ olan bərabəryanlı $ABCD$ trapesiyasının iti bucağının $AM$ tənböləni yan tərəfi $CM = 3\\text{ sm}$ və $MD = 7\\text{ sm}$ parçalarına bölərsə, trapesiyanın böyük oturacağını tapın.",
+          ru: "Биссектриса делит боковую сторону на $CM = 3\\text{ см}$ и $MD = 7\\text{ см}$. Меньшее основание $4\\text{ см}$. Найдите большее основание.",
+          en: "Bisector divides leg into $CM = 3\\text{ cm}$ and $MD = 7\\text{ cm}$. Smaller base is $4\\text{ cm}$. Find larger base."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AD = 14\\text{ sm}$.",
+          ru: "Решение:\n1) $AD = 14\\text{ см}$.",
+          en: "Solution:\n1) $AD = 14\\text{ cm}$."
+        }
+      },
+      {
+        id: 41,
+        type: "mcq",
+        correct: "E",
+        options: { A: "30 sm", B: "24 sm", C: "36 sm", D: "34 sm", E: "32 sm" },
+        text: {
+          az: "$ABCD$ trapesiyasının $CD$ yan tərəfinin $M$ orta nöqtəsindən $AB$ tərəfinə çəkilən $BM$ perpendikulyarının uzunluğu $6\\text{ sm}$-dir. $AB = 9\\text{ sm}$ və $CD = 8\\text{ sm}$ olarsa, trapesiyanın perimetrini tapın.",
+          ru: "Из середины $M$ стороны $CD$ опущен перпендикуляр $BM = 6\\text{ см}$ на $AB$. $AB = 9\\text{ см}, CD = 8\\text{ см}$. Найдите периметр.",
+          en: "From midpoint $M$ of $CD$, perpendicular $BM = 6\\text{ cm}$ is drawn to $AB$. $AB = 9\\text{ cm}, CD = 8\\text{ cm}$. Find perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P = 32\\text{ sm}$.",
+          ru: "Решение:\n1) $P = 32\\text{ см}$.",
+          en: "Solution:\n1) $P = 32\\text{ cm}$."
+        }
+      },
+      {
+        id: 42,
+        type: "mcq",
+        correct: "C",
+        options: { A: "$(2\\sqrt{3}-5)\\text{ sm}$", B: "$6\\sqrt{2}\\text{ sm}$", C: "$(8-2\\sqrt{3})\\text{ sm}$", D: "$3\\sqrt{5}\\text{ sm}$", E: "14 sm" },
+        text: {
+          az: "$ABCD$ trapesiyasının $AD$ böyük oturacağının $A$ təpəsindən bu oturacağa çəkilmiş perpendikulyar $CD$ tərəfinin uzantısı ilə $K$ nöqtəsində kəsişir. $AK = 10\\text{ sm}, \\angle KAB = 30^\\circ, \\angle AKD = 45^\\circ$ və trapesiyanın hündürlüyü $2\\sqrt{3}\\text{ sm}$ olarsa, kiçik oturacağını tapın.",
+          ru: "Найдите меньшее основание trapeziya.",
+          en: "Find smaller base."
+        },
+        explanation: {
+          az: "Həlli:\n1) $b = (8 - 2\\sqrt{3})\\text{ sm}$.",
+          ru: "Решение:\n1) $b = 8 - 2\\sqrt{3}\\text{ см}$.",
+          en: "Solution:\n1) $b = (8 - 2\\sqrt{3})\\text{ cm}$."
+        }
+      },
+      {
+        id: 43,
+        type: "mcq",
+        correct: "B",
+        image: "Trapesiya_Image0043.png",
+        options: { A: "30 sm", B: "50 sm", C: "40 sm", D: "45 sm", E: "60 sm" },
+        text: {
+          az: "$ABCD$ düzbucaqlı trapesiyasında ($\\angle BAD = 90^\\circ$), $BC = 32\\text{ sm}, AC \\perp BD$ və $AC : BD = 4 : 5$. $AD$-ni tapın.",
+          ru: "В прямоугольной трапеции $BC = 32\\text{ см}, AC \\perp BD, AC : BD = 4 : 5$. Найдите $AD$.",
+          en: "In right trapezoid, $BC = 32\\text{ cm}, AC \\perp BD, AC : BD = 4 : 5$. Find $AD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AD = 50\\text{ sm}$.",
+          ru: "Решение:\n1) $AD = 50\\text{ см}$.",
+          en: "Solution:\n1) $AD = 50\\text{ cm}$."
+        }
+      },
+      {
+        id: 44,
+        type: "open",
+        correct: "60",
+        image: "Trapesiya_Image0044.png",
+        text: {
+          az: "$ABCD$ bərabəryanlı trapesiyasında $AC$ və $BD$ diaqonallar, $O$ – onların kəsişmə nöqtəsidir. $\\angle BAC = 50^\\circ, \\angle ACD = 70^\\circ$ olarsa, $\\angle COD$-nin dərəcə ölçüsünü tapın.",
+          ru: "В равнобедренной трапеции $\\angle BAC = 50^\\circ, \\angle ACD = 70^\\circ$. Найдите $\\angle COD$.",
+          en: "In isosceles trapezoid, $\\angle BAC = 50^\\circ, \\angle ACD = 70^\\circ$. Find $\\angle COD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle COD = 60^\\circ$.",
+          ru: "Решение:\n1) $\\angle COD = 60^\\circ$.",
+          en: "Solution:\n1) $\\angle COD = 60^\\circ$."
+        }
+      },
+      {
+        id: 45,
+        type: "open",
+        correct: "100",
+        image: "Trapesiya_Image0045.png",
+        text: {
+          az: "$ABCD$ bərabəryanlı trapesiyasında $AC$ və $BD$ diaqonallar, $O$ – onların kəsişmə nöqtəsidir. $\\angle BAC = 45^\\circ, \\angle COD = 35^\\circ$ olarsa, $\\angle ACD$-nin dərəcə ölçüsünü tapın.",
+          ru: "В равнобедренной трапеции $\\angle BAC = 45^\\circ, \\angle COD = 35^\\circ$. Найдите $\\angle ACD$.",
+          en: "In isosceles trapezoid, $\\angle BAC = 45^\\circ, \\angle COD = 35^\\circ$. Find $\\angle ACD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle ACD = 100^\\circ$.",
+          ru: "Решение:\n1) $\\angle ACD = 100^\\circ$.",
+          en: "Solution:\n1) $\\angle ACD = 100^\\circ$."
+        }
+      },
+      {
+        id: 46,
+        type: "open",
+        correct: "36",
+        text: {
+          az: "Oturacaqları 7 və 15 olan bərabəryanlı trapesiyanın diaqonalı onun iti bucağını yarıya bölərsə, bu trapesiyanın perimetrini hesablayın.",
+          ru: "Основания равнобедренной трапеции 7 и 15, диагональ делит острый угол пополам. Найдите периметр.",
+          en: "Bases are 7 and 15, diagonal bisects acute angle. Calculate perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $c = 7 \\implies P = 7 + 15 + 2(7) = 36$.",
+          ru: "Решение:\n1) $P = 7 + 15 + 14 = 36$.",
+          en: "Solution:\n1) $P = 36$."
+        }
+      },
+      {
+        id: 47,
+        type: "open",
+        correct: "27",
+        text: {
+          az: "Bərabəryanlı trapesiyanın oturacaqları 5 və 12-dir. Diaqonalı onun iti bucağını yarıya bölərsə, bu trapesiyanın perimetrini hesablayın.",
+          ru: "Основания 5 и 12, диагональ делит острый угол пополам. Найдите периметр.",
+          en: "Bases are 5 and 12, diagonal bisects acute angle. Calculate perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P = 5 + 12 + 2(5) = 27$.",
+          ru: "Решение:\n1) $P = 27$.",
+          en: "Solution:\n1) $P = 27$."
+        }
+      },
+      {
+        id: 48,
+        type: "open",
+        correct: "62",
+        text: {
+          az: "Bərabəryanlı trapesiyanın oturacaqları 25 və 7, diaqonalı isə 20-dir. Onun perimetrini tapın.",
+          ru: "Основания равнобедренной трапеции 25 и 7, диагональ 20. Найдите периметр.",
+          en: "Bases are 25 and 7, diagonal is 20. Find perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $c = 15 \\implies P = 25 + 7 + 2(15) = 62$.",
+          ru: "Решение:\n1) $P = 62$.",
+          en: "Solution:\n1) $P = 62$."
+        }
+      },
+      {
+        id: 49,
+        type: "open",
+        correct: "3",
+        image: "Trapesiya_Image0049.png",
+        text: {
+          az: "$ABCD$ trapesiyasında $\\angle A = 90^\\circ, BC \\parallel AD, BC = 2$ və $AC = CD$ olarsa, $MN$ orta xəttin uzunluğunu tapın.",
+          ru: "В трапеции $\\angle A = 90^\\circ, BC = 2, AC = CD$. Найдите среднюю линию $MN$.",
+          en: "In trapezoid $\\angle A = 90^\\circ, BC = 2, AC = CD$. Find midsegment $MN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AD = 4 \\implies MN = \\frac{2 + 4}{2} = 3$.",
+          ru: "Решение:\n1) $MN = 3$.",
+          en: "Solution:\n1) $MN = 3$."
+        }
+      },
+      {
+        id: 50,
+        type: "open",
+        correct: "4,5",
+        image: "Trapesiya_Image0050.png",
+        text: {
+          az: "$ABCD$ trapesiyasında $\\angle A = 90^\\circ, BC = 3$ və $AC = CD$ olarsa, $MN$ orta xəttinin uzunluğunu tapın.",
+          ru: "В трапеции $\\angle A = 90^\\circ, BC = 3, AC = CD$. Найдите среднюю линию $MN$.",
+          en: "In trapezoid $\\angle A = 90^\\circ, BC = 3, AC = CD$. Find midsegment $MN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AD = 6 \\implies MN = \\frac{3 + 6}{2} = 4,5$.",
+          ru: "Решение:\n1) $MN = 4,5$.",
+          en: "Solution:\n1) $MN = 4.5$."
+        }
+      },
+      {
+        id: 51,
+        type: "open",
+        correct: "12",
+        image: "Trapesiya_Image0051.png",
+        text: {
+          az: "$ABCD$ trapesiyasında $\\angle BAD = \\alpha, \\angle BCD = 2\\alpha, BC = 5, CD = 7$ olarsa, $AD$-ni tapın.",
+          ru: "В трапеции $\\angle BAD = \\alpha, \\angle BCD = 2\\alpha, BC = 5, CD = 7$. Найдите $AD$.",
+          en: "In trapezoid $\\angle BAD = \\alpha, \\angle BCD = 2\\alpha, BC = 5, CD = 7$. Find $AD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AD = BC + CD = 5 + 7 = 12$.",
+          ru: "Решение:\n1) $AD = 5 + 7 = 12$.",
+          en: "Solution:\n1) $AD = 12$."
+        }
+      },
+      {
+        id: 52,
+        type: "open",
+        correct: "12",
+        image: "Trapesiya_Image0052.png",
+        text: {
+          az: "$ABCD$ trapesiyasında $\\angle BAD = \\alpha, \\angle BCD = 2\\alpha, BC = 4, CD = 8$ olarsa, $AD$-ni tapın.",
+          ru: "В траpeции $\\angle BAD = \\alpha, \\angle BCD = 2\\alpha, BC = 4, CD = 8$. Найдите $AD$.",
+          en: "In trapezoid $\\angle BAD = \\alpha, \\angle BCD = 2\\alpha, BC = 4, CD = 8$. Find $AD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AD = 4 + 8 = 12$.",
+          ru: "Решение:\n1) $AD = 12$.",
+          en: "Solution:\n1) $AD = 12$."
+        }
+      },
+      {
+        id: 53,
+        type: "open",
+        correct: "30",
+        text: {
+          az: "Bərabəryanlı trapesiyanın diaqonalı iti bucağının tənbölənidir və yan tərəfə perpendikulyardır. Trapesiyanın diaqonalı $6\\sqrt{3}$ olarsa, perimetrini tapın.",
+          ru: "Диагональ равна $6\\sqrt{3}$, является биссектрисой и $\\perp$ боковой стороне. Найдите периметр.",
+          en: "Diagonal is $6\\sqrt{3}$, bisects acute angle and is $\\perp$ to leg. Find perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha = 60^\\circ \\implies c = 6, a = 12, b = 6$.\n2) $P = 6 + 12 + 2(6) = 30$.",
+          ru: "Решение:\n1) $P = 30$.",
+          en: "Solution:\n1) $P = 30$."
+        }
+      },
+      {
+        id: 54,
+        type: "open",
+        correct: "9",
+        text: {
+          az: "Bərabəryanlı trapesiyanın diaqonalı iti bucağın tənbölənidir və yan tərəfə perpendikulyardır. Trapesiyanın perimetri $15\\sqrt{3}$ olarsa, diaqonalı tapın.",
+          ru: "Периметр равен $15\\sqrt{3}$. Найдите диагональ.",
+          en: "Perimeter is $15\\sqrt{3}$. Find diagonal."
+        },
+        explanation: {
+          az: "Həlli:\n1) $d = 9$.",
+          ru: "Решение:\n1) $d = 9$.",
+          en: "Solution:\n1) $d = 9$."
+        }
+      },
+      {
+        id: 55,
+        type: "open",
+        correct: "4",
+        image: "Trapesiya_Image0055.png",
+        text: {
+          az: "$ABCD$ trapesiyasında $BH \\perp AD, AB = 2\\sqrt{5}, AH = 4$ və $\\angle ADC = 30^\\circ$ olarsa, $CD$-nin uzunluğunu hesablayın.",
+          ru: "В трапеции $BH \\perp AD, AB = 2\\sqrt{5}, AH = 4, \\angle ADC = 30^\\circ$. Найдите $CD$.",
+          en: "In trapezoid $BH \\perp AD, AB = 2\\sqrt{5}, AH = 4, \\angle ADC = 30^\\circ$. Find $CD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $h = \\sqrt{(2\\sqrt{5})^2 - 4^2} = \\sqrt{20 - 16} = 2$.\n2) $CD = \\frac{h}{\\sin 30^\\circ} = 4$.",
+          ru: "Решение:\n1) $h = 2 \\implies CD = 4$.",
+          en: "Solution:\n1) $h = 2 \\implies CD = 4$."
+        }
+      },
+      {
+        id: 56,
+        type: "open",
+        correct: "12",
+        image: "Trapesiya_Image0056.png",
+        text: {
+          az: "$ABCD$ trapesiyasında $BH \\perp AD, AB = 3\\sqrt{5}, AH = 3$ və $\\angle ADC = 30^\\circ$ olarsa, $CD$-nin uzunluğunu hesablayın.",
+          ru: "В трапеции $BH \\perp AD, AB = 3\\sqrt{5}, AH = 3, \\angle ADC = 30^\\circ$. Найдите $CD$.",
+          en: "In trapezoid $BH \\perp AD, AB = 3\\sqrt{5}, AH = 3, \\angle ADC = 30^\\circ$. Find $CD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $h = \\sqrt{45 - 9} = 6$.\n2) $CD = \\frac{6}{1/2} = 12$.",
+          ru: "Решение:\n1) $h = 6 \\implies CD = 12$.",
+          en: "Solution:\n1) $h = 6 \\implies CD = 12$."
+        }
+      },
+      {
+        id: 57,
+        type: "open",
+        correct: "24",
+        text: {
+          az: "Trapesiyanın diaqonalları onun böyük oturacağına bitişik bucaqlarını yarı bölürlər. Trapesiyanın perimetri 60, orta xətti isə 18 olarsa, onun böyük oturacağını tapın.",
+          ru: "Диагонали делят углы при большем основании пополам. Периметр 60, средняя линия 18. Найдите большее основание.",
+          en: "Diagonals bisect base angles. Perimeter is 60, midsegment is 18. Find larger base."
+        },
+        explanation: {
+          az: "Həlli:\n1) $a + b = 36, 2c = 60 - 36 = 24 \\implies c = 12$.\n2) $b = c = 12 \\implies a = 36 - 12 = 24$.",
+          ru: "Решение:\n1) $a = 24$.",
+          en: "Solution:\n1) $a = 24$."
+        }
+      },
+      {
+        id: 58,
+        type: "open",
+        correct: "9",
+        text: {
+          az: "Diaqonalları qarşılıqlı perpendikulyar olan düzbucaqlı trapesiyanın oturacaqları 27 və 3-dür. Bu trapesiyanın hündürlüyünü tapın.",
+          ru: "Основания прямоугольной трапеции с перпендикулярными диагоналями равны 27 и 3. Найдите высоту.",
+          en: "Bases of right trapezoid with perpendicular diagonals are 27 and 3. Find height."
+        },
+        explanation: {
+          az: "Həlli:\n1) $h = \\sqrt{a \\cdot b} = \\sqrt{27 \\times 3} = \\sqrt{81} = 9$.",
+          ru: "Решение:\n1) $h = \\sqrt{27 \\times 3} = 9$.",
+          en: "Solution:\n1) $h = \\sqrt{27 \\times 3} = 9$."
+        }
+      },
+      {
+        id: 59,
+        type: "open",
+        correct: "9",
+        text: {
+          az: "Diaqonalları qarşılıqlı perpendikulyar olan düzbucaqlı trapesiyanın kiçik oturacağı 4, hündürlüyü 6-dır. Bu trapesiyanın böyük oturacağını tapın.",
+          ru: "Меньшее основание равно 4, высота 6. Найдите большее основание.",
+          en: "Smaller base is 4, height is 6. Find larger base."
+        },
+        explanation: {
+          az: "Həlli:\n1) $h^2 = a \\cdot b \\implies 36 = a \\cdot 4 \\implies a = 9$.",
+          ru: "Решение:\n1) $a = 36 / 4 = 9$.",
+          en: "Solution:\n1) $a = 9$."
+        }
+      },
+      {
+        id: 60,
+        type: "open",
+        correct: "20",
+        image: "Trapesiya_Image0060.png",
+        text: {
+          az: "Hündürlüyü 8, iti bucağının tangensi 2 olan bərabəryanlı trapesiyanın diaqonalı yan tərəfə perpendikulyardır. Trapesiyanın böyük oturacağını tapın.",
+          ru: "Высота 8, тангенс угла равен 2, диагональ $\\perp$ боковой стороне. Найдите большее основание.",
+          en: "Height 8, tangent of angle is 2, diagonal $\\perp$ leg. Find larger base."
+        },
+        explanation: {
+          az: "Həlli:\n1) $KD = \\frac{8}{2} = 4$.\n2) $h^2 = AK \\cdot KD \\implies 64 = AK \\cdot 4 \\implies AK = 16$.\n3) $AD = AK + KD = 16 + 4 = 20$.",
+          ru: "Решение:\n1) $AD = 16 + 4 = 20$.",
+          en: "Solution:\n1) $AD = 20$."
+        }
+      },
+      {
+        id: 61,
+        type: "open",
+        correct: "26",
+        image: "Trapesiya_Image0061.png",
+        text: {
+          az: "Hündürlüyü 12, iti bucağının tangensi $\\frac{3}{2}$ olan bərabəryanlı trapesiyanın diaqonalı yan tərəfə perpendikulyardır. Trapesiyanın böyük oturacağını tapın.",
+          ru: "Высота 12, тангенс $3/2$, диагональ $\\perp$ стороне. Найдите большее основание.",
+          en: "Height 12, tangent $3/2$, diagonal $\\perp$ leg. Find larger base."
+        },
+        explanation: {
+          az: "Həlli:\n1) $KD = 8, AK = 18 \\implies AD = 18 + 8 = 26$.",
+          ru: "Решение:\n1) $AD = 26$.",
+          en: "Solution:\n1) $AD = 26$."
+        }
+      },
+      {
+        id: 62,
+        type: "open",
+        correct: "2",
+        text: {
+          az: "Oturacaqları 12 və 20 olan bərabəryanlı trapesiyanın diaqonalı yan tərəfə perpendikulyardır. Trapesiyanın iti bucağının tangensini tapın.",
+          ru: "Основания 12 и 20, диагональ $\\perp$ боковой стороне. Найдите тангенс острого угла.",
+          en: "Bases 12 and 20, diagonal $\\perp$ leg. Find tangent of acute angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) $KD = 4, AK = 16 \\implies h = \\sqrt{64} = 8$.\n2) $\\operatorname{tg}\\alpha = \\frac{8}{4} = 2$.",
+          ru: "Решение:\n1) $\\operatorname{tg}\\alpha = 2$.",
+          en: "Solution:\n1) $\\tan\\alpha = 2$."
+        }
+      },
+      {
+        id: 63,
+        type: "open",
+        correct: "8",
+        image: "Trapesiya_Image0063.png",
+        text: {
+          az: "Düzbucaqlı $ABCD$ trapesiyasının ($\\angle A = 90^\\circ$) diaqonalları qarşılıqlı perpendikulyardır. $AB = 18, AD = 12$ olarsa, $DC$ parçasının uzunluğunu tapın.",
+          ru: "Диагонали перпендикулярны. $AB = 18, AD = 12$. Найдите $DC$.",
+          en: "Diagonals are perpendicular. $AB = 18, AD = 12$. Find $DC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AD^2 = AB \\cdot DC \\implies 144 = 18 \\cdot DC \\implies DC = 8$.",
+          ru: "Решение:\n1) $DC = 144 / 18 = 8$.",
+          en: "Solution:\n1) $DC = 8$."
+        }
+      },
+      {
+        id: 64,
+        type: "open",
+        correct: "7",
+        image: "Trapesiya_Image0064.png",
+        text: {
+          az: "Düzbucaqlı $ABCD$ trapesiyasının ($\\angle A = 90^\\circ$) diaqonalları qarşılıqlı perpendikulyardır. $AB = 28, AD = 14$ olarsa, $DC$ parçasının uzunluğunu tapın.",
+          ru: "Диагонали перпендикулярны. $AB = 28, AD = 14$. Найдите $DC$.",
+          en: "Diagonals are perpendicular. $AB = 28, AD = 14$. Find $DC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $DC = \\frac{14^2}{28} = \\frac{196}{28} = 7$.",
+          ru: "Решение:\n1) $DC = 7$.",
+          en: "Solution:\n1) $DC = 7$."
+        }
+      },
+      {
+        id: 65,
+        type: "open",
+        correct: "35",
+        text: {
+          az: "Diaqonalı 26, hündürlüyü 10, kiçik oturacağı 13 olan bərabəryanlı trapesiyanın böyük oturacağının uzunluğunu tapın.",
+          ru: "Диагональ 26, высота 10, меньшее основание 13. Найдите большее основание.",
+          en: "Diagonal is 26, height 10, smaller base 13. Find larger base."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\frac{a + b}{2} = \\sqrt{26^2 - 10^2} = 24$.\n2) $a + 13 = 48 \\implies a = 35$.",
+          ru: "Решение:\n1) $a = 48 - 13 = 35$.",
+          en: "Solution:\n1) $a = 35$."
+        }
+      },
+      {
+        id: 66,
+        type: "open",
+        correct: "1-c,e; 2-b,d; 3-a",
+        text: {
+          az: "Uyğunluğu müəyyən edin:\n1. $ABCD$ bərabəryanlı trapesiyadır\n2. $ABCD$ rombdur\n3. $ABCD$ kvadratdır\n\na. dörd simmetriya oxu var\nb. iki simmetriya oxu var\nc. bir simmetriya oxu var\nd. yalnız daxilinə çevrə çəkmək olar\ne. $ABCD$-nin xaricinə, bəzi hallarda isə daxilinə də çevrə çəkmək olar",
+          ru: "Установите соответствие:\n1. Равнобедренная трапеция\n2. Ромб\n3. Квадрат",
+          en: "Match the properties:\n1. Isosceles trapezoid\n2. Rhombus\n3. Square"
+        },
+        explanation: {
+          az: "Həlli:\n1 -> c, e\n2 -> b, d\n3 -> a",
+          ru: "Решение:\n1 -> c, e; 2 -> b, d; 3 -> a.",
+          en: "Solution:\n1 -> c, e; 2 -> b, d; 3 -> a."
+        }
+      },
+      {
+        id: 67,
+        type: "open",
+        correct: "1-b,d; 2-a; 3-e",
+        text: {
+          az: "Uyğunluğu müəyyən edin:\n1. Romb\n2. Düzbucaqlı\n3. Trapesiya\n\na. diaqonalları bərabərdir\nb. diaqonalları qarşılıqlı perpendikulyardır\nc. daxili bucaqlarının cəmi $540^\\circ$-dir\nd. diaqonalı bucağının tənbölənidir\ne. yalnız iki tərəfi paraleldir",
+          ru: "Установите соответствие:\n1. Ромб\n2. Прямоугольник\n3. Трапеция",
+          en: "Match the properties:\n1. Rhombus\n2. Rectangle\n3. Trapezoid"
+        },
+        explanation: {
+          az: "Həlli:\n1 -> b, d\n2 -> a\n3 -> e",
+          ru: "Решение:\n1 -> b, d; 2 -> a; 3 -> e.",
+          en: "Solution:\n1 -> b, d; 2 -> a; 3 -> e."
+        }
+      },
+      {
+        id: 68,
+        type: "open",
+        correct: "1-a,e; 2-d; 3-b",
+        text: {
+          az: "Uyğunluğu müəyyən edin:\n1. Kvadrat\n2. Düzbucaqlı\n3. Trapesiya\n\na. diaqonalı bucağının tənbölənidir\nb. yalnız iki tərəfi paraleldir\nc. daxili bucaqlarının cəmi $180^\\circ$-dir\nd. iki simmetriya oxu var\ne. bütün tərəfləri bərabərdir",
+          ru: "Установите соответствие:\n1. Квадрат\n2. Прямоугольник\n3. Трапеция",
+          en: "Match the properties:\n1. Square\n2. Rectangle\n3. Trapezoid"
+        },
+        explanation: {
+          az: "Həlli:\n1 -> a, e\n2 -> d\n3 -> b",
+          ru: "Решение:\n1 -> a, e; 2 -> d; 3 -> b.",
+          en: "Solution:\n1 -> a, e; 2 -> d; 3 -> b."
+        }
+      },
+      {
+        id: 69,
+        type: "open",
+        correct: "6",
+        text: {
+          az: "Trapesiyanın böyük oturacaqla $75^\\circ$-li bucaq əmələ gətirən diaqonalı yan tərəfə perpendikulyardır. Trapesiyanın böyük oturacağı 24 olarsa, trapesiyanın hündürlüyünü tapın.",
+          ru: "Диагональ образует угол $75^\\circ$ с большим основанием и перпендикулярна боковой стороне. Большее основание равно 24. Найдите высоту.",
+          en: "Diagonal makes a $75^\\circ$ angle with base and is perpendicular to leg. Base is 24. Find height."
+        },
+        explanation: {
+          az: "Həlli:\n1) Düzbucaqlı üçbucaqda $15^\\circ$-li və $75^\\circ$-li bucaqlar olduqda hipotenuza çəkilən hündürlük hipotenuzun 4-də birinə bərabərdir:\n2) $h = \\frac{24}{4} = 6$.",
+          ru: "Решение:\n1) В прямоугольном треугольнике с углом $75^\\circ$ высота равна $h = 24 / 4 = 6$.",
+          en: "Solution:\n1) Height to hypotenuse with $75^\\circ$ angle: $h = 24 / 4 = 6$."
+        }
+      },
+      {
+        id: 70,
+        type: "open",
+        correct: "8",
+        text: {
+          az: "Böyük oturacaqla $75^\\circ$-li bucaq əmələ gətirən trapesiyanın diaqonalı yan tərəfə perpendikulyardır. Trapesiyanın böyük oturacağı 32 olarsa, trapesiyanın hündürlüyünü tapın.",
+          ru: "Большее основание равно 32. Найдите высоту.",
+          en: "Base is 32. Find height."
+        },
+        explanation: {
+          az: "Həlli:\n1) $h = \\frac{32}{4} = 8$.",
+          ru: "Решение:\n1) $h = 32 / 4 = 8$.",
+          en: "Solution:\n1) $h = 32 / 4 = 8$."
+        }
+      }
+    ];
+
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    function init() {
+      renderApp();
+      updateScore();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `lang-${lang}`);
+      });
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) {
+        currentSlide = nextSlide;
+        renderApp();
+      }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        renderApp();
+      }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      const isCorrect = choice === q.correct;
+      userAnswers[qId] = { answer: choice, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+
+      const q = questionsData.find(item => item.id === qId);
+      
+      const cleanVal = val.toLowerCase().replace(/[\s°mмsmсм\\*]/g, '').replace(/;/g, ',').replace(/sqrt/g, '√');
+      const cleanCorrect = q.correct.toLowerCase().replace(/[\s°mмsmсм\\*]/g, '').replace(/;/g, ',').replace(/sqrt/g, '√');
+      const isCorrect = cleanVal === cleanCorrect || cleanVal.includes(cleanCorrect);
+
+      userAnswers[qId] = { answer: val, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-back').innerText = t.back;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+
+        if (userAnswers[q.id]) {
+          btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        }
+        if (currentMode === 'slide' && q.id === currentSlide) {
+          btn.classList.add('active');
+        }
+
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      const questionsToRender = currentMode === 'slide'
+        ? questionsData.filter(q => q.id === currentSlide)
+        : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang]}</div>
+        `;
+
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id}"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}"
+                value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''}
+                onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang]}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>
