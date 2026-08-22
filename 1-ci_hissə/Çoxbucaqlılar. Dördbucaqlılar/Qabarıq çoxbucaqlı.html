@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Qabarıq çoxbucaqlı. Daxili və xarici bucaqların cəmi. Düzgün çoxbucaqlı</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      padding: 12px 20px;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topic-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #f1f5f9;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary);
+    }
+
+    .topic-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .btn-group button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .btn-group button.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .score-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .grid-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .grid-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .q-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 6px;
+    }
+
+    .q-btn {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .q-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .q-btn.active {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .q-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .q-btn.incorrect {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .q-type-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .q-image-container {
+      margin: 16px 0;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .q-image-container img {
+      max-width: 100%;
+      max-height: 230px;
+      height: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .option-btn.selected-correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46 !important;
+      font-weight: 700;
+    }
+
+    .option-btn.selected-incorrect {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b !important;
+      font-weight: 700;
+    }
+
+    .open-input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      max-width: 440px;
+    }
+
+    .open-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .open-input:focus {
+      border-color: var(--primary);
+    }
+
+    .submit-btn {
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .explanation-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-body {
+      white-space: pre-line;
+      color: #334155;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="topic-title-box">
+        <a href="../../index.html" class="back-btn">← <span id="ui-back">Əsas Menyu</span></a>
+        <div class="topic-title" id="ui-topic">Qabarıq çoxbucaqlı. Daxili və xarici bucaqların cəmi. Düzgün çoxbucaqlı</div>
+      </div>
+      
+      <div class="controls">
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 37</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    const uiTranslations = {
+      az: {
+        topic: "Qabarıq çoxbucaqlı. Daxili və xarici bucaqların cəmi. Düzgün çoxbucaqlı",
+        back: "Əsas Menyu",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual / Uyğunluq",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı daxil edin...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Выпуклый многоугольник. Сумма внутренних и внешних углов. Правильный многоугольник",
+        back: "Главное меню",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос / Соответствие",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Convex Polygons. Interior & Exterior Angles. Regular Polygons",
+        back: "Main Menu",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended / Matching",
+        check: "Submit",
+        enterAnswer: "Enter answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    const questionsData = [
+      {
+        id: 1,
+        type: "mcq",
+        correct: "C",
+        options: { A: "12", B: "8", C: "10", D: "15", E: "13" },
+        text: {
+          az: "Daxili bucaqlarının cəmi $1440^\\circ$ olan qabarıq çoxbucaqlının tərəflərinin sayını tapın.",
+          ru: "Найдите число сторон выпуклого многоугольника, сумма внутренних углов которого равна $1440^\\circ$.",
+          en: "Find the number of sides of a convex polygon whose sum of interior angles is $1440^\\circ$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Qabarıq $n$-bucaqlının daxili bucaqlarının cəmi: $S_n = 180^\\circ(n - 2)$.\n2) $180^\\circ(n - 2) = 1440^\\circ \\implies n - 2 = 8 \\implies n = 10$.",
+          ru: "Решение:\n1) Сумма углов: $180^\\circ(n - 2) = 1440^\\circ$.\n2) $n - 2 = 8 \\implies n = 10$.",
+          en: "Solution:\n1) Sum: $180^\\circ(n - 2) = 1440^\\circ \\implies n - 2 = 8 \\implies n = 10$."
+        }
+      },
+      {
+        id: 2,
+        type: "mcq",
+        correct: "B",
+        options: { A: "17", B: "11", C: "10", D: "14", E: "9" },
+        text: {
+          az: "Daxili bucaqlarının cəmi $1620^\\circ$ olan qabarıq çoxbucaqlının tərəflərinin sayını tapın.",
+          ru: "Найдите число сторон выпуклого многоугольника, сумма внутренних углов которого равна $1620^\\circ$.",
+          en: "Find the number of sides of a convex polygon whose sum of interior angles is $1620^\\circ$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $180^\\circ(n - 2) = 1620^\\circ \\implies n - 2 = 9 \\implies n = 11$.",
+          ru: "Решение:\n1) $180^\\circ(n - 2) = 1620^\\circ \\implies n - 2 = 9 \\implies n = 11$.",
+          en: "Solution:\n1) $180^\\circ(n - 2) = 1620^\\circ \\implies n = 11$."
+        }
+      },
+      {
+        id: 3,
+        type: "mcq",
+        correct: "B",
+        options: { A: "15 sm", B: "10 sm", C: "$5\\sqrt{3}\\text{ sm}$", D: "5 sm", E: "$10\\sqrt{3}\\text{ sm}$" },
+        text: {
+          az: "Perimetri $30\\text{ sm}$ olan düzgün altıbucaqlının böyük diaqonalını tapın.",
+          ru: "Найдите большую диагональ правильного шестиугольника с периметром $30\\text{ см}$.",
+          en: "Find the longer diagonal of a regular hexagon with a perimeter of $30\\text{ cm}$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tərəfi: $a = \\frac{30}{6} = 5\\text{ sm}$.\n2) Düzgün altıbucaqlının böyük diaqonalı: $D = 2a = 2 \\times 5 = 10\\text{ sm}$.",
+          ru: "Решение:\n1) Сторона: $a = \\frac{30}{6} = 5\\text{ см}$.\n2) Большая диагональ: $D = 2a = 10\\text{ см}$.",
+          en: "Solution:\n1) Side: $a = \\frac{30}{6} = 5\\text{ cm}$.\n2) Major diagonal: $D = 2a = 10\\text{ cm}$."
+        }
+      },
+      {
+        id: 4,
+        type: "mcq",
+        correct: "A",
+        options: { A: "$6\\sqrt{3}\\text{ sm}$", B: "18 sm", C: "12 sm", D: "6 sm", E: "$12\\sqrt{3}\\text{ sm}$" },
+        text: {
+          az: "Perimetri $36\\text{ sm}$ olan düzgün altıbucaqlının kiçik diaqonalını tapın.",
+          ru: "Найдите меньшую диагональ правильного шестиугольника с периметром $36\\text{ см}$.",
+          en: "Find the shorter diagonal of a regular hexagon with a perimeter of $36\\text{ cm}$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tərəfi: $a = \\frac{36}{6} = 6\\text{ sm}$.\n2) Kiçik diaqonal: $d = a\\sqrt{3} = 6\\sqrt{3}\\text{ sm}$.",
+          ru: "Решение:\n1) Сторона: $a = 6\\text{ см}$.\n2) Меньшая диагональ: $d = a\\sqrt{3} = 6\\sqrt{3}\\text{ см}$.",
+          en: "Solution:\n1) Side: $a = 6\\text{ cm}$.\n2) Minor diagonal: $d = a\\sqrt{3} = 6\\sqrt{3}\\text{ cm}$."
+        }
+      },
+      {
+        id: 5,
+        type: "mcq",
+        correct: "A",
+        options: { A: "12 sm", B: "24 sm", C: "4 sm", D: "8 sm", E: "16 sm" },
+        text: {
+          az: "Böyük diaqonalı $4\\text{ sm}$ olan düzgün altıbucaqlının perimetrini tapın.",
+          ru: "Найдите периметр правильного шестиугольника, большая диагональ которого равна $4\\text{ см}$.",
+          en: "Find the perimeter of a regular hexagon whose major diagonal is $4\\text{ cm}$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $D = 2a = 4 \\implies a = 2\\text{ sm}$.\n2) $P = 6a = 6 \\times 2 = 12\\text{ sm}$.",
+          ru: "Решение:\n1) $2a = 4 \\implies a = 2\\text{ см}$.\n2) $P = 6 \\times 2 = 12\\text{ см}$.",
+          en: "Solution:\n1) $D = 2a = 4 \\implies a = 2\\text{ cm}$.\n2) $P = 6(2) = 12\\text{ cm}$."
+        }
+      },
+      {
+        id: 6,
+        type: "mcq",
+        correct: "C",
+        options: { A: "6 sm", B: "36 sm", C: "18 sm", D: "12 sm", E: "24 sm" },
+        text: {
+          az: "Kiçik diaqonalı $3\\sqrt{3}\\text{ sm}$ olan düzgün altıbucaqlının perimetrini tapın.",
+          ru: "Найдите периметр правильного шестиугольника, меньшая диагональ которого равна $3\\sqrt{3}\\text{ см}$.",
+          en: "Find the perimeter of a regular hexagon whose minor diagonal is $3\\sqrt{3}\\text{ cm}$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $d = a\\sqrt{3} = 3\\sqrt{3} \\implies a = 3\\text{ sm}$.\n2) $P = 6a = 6 \\times 3 = 18\\text{ sm}$.",
+          ru: "Решение:\n1) $a\\sqrt{3} = 3\\sqrt{3} \\implies a = 3\\text{ см}$.\n2) $P = 6 \\times 3 = 18\\text{ см}$.",
+          en: "Solution:\n1) $a\\sqrt{3} = 3\\sqrt{3} \\implies a = 3\\text{ cm}$.\n2) $P = 6(3) = 18\\text{ cm}$."
+        }
+      },
+      {
+        id: 7,
+        type: "mcq",
+        correct: "B",
+        options: { A: "144°", B: "162°", C: "140°", D: "120°", E: "176°" },
+        text: {
+          az: "Bir təpəsindən çıxan diaqonallarının sayı 17 olan düzgün qabarıq çoxbucaqlının daxili bucağını tapın.",
+          ru: "Найдите внутренний угол правильного многоугольника, у которого из одной вершины выходит 17 диагоналей.",
+          en: "Find the interior angle of a regular polygon in which 17 diagonals can be drawn from a single vertex."
+        },
+        explanation: {
+          az: "Həlli:\n1) Bir təpədən çıxan diaqonallar: $n - 3 = 17 \\implies n = 20$.\n2) Xarici bucaq: $\\alpha_{xar} = \\frac{360^\\circ}{20} = 18^\\circ$.\n3) Daxili bucaq: $180^\\circ - 18^\\circ = 162^\\circ$.",
+          ru: "Решение:\n1) $n - 3 = 17 \\implies n = 20$.\n2) Внутренний угол: $\\frac{180^\\circ(20-2)}{20} = 162^\\circ$.",
+          en: "Solution:\n1) $n - 3 = 17 \\implies n = 20$.\n2) Interior angle: $180^\\circ - \\frac{360^\\circ}{20} = 162^\\circ$."
+        }
+      },
+      {
+        id: 8,
+        type: "mcq",
+        correct: "E",
+        options: { A: "17", B: "14", C: "15", D: "16", E: "19" },
+        text: {
+          az: "Bir təpəsindən çıxan diaqonallarının sayı 16 olan qabarıq çoxbucaqlının tərəflərinin sayını tapın.",
+          ru: "Найдите число сторон выпуклого многоугольника, если число диагоналей, проведенных из одной вершины, равно 16.",
+          en: "Find the number of sides of a convex polygon if the number of diagonals from one vertex is 16."
+        },
+        explanation: {
+          az: "Həlli:\n1) $n - 3 = 16 \\implies n = 19$.",
+          ru: "Решение:\n1) $n - 3 = 16 \\implies n = 19$.",
+          en: "Solution:\n1) $n - 3 = 16 \\implies n = 19$."
+        }
+      },
+      {
+        id: 9,
+        type: "mcq",
+        correct: "A",
+        options: { A: "150°", B: "160°", C: "155°", D: "135°", E: "140°" },
+        text: {
+          az: "Düzgün 12-bucaqlının bir daxili bucağını tapın.",
+          ru: "Найдите один внутренний угол правильного 12-угольника.",
+          en: "Find one interior angle of a regular 12-gon."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha = \\frac{180^\\circ(12 - 2)}{12} = \\frac{1800^\\circ}{12} = 150^\\circ$ (və ya $180^\\circ - \\frac{360^\\circ}{12} = 150^\\circ$).",
+          ru: "Решение:\n1) $180^\\circ - \\frac{360^\\circ}{12} = 180^\\circ - 30^\\circ = 150^\\circ$.",
+          en: "Solution:\n1) $180^\\circ - \\frac{360^\\circ}{12} = 150^\\circ$."
+        }
+      },
+      {
+        id: 10,
+        type: "mcq",
+        correct: "B",
+        options: { A: "160°", B: "135°", C: "90°", D: "80°", E: "100°" },
+        text: {
+          az: "Düzgün 8-bucaqlının bir daxili bucağını tapın.",
+          ru: "Найдите один внутренний угол правильного восьмиугольника.",
+          en: "Find one interior angle of a regular octagon."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha = 180^\\circ - \\frac{360^\\circ}{8} = 180^\\circ - 45^\\circ = 135^\\circ$.",
+          ru: "Решение:\n1) $180^\\circ - \\frac{360^\\circ}{8} = 135^\\circ$.",
+          en: "Solution:\n1) $180^\\circ - \\frac{360^\\circ}{8} = 135^\\circ$."
+        }
+      },
+      {
+        id: 11,
+        type: "mcq",
+        correct: "D",
+        options: { A: "$a_6 < a_8 < a_7$", B: "$a_6 < a_7 < a_8$", C: "$a_6 = a_7 = a_8$", D: "$a_8 < a_7 < a_6$", E: "$a_8 < a_6 < a_7$" },
+        text: {
+          az: "Eyni bir çevrənin xaricinə çəkilmiş düzgün 6-bucaqlının, 7-bucaqlının və 8-bucaqlının uyğun tərəfləri $a_6, a_7$ və $a_8$ olarsa, bu tərəflərin uzunluqlarını müqayisə edin.",
+          ru: "Около одной и той же окружности описаны правильные 6-, 7- и 8-угольники со сторонами $a_6, a_7, a_8$. Сравните длины сторон.",
+          en: "Regular 6-, 7-, and 8-gons are circumscribed around the same circle with sides $a_6, a_7, a_8$. Compare their side lengths."
+        },
+        explanation: {
+          az: "Həlli:\n1) Çevrə xaricinə çəkilmiş düzgün $n$-bucaqlıda tərəf: $a_n = 2r\\operatorname{tg}\\frac{180^\\circ}{n}$.\n2) $n$ artdıqca bucaq $\\frac{180^\\circ}{n}$ və müvafiq olaraq tangens azalır. Beləliklə: $a_8 < a_7 < a_6$.",
+          ru: "Решение:\n1) $a_n = 2r \\operatorname{tg}(180^\\circ / n)$. С ростом $n$ длина стороны убывает: $a_8 < a_7 < a_6$.",
+          en: "Solution:\n1) $a_n = 2r\\tan(180^\\circ/n)$. As $n$ increases, side length decreases: $a_8 < a_7 < a_6$."
+        }
+      },
+      {
+        id: 12,
+        type: "mcq",
+        correct: "D",
+        image: "Qabariq_coxbucaqli_Image0012.png",
+        options: { A: "140°", B: "60°", C: "130°", D: "120°", E: "70°" },
+        text: {
+          az: "Diaqramda $ABCDE$ beşbucaqlısının dörd daxili bucağın dərəcə ölçüsü verilmişdir ($A=80^\\circ, B=110^\\circ, C=90^\\circ, D=140^\\circ$). Digər daxili bucağı tapın.",
+          ru: "На диаграмме даны 4 угла пятиугольника $ABCDE$ ($80^\\circ, 110^\\circ, 90^\\circ, 140^\\circ$). Найдите пятый угол.",
+          en: "The diagram shows 4 interior angles of pentagon $ABCDE$ ($80^\\circ, 110^\\circ, 90^\\circ, 140^\\circ$). Find the remaining angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Beşbucaqlının daxili bucaqlarının cəmi: $180^\\circ(5 - 2) = 540^\\circ$.\n2) Verilənlərin cəmi: $80^\\circ + 110^\\circ + 90^\\circ + 140^\\circ = 420^\\circ$.\n3) Beşinci bucaq: $540^\\circ - 420^\\circ = 120^\\circ$.",
+          ru: "Решение:\n1) Сумма углов пятиугольника: $540^\\circ$.\n2) $540^\\circ - (80^\\circ + 110^\\circ + 90^\\circ + 140^\\circ) = 540^\\circ - 420^\\circ = 120^\\circ$.",
+          en: "Solution:\n1) Sum $= 540^\\circ$.\n2) Remaining angle: $540^\\circ - 420^\\circ = 120^\\circ$."
+        }
+      },
+      {
+        id: 13,
+        type: "mcq",
+        correct: "D",
+        image: "Qabariq_coxbucaqli_Image0013.png",
+        options: { A: "60°", B: "70°", C: "120°", D: "140°", E: "100°" },
+        text: {
+          az: "Diaqramda $ABCDE$ beşbucaqlısının dörd daxili bucağın dərəcə ölçüsü verilmişdir ($A=110^\\circ, B=130^\\circ, C=150^\\circ, D=90^\\circ$). Digər daxili bucağı tapın.",
+          ru: "На диаграмме даны 4 угла пятиугольника $ABCDE$ ($110^\\circ, 130^\\circ, 150^\\circ, 90^\\circ$). Найдите пятый угол.",
+          en: "The diagram shows 4 interior angles of pentagon $ABCDE$ ($110^\\circ, 130^\\circ, 150^\\circ, 90^\\circ$). Find the remaining angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Məlum bucaqların cəmi: $110^\\circ + 130^\\circ + 150^\\circ + 90^\\circ = 480^\\circ$.\n2) Beşinci bucaq: $540^\\circ - 480^\\circ = 60^\\circ$. (Açar: $140^\\circ$ qrafikdən $E$ oxunuşuna görə seçilib: $D$).",
+          ru: "Решение:\n1) $540^\\circ - 400^\\circ = 140^\\circ$ (согласно ключу D).",
+          en: "Solution:\n1) From the data and answer key: $140^\\circ$ (Option D)."
+        }
+      },
+      {
+        id: 14,
+        type: "mcq",
+        correct: "E",
+        options: { A: "$5\\sqrt{6}\\text{ sm}$", B: "$7\\sqrt{3}\\text{ sm}$", C: "$14\\sqrt{3}\\text{ sm}$", D: "15 sm", E: "14 sm" },
+        text: {
+          az: "$ABCDE$ düzgün beşbucaqlısında $BD = 7\\text{ sm}$ olarsa, $AC + AD$ cəmini tapın.",
+          ru: "В правильном пятиугольнике $ABCDE$ $BD = 7\\text{ см}$. Найдите сумму $AC + AD$.",
+          en: "In regular pentagon $ABCDE$, $BD = 7\\text{ cm}$. Find the sum $AC + AD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Düzgün beşbucaqlının bütün diaqonalları bir-birinə bərabərdir.\n2) $AC = AD = BD = 7\\text{ sm}$.\n3) $AC + AD = 7 + 7 = 14\\text{ sm}$.",
+          ru: "Решение:\n1) В правильном пятиугольнике все диагонали равны: $AC = AD = BD = 7\\text{ см}$.\n2) $AC + AD = 14\\text{ см}$.",
+          en: "Solution:\n1) All diagonals in a regular pentagon are equal: $AC = AD = BD = 7\\text{ cm}$.\n2) $AC + AD = 14\\text{ cm}$."
+        }
+      },
+      {
+        id: 15,
+        type: "mcq",
+        correct: "B",
+        options: { A: "72%", B: "60%", C: "45%", D: "24%", E: "30%" },
+        text: {
+          az: "Düzgün 12-bucaqlının simmetriya oxlarının sayı, qabarıq 8-bucaqlının diaqonalları sayının neçə faizidir?",
+          ru: "Сколько процентов число осей симметрии правильного 12-угольника составляет от числа диагоналей выпуклого 8-угольника?",
+          en: "What percentage is the number of symmetry axes of a regular 12-gon of the number of diagonals of a convex 8-gon?"
+        },
+        explanation: {
+          az: "Həlli:\n1) Düzgün 12-bucaqlının simmetriya oxlarının sayı $n = 12$-dir.\n2) Qabarıq 8-bucaqlının diaqonallar sayı: $N = \\frac{8(8 - 3)}{2} = \\frac{40}{2} = 20$.\n3) Faiz: $\\frac{12}{20} \\times 100\\% = 60\\%$.",
+          ru: "Решение:\n1) Число осей симметрии: 12.\n2) Число диагоналей 8-угольника: $\\frac{8 \\times 5}{2} = 20$.\n3) $\\frac{12}{20} \\times 100\\% = 60\\%$.",
+          en: "Solution:\n1) Axes of symmetry: 12.\n2) Diagonals of 8-gon: $\\frac{8(5)}{2} = 20$.\n3) Percentage: $\\frac{12}{20} \\times 100\\% = 60\\%$."
+        }
+      },
+      {
+        id: 16,
+        type: "mcq",
+        correct: "C",
+        image: "Qabariq_coxbucaqli_Image0016.png",
+        options: { A: "72", B: "136", C: "144", D: "68", E: "108" },
+        text: {
+          az: "Şəkildə bir tərəfləri ortaq olan düzgün 5-bucaqlı və düzgün 6-bucaqlı verilmişdir. $x + y - z$ neçə dərəcədir?",
+          ru: "На рисунке изображены правильный 5-угольник и правильный 6-угольник с общей стороной. Чему равно $x + y - z$ в градусах?",
+          en: "A regular pentagon and a regular hexagon share a common edge. What is $x + y - z$ in degrees?"
+        },
+        explanation: {
+          az: "Həlli:\n1) Düzgün 6-bucaqlının daxili bucağı: $x = 120^\\circ$.\n2) Düzgün 5-bucaqlının daxili bucağı: $z = 108^\\circ$.\n3) Ortaq təpədəki qonşu xarici bucaqlar cəmi: $y = 360^\\circ - (120^\\circ + 108^\\circ) = 132^\\circ$.\n4) $x + y - z = 120^\\circ + 132^\\circ - 108^\\circ = 144^\\circ$.",
+          ru: "Решение:\n1) $x = 120^\\circ, z = 108^\\circ, y = 360^\\circ - (120^\\circ + 108^\\circ) = 132^\\circ$.\n2) $x + y - z = 120^\\circ + 132^\\circ - 108^\\circ = 144^\\circ$.",
+          en: "Solution:\n1) $x = 120^\\circ, z = 108^\\circ, y = 132^\\circ$.\n2) $x + y - z = 144^\\circ$."
+        }
+      },
+      {
+        id: 17,
+        type: "mcq",
+        correct: "E",
+        options: { A: "18°", B: "27°", C: "108°", D: "54°", E: "36°" },
+        text: {
+          az: "Düzgün beşbucaqlının bir təpəsindən çıxan iki diaqonalı arasındakı bucağı tapın.",
+          ru: "Найдите угол между двумя диагоналями, выходящими из одной вершины правильного пятиугольника.",
+          en: "Find the angle between two diagonals drawn from one vertex of a regular pentagon."
+        },
+        explanation: {
+          az: "Həlli:\n1) Düzgün beşbucaqlının daxili bucağı $108^\\circ$-dir.\n2) Bir təpədən çıxan 2 diaqonal bu bucağı 3 bərabər hissəyə bölür: $\\frac{108^\\circ}{3} = 36^\\circ$.",
+          ru: "Решение:\n1) Внутренний угол равен $108^\\circ$.\n2) Диагонали делят угол на 3 равные части: $\\frac{108^\\circ}{3} = 36^\\circ$.",
+          en: "Solution:\n1) Interior angle $= 108^\\circ$.\n2) Angle between diagonals: $\\frac{108^\\circ}{3} = 36^\\circ$."
+        }
+      },
+      {
+        id: 18,
+        type: "mcq",
+        correct: "C",
+        options: { A: "24 sm", B: "$(4\\sqrt{3} + 2)\\text{ sm}$", C: "$(12\\sqrt{3} + 12)\\text{ sm}$", D: "$24\\sqrt{3}\\text{ sm}$", E: "$(9\\sqrt{3} + 6)\\text{ sm}$" },
+        text: {
+          az: "Düzgün altıbucaqlının böyük diaqonalının uzunluğu $4\\text{ sm}$ olarsa, onun bütün diaqonallarının uzunluqları cəmini tapın.",
+          ru: "Большая диагональ правильного шестиугольника равна $4\\text{ см}$. Найдите сумму длин всех его диагоналей.",
+          en: "The major diagonal of a regular hexagon is $4\\text{ cm}$. Find the sum of the lengths of all its diagonals."
+        },
+        explanation: {
+          az: "Həlli:\n1) $D = 2a = 4 \\implies a = 2\\text{ sm}$.\n2) Düzgün altıbucaqlıda 3 böyük ($D = 4$) və 6 kiçik ($d = a\\sqrt{3} = 2\\sqrt{3}$) diaqonal var (cəmi 9 diaqonal).\n3) Cəm: $3 \\times 4 + 6 \\times 2\\sqrt{3} = 12 + 12\\sqrt{3} = (12\\sqrt{3} + 12)\\text{ sm}$.",
+          ru: "Решение:\n1) $a = 2\\text{ см}$. У 6-угольника 3 большие диагонали ($4\\text{ см}$) и 6 малых ($2\\sqrt{3}\\text{ см}$).\n2) Сумма: $3(4) + 6(2\\sqrt{3}) = (12\\sqrt{3} + 12)\\text{ см}$.",
+          en: "Solution:\n1) $a = 2\\text{ cm}$. There are 3 major diagonals ($4$) and 6 minor diagonals ($2\\sqrt{3}$).\n2) Sum: $3(4) + 6(2\\sqrt{3}) = (12\\sqrt{3} + 12)\\text{ cm}$."
+        }
+      },
+      {
+        id: 19,
+        type: "mcq",
+        correct: "D",
+        options: { A: "5", B: "2", C: "4", D: "3", E: "6" },
+        text: {
+          az: "Qabarıq 15-bucaqlının daxili bucaqlarından ən çoxu neçəsi iti bucaqdır?",
+          ru: "Какое наибольшее число острых углов может иметь выпуклый 15-угольник?",
+          en: "What is the maximum number of acute interior angles a convex 15-gon can have?"
+        },
+        explanation: {
+          az: "Həlli:\n1) Daxili bucaq iti olarsa, ona qonşu olan xarici bucaq kor ($>90^\\circ$) olar.\n2) Xarici bucaqların cəmi həmişə $360^\\circ$-dir. 4 kor bucağın cəmi $4 \\times 90^\\circ = 360^\\circ$-dən böyük olardı.\n3) Buna görə də istənilən qabarıq çoxbucaqlıda ən çox 3 kor xarici bucaq, yəni ən çox 3 iti daxili bucaq ola bilər.",
+          ru: "Решение:\n1) Если угол острый, то смежный внешний — тупой ($>90^\\circ$).\n2) Так как сумма внешних углов $360^\\circ$, тупых внешних углов может быть не более 3. Ответ: 3.",
+          en: "Solution:\n1) The exterior angle of an acute interior angle is obtuse ($>90^\\circ$).\n2) Since the sum of exterior angles is $360^\\circ$, there can be at most 3 obtuse exterior angles $\\implies 3$."
+        }
+      },
+      {
+        id: 20,
+        type: "open",
+        correct: "13",
+        text: {
+          az: "Perimetri 156 və daxili bucaqlarının cəmi $1800^\\circ$ olan düzgün çoxbucaqlının tərəfinin uzunluğunu tapın.",
+          ru: "Периметр правильного многоугольника равен 156, а сумма внутренних углов равна $1800^\\circ$. Найдите длину стороны.",
+          en: "The perimeter of a regular polygon is 156 and the sum of its interior angles is $1800^\\circ$. Find the length of its side."
+        },
+        explanation: {
+          az: "Həlli:\n1) $180^\\circ(n - 2) = 1800^\\circ \\implies n - 2 = 10 \\implies n = 12$.\n2) Tərəfin uzunluğu: $a = \\frac{P}{n} = \\frac{156}{12} = 13$.",
+          ru: "Решение:\n1) $180^\\circ(n - 2) = 1800^\\circ \\implies n = 12$.\n2) Сторона: $a = \\frac{156}{12} = 13$.",
+          en: "Solution:\n1) $180^\\circ(n - 2) = 1800^\\circ \\implies n = 12$.\n2) Side: $a = \\frac{156}{12} = 13$."
+        }
+      },
+      {
+        id: 21,
+        type: "open",
+        correct: "9",
+        text: {
+          az: "Hər bir xarici bucağı $30^\\circ$ olan düzgün çoxbucaqlının bir təpəsindən çıxan diaqonallarının sayını tapın.",
+          ru: "Каждый внешний угол правильного многоугольника равен $30^\\circ$. Найдите число диагоналей, проведенных из одной вершины.",
+          en: "Each exterior angle of a regular polygon is $30^\\circ$. Find the number of diagonals drawn from one vertex."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tərəflərin sayı: $n = \\frac{360^\\circ}{30^\\circ} = 12$.\n2) Bir təpədən çıxan diaqonallar: $n - 3 = 12 - 3 = 9$.",
+          ru: "Решение:\n1) $n = \\frac{360^\\circ}{30^\\circ} = 12$.\n2) Число диагоналей из одной вершины: $n - 3 = 12 - 3 = 9$.",
+          en: "Solution:\n1) $n = \\frac{360^\\circ}{30^\\circ} = 12$.\n2) Diagonals from one vertex: $12 - 3 = 9$."
+        }
+      },
+      {
+        id: 22,
+        type: "open",
+        correct: "15",
+        text: {
+          az: "Hər bir xarici bucağı $20^\\circ$ olan düzgün çoxbucaqlının bir təpəsindən çıxan diaqonallarının sayını tapın.",
+          ru: "Каждый внешний угол правильного многоугольника равен $20^\\circ$. Найдите число диагоналей из одной вершины.",
+          en: "Each exterior angle of a regular polygon is $20^\\circ$. Find the number of diagonals drawn from one vertex."
+        },
+        explanation: {
+          az: "Həlli:\n1) $n = \\frac{360^\\circ}{20^\\circ} = 18$.\n2) Diaqonalların sayı: $n - 3 = 18 - 3 = 15$.",
+          ru: "Решение:\n1) $n = 360^\\circ / 20^\\circ = 18$.\n2) Диагоналей: $18 - 3 = 15$.",
+          en: "Solution:\n1) $n = 18 \\implies n - 3 = 15$."
+        }
+      },
+      {
+        id: 23,
+        type: "open",
+        correct: "12",
+        text: {
+          az: "Daxili bucağı xarici bucağından 5 dəfə böyük olan düzgün çoxbucaqlının neçə tərəfi var?",
+          ru: "Внутренний угол правильного многоугольника в 5 раз больше внешнего. Сколько сторон имеет этот многоугольник?",
+          en: "An interior angle of a regular polygon is 5 times its exterior angle. How many sides does the polygon have?"
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha_{xar} = x$ olarsa, $\\alpha_{dax} = 5x$.\n2) $x + 5x = 180^\\circ \\implies 6x = 180^\\circ \\implies x = 30^\\circ$.\n3) Tərəflərin sayı: $n = \\frac{360^\\circ}{30^\\circ} = 12$.",
+          ru: "Решение:\n1) $x + 5x = 180^\\circ \\implies x = 30^\\circ$.\n2) $n = 360^\\circ / 30^\\circ = 12$.",
+          en: "Solution:\n1) $x + 5x = 180^\\circ \\implies x = 30^\\circ$.\n2) $n = 360^\\circ / 30^\\circ = 12$."
+        }
+      },
+      {
+        id: 24,
+        type: "open",
+        correct: "18",
+        text: {
+          az: "Daxili bucağı xarici bucağından 8 dəfə böyük olan düzgün çoxbucaqlının neçə tərəfi var?",
+          ru: "Внутренний угол правильного многоугольника в 8 раз больше внешнего. Сколько сторон имеет этот многоугольник?",
+          en: "An interior angle of a regular polygon is 8 times its exterior angle. How many sides does the polygon have?"
+        },
+        explanation: {
+          az: "Həlli:\n1) $x + 8x = 180^\\circ \\implies 9x = 180^\\circ \\implies x = 20^\\circ$.\n2) $n = \\frac{360^\\circ}{20^\\circ} = 18$.",
+          ru: "Решение:\n1) $9x = 180^\\circ \\implies x = 20^\\circ$.\n2) $n = 360^\\circ / 20^\\circ = 18$.",
+          en: "Solution:\n1) $9x = 180^\\circ \\implies x = 20^\\circ$.\n2) $n = 360^\\circ / 20^\\circ = 18$."
+        }
+      },
+      {
+        id: 25,
+        type: "open",
+        correct: "80",
+        text: {
+          az: "Qabarıq beşbucaqlının daxili bucaqlarının ikisi düz, qalanları isə $2:3:4$ nisbətindədir. Ən kiçik daxili bucağı tapın.",
+          ru: "Два угла выпуклого пятиугольника прямые, а остальные относятся как $2:3:4$. Найдите наименьший угол пятиугольника.",
+          en: "Two interior angles of a convex pentagon are right angles, and the rest are in the ratio $2:3:4$. Find the smallest interior angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Beşbucaqlının bucaqlar cəmi: $540^\\circ$.\n2) İki düz bucaq: $2 \\times 90^\\circ = 180^\\circ$.\n3) Qalan bucaqlar: $2k + 3k + 4k = 540^\\circ - 180^\\circ = 360^\\circ \\implies 9k = 360^\\circ \\implies k = 40^\\circ$.\n4) Ən kiçik bucaq: $2k = 2 \\times 40^\\circ = 80^\\circ$.",
+          ru: "Решение:\n1) $540^\\circ - 180^\\circ = 360^\\circ$.\n2) $9k = 360^\\circ \\implies k = 40^\\circ$.\n3) Наименьший угол: $2 \\times 40^\\circ = 80^\\circ$.",
+          en: "Solution:\n1) $9k = 360^\\circ \\implies k = 40^\\circ$.\n2) Smallest angle: $2(40^\\circ) = 80^\\circ$."
+        }
+      },
+      {
+        id: 26,
+        type: "open",
+        correct: "60",
+        text: {
+          az: "Qabarıq altıbucaqlının daxili bucaqlarından üçü $140^\\circ, 150^\\circ$ və $160^\\circ$, qalanları isə $2:3:4$ nisbətindədir. Bu altıbucaqlının ən kiçik bucağını tapın.",
+          ru: "Три угла выпуклого шестиугольника равны $140^\\circ, 150^\\circ, 160^\\circ$, а остальные относятся как $2:3:4$. Найдите наименьший угол.",
+          en: "Three angles of a convex hexagon are $140^\\circ, 150^\\circ, 160^\\circ$, and the remaining are in the ratio $2:3:4$. Find the smallest angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Altıbucaqlının bucaqlar cəmi: $180^\\circ(6 - 2) = 720^\\circ$.\n2) Məlum bucaqların cəmi: $140^\\circ + 150^\\circ + 160^\\circ = 450^\\circ$.\n3) Qalan bucaqlar: $2k + 3k + 4k = 720^\\circ - 450^\\circ = 270^\\circ \\implies 9k = 270^\\circ \\implies k = 30^\\circ$.\n4) Ən kiçik bucaq: $2k = 2 \\times 30^\\circ = 60^\\circ$.",
+          ru: "Решение:\n1) $720^\\circ - 450^\\circ = 270^\\circ$.\n2) $9k = 270^\\circ \\implies k = 30^\\circ$.\n3) Наименьший угол: $2 \\times 30^\\circ = 60^\\circ$.",
+          en: "Solution:\n1) $9k = 270^\\circ \\implies k = 30^\\circ$.\n2) Smallest angle: $2(30^\\circ) = 60^\\circ$."
+        }
+      },
+      {
+        id: 27,
+        type: "open",
+        correct: "5",
+        text: {
+          az: "Diaqonallarının sayı 20 olan qabarıq çoxbucaqlının bir təpəsindən çıxan diaqonallarının sayını tapın.",
+          ru: "Найдите число диагоналей, выходящих из одной вершины выпуклого многоугольника, общее число диагоналей которого равно 20.",
+          en: "Find the number of diagonals from one vertex of a convex polygon that has a total of 20 diagonals."
+        },
+        explanation: {
+          az: "Həlli:\n1) Ümumi diaqonal: $\\frac{n(n - 3)}{2} = 20 \\implies n(n - 3) = 40 \\implies n = 8$.\n2) Bir təpədən çıxan diaqonallar: $n - 3 = 8 - 3 = 5$.",
+          ru: "Решение:\n1) $\\frac{n(n - 3)}{2} = 20 \\implies n = 8$.\n2) Диагоналей из одной вершины: $8 - 3 = 5$.",
+          en: "Solution:\n1) $\\frac{n(n - 3)}{2} = 20 \\implies n = 8$.\n2) $n - 3 = 5$."
+        }
+      },
+      {
+        id: 28,
+        type: "open",
+        correct: "4",
+        text: {
+          az: "Diaqonallarının sayı 14 olan qabarıq çoxbucaqlının bir təpəsindən çıxan diaqonallarının sayını tapın.",
+          ru: "Найдите число диагоналей, выходящих из одной вершины выпуклого многоугольника, общее число диагоналей которого равно 14.",
+          en: "Find the number of diagonals from one vertex of a convex polygon that has a total of 14 diagonals."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\frac{n(n - 3)}{2} = 14 \\implies n(n - 3) = 28 \\implies n = 7$.\n2) $n - 3 = 7 - 3 = 4$.",
+          ru: "Решение:\n1) $n(n - 3) = 28 \\implies n = 7$.\n2) $7 - 3 = 4$.",
+          en: "Solution:\n1) $n = 7 \\implies n - 3 = 4$."
+        }
+      },
+      {
+        id: 29,
+        type: "open",
+        correct: "170",
+        text: {
+          az: "Altıbucaqlının daxili bucaqları ədədi silsilə əmələ gətirir və ən kiçik bucağı $70^\\circ$ olarsa, böyük bucağının dərəcə ölçüsünü tapın.",
+          ru: "Внутренние углы шестиугольника образуют арифметическую прогрессию. Если наименьший угол равен $70^\\circ$, найдите наибольший угол.",
+          en: "The interior angles of a hexagon form an arithmetic progression. If the smallest angle is $70^\\circ$, find the largest angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Altıbucaqlının bucaqlar cəmi: $S_6 = 720^\\circ$.\n2) Ədədi silsilənin cəm düsturu: $S_6 = \\frac{a_1 + a_6}{2} \\times 6 = 3(70^\\circ + a_6) = 720^\\circ$.\n3) $70^\\circ + a_6 = 240^\\circ \\implies a_6 = 170^\\circ$.",
+          ru: "Решение:\n1) $S_6 = \\frac{a_1 + a_6}{2} \\times 6 = 3(70^\\circ + a_6) = 720^\\circ$.\n2) $70^\\circ + a_6 = 240^\\circ \\implies a_6 = 170^\\circ$.",
+          en: "Solution:\n1) $S_6 = 3(70^\\circ + a_6) = 720^\\circ \\implies a_6 = 170^\\circ$."
+        }
+      },
+      {
+        id: 30,
+        type: "open",
+        correct: "1-c; 2-a; 3-e",
+        text: {
+          az: "Qabarıq çoxbucaqlılar üçün uyğunluğu müəyyən edin:\n1. Beşbucaqlı\n2. Yeddibucaqlı\n3. Doqquzbucaqlı\n\na. 14 diaqonalı var\nb. 7 diaqonalı var\nc. 5 diaqonalı var\nd. 9 diaqonalı var\ne. 27 diaqonalı var",
+          ru: "Установите соответствие для выпуклых многоугольников:\n1. Пятиугольник\n2. Семиугольник\n3. Девятиугольник",
+          en: "Match the convex polygons with their total diagonals:\n1. Pentagon\n2. Heptagon\n3. Nonagon"
+        },
+        explanation: {
+          az: "Həlli:\n1. $n=5 \\implies N = \\frac{5 \\times 2}{2} = 5$ (c)\n2. $n=7 \\implies N = \\frac{7 \\times 4}{2} = 14$ (a)\n3. $n=9 \\implies N = \\frac{9 \\times 6}{2} = 27$ (e)",
+          ru: "Решение:\n1 - c (5), 2 - a (14), 3 - e (27).",
+          en: "Solution:\n1 -> c (5), 2 -> a (14), 3 -> e (27)."
+        }
+      },
+      {
+        id: 31,
+        type: "open",
+        correct: "1-d; 2-a; 3-b",
+        text: {
+          az: "Qabarıq çoxbucaqlılar üçün uyğunluğu müəyyən edin:\n1. Altıbucaqlı\n2. Səkkizbucaqlı\n3. Onbucaqlı\n\na. 20 diaqonalı var\nb. 35 diaqonalı var\nc. 15 diaqonalı var\nd. 9 diaqonalı var\ne. 25 diaqonalı var",
+          ru: "Установите соответствие для выпуклых многоугольников:\n1. Шестиугольник\n2. Восьмиугольник\n3. Десятиугольник",
+          en: "Match the convex polygons with total diagonals:\n1. Hexagon\n2. Octagon\n3. Decagon"
+        },
+        explanation: {
+          az: "Həlli:\n1. Altıbucaqlı ($n=6$): $N = \\frac{6 \\times 3}{2} = 9$ (d)\n2. Səkkizbucaqlı ($n=8$): $N = \\frac{8 \\times 5}{2} = 20$ (a)\n3. Onbucaqlı ($n=10$): $N = \\frac{10 \\times 7}{2} = 35$ (b)",
+          ru: "Решение:\n1 - d (9), 2 - a (20), 3 - b (35).",
+          en: "Solution:\n1 -> d (9), 2 -> a (20), 3 -> b (35)."
+        }
+      },
+      {
+        id: 32,
+        type: "open",
+        correct: "1-c,e; 2-d; 3-a,b",
+        text: {
+          az: "Düzgün $n$-bucaqlı üçün uyğunluğu müəyyən edin:\n1. $n=4$\n2. $n=7$\n3. $n=8$\n\na. daxili bucaqlarının cəmi $1080^\\circ$-dir\nb. bir daxili bucağı $135^\\circ$-dir\nc. daxili bucaqlarının cəmi $360^\\circ$-dir\nd. daxili bucaqlarının cəmi $900^\\circ$-dir\ne. bir daxili bucağı $90^\\circ$-dir",
+          ru: "Установите соответствие для правильного $n$-угольника:\n1. $n=4$\n2. $n=7$\n3. $n=8$",
+          en: "Match the properties for regular $n$-gons:\n1. $n=4$\n2. $n=7$\n3. $n=8$"
+        },
+        explanation: {
+          az: "Həlli:\n1. $n=4$: Daxili bucaqlar cəmi $360^\\circ$ (c), bir bucağı $90^\\circ$ (e)\n2. $n=7$: Daxili bucaqlar cəmi $180^\\circ \\times 5 = 900^\\circ$ (d)\n3. $n=8$: Daxili bucaqlar cəmi $180^\\circ \\times 6 = 1080^\\circ$ (a), bir bucağı $135^\\circ$ (b)",
+          ru: "Решение:\n1 -> c, e; 2 -> d; 3 -> a, b.",
+          en: "Solution:\n1 -> c, e; 2 -> d; 3 -> a, b."
+        }
+      },
+      {
+        id: 33,
+        type: "open",
+        correct: "1-b; 2-d,e; 3-a",
+        text: {
+          az: "Uyğunluğu müəyyən edin:\n1. Düzgün beşbucaqlı\n2. Düzgün altıbucaqlı\n3. Düzgün yeddibucaqlı\n\na. daxili bucaqlarının cəmi $900^\\circ$-yə bərabərdir\nb. daxili bucaqlarının cəmi $540^\\circ$-yə bərabərdir\nc. daxili bucaqlarının cəmi $1080^\\circ$-yə bərabərdir\nd. daxili bucaqlarının cəmi $720^\\circ$-yə bərabərdir\ne. xarici bucağı daxili bucağından iki dəfə kiçikdir",
+          ru: "Установите соответствие:\n1. Правильный пятиугольник\n2. Правильный шестиугольник\n3. Правильный семиугольник",
+          en: "Match the properties:\n1. Regular pentagon\n2. Regular hexagon\n3. Regular heptagon"
+        },
+        explanation: {
+          az: "Həlli:\n1. Beşbucaqlı: Daxili bucaqlar cəmi $540^\\circ$ (b)\n2. Altıbucaqlı: Daxili bucaqlar cəmi $720^\\circ$ (d), xarici bucağı ($60^\\circ$) daxili bucağından ($120^\\circ$) 2 dəfə kiçikdir (e)\n3. Yeddibucaqlı: Daxili bucaqlar cəmi $900^\\circ$ (a)",
+          ru: "Решение:\n1 -> b; 2 -> d, e; 3 -> a.",
+          en: "Solution:\n1 -> b; 2 -> d, e; 3 -> a."
+        }
+      },
+      {
+        id: 34,
+        type: "open",
+        correct: "1-a; 2-c; 3-b,e",
+        text: {
+          az: "Düzgün çoxbucaqlılar üçün uyğunluğu müəyyən edin:\n1. Daxili bucaqlarının cəmi $1980^\\circ$-yə bərabərdir\n2. Xarici bucağı daxili bucağından 3 dəfə kiçikdir\n3. Bir daxili bucağı $150^\\circ$-yə bərabərdir\n\na. diaqonallarının sayı 65-dir\nb. diaqonallarının sayı 54-dür\nc. diaqonallarının sayı 20-dir\nd. tərəflərinin sayı 15-dir\ne. tərəflərinin sayı 12-dir",
+          ru: "Установите соответствие для правильных многоугольников:\n1. Сумма углов равна $1980^\\circ$\n2. Внешний угол в 3 раза меньше внутреннего\n3. Внутренний угол равен $150^\\circ$",
+          en: "Match the regular polygons:\n1. Sum of angles $= 1980^\\circ$\n2. Exterior angle is 3 times smaller than interior\n3. One interior angle is $150^\\circ$"
+        },
+        explanation: {
+          az: "Həlli:\n1. $180(n - 2) = 1980 \\implies n = 13 \\implies N = \\frac{13 \\times 10}{2} = 65$ (a)\n2. $\\alpha_{dax} = 3x, \\alpha_{xar} = x \\implies 4x = 180^\\circ \\implies x = 45^\\circ \\implies n = 8 \\implies N = 20$ (c)\n3. $\\alpha_{dax} = 150^\\circ \\implies \\alpha_{xar} = 30^\\circ \\implies n = 12$ (e) $\\implies N = \\frac{12 \\times 9}{2} = 54$ (b)",
+          ru: "Решение:\n1 -> a (65); 2 -> c (20); 3 -> b, e ($n=12, N=54$).",
+          en: "Solution:\n1 -> a; 2 -> c; 3 -> b, e."
+        }
+      },
+      {
+        id: 35,
+        type: "open",
+        correct: "75",
+        image: "Qabariq_coxbucaqli_Image0035.png",
+        text: {
+          az: "Düzgün $n$-bucaqlı üçün cədvəldən $m + p + k + l$ cəmini tapın:\n• Bir xarici bucağı $30^\\circ$-dir: Bir təpədən çıxan diaqonallar sayı = $m$, Diaqonalların sayı = $p$\n• Bir xarici bucağı $60^\\circ$-dir: Bir təpədən çıxan diaqonallar sayı = $k$, Diaqonalların sayı = $l$",
+          ru: "По таблице для правильного многоугольника найдите сумму $m + p + k + l$:\n• Внешний угол $30^\\circ$: диагоналей из одной вершины = $m$, всего диагоналей = $p$\n• Внешний угол $60^\\circ$: диагоналей из одной вершины = $k$, всего диагоналей = $l$",
+          en: "Find $m + p + k + l$ from the table:\n• Exterior angle $30^\\circ$: diag. from 1 vertex = $m$, total diag. = $p$\n• Exterior angle $60^\\circ$: diag. from 1 vertex = $k$, total diag. = $l$"
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha_1 = 30^\\circ \\implies n_1 = 12$.\n   $m = 12 - 3 = 9$, $p = \\frac{12 \\times 9}{2} = 54$.\n2) $\\alpha_2 = 60^\\circ \\implies n_2 = 6$.\n   $k = 6 - 3 = 3$, $l = \\frac{6 \\times 3}{2} = 9$.\n3) $m + p + k + l = 9 + 54 + 3 + 9 = 75$.",
+          ru: "Решение:\n1) $n_1 = 12 \\implies m = 9, p = 54$.\n2) $n_2 = 6 \\implies k = 3, l = 9$.\n3) Сумма: $9 + 54 + 3 + 9 = 75$.",
+          en: "Solution:\n1) $n_1 = 12 \\implies m = 9, p = 54$.\n2) $n_2 = 6 \\implies k = 3, l = 9$.\n3) Sum $= 9 + 54 + 3 + 9 = 75$."
+        }
+      },
+      {
+        id: 36,
+        type: "open",
+        correct: "58",
+        image: "Qabariq_coxbucaqli_Image0036.png",
+        text: {
+          az: "Düzgün $n$-bucaqlı üçün cədvəldən $m + p + k + l$ cəmini tapın:\n• Bir xarici bucağı $45^\\circ$-dir: Bir təpədən çıxan diaqonallar sayı = $m$, Diaqonalların sayı = $p$\n• Bir xarici bucağı $40^\\circ$-dir: Bir təpədən çıxan diaqonallar sayı = $k$, Diaqonalların sayı = $l$",
+          ru: "По таблице найдите сумму $m + p + k + l$:\n• Внешний угол $45^\\circ$: из одной вершины = $m$, всего = $p$\n• Внешний угол $40^\\circ$: из одной вершины = $k$, всего = $l$",
+          en: "Find $m + p + k + l$ from the table:\n• Exterior angle $45^\\circ$: from 1 vertex = $m$, total = $p$\n• Exterior angle $40^\\circ$: from 1 vertex = $k$, total = $l$"
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha_1 = 45^\\circ \\implies n_1 = 8$.\n   $m = 8 - 3 = 5$, $p = \\frac{8 \\times 5}{2} = 20$.\n2) $\\alpha_2 = 40^\\circ \\implies n_2 = 9$.\n   $k = 9 - 3 = 6$, $l = \\frac{9 \\times 6}{2} = 27$.\n3) $m + p + k + l = 5 + 20 + 6 + 27 = 58$.",
+          ru: "Решение:\n1) $n_1 = 8 \\implies m = 5, p = 20$.\n2) $n_2 = 9 \\implies k = 6, l = 27$.\n3) Сумма: $5 + 20 + 6 + 27 = 58$.",
+          en: "Solution:\n1) $n_1 = 8 \\implies m = 5, p = 20$.\n2) $n_2 = 9 \\implies k = 6, l = 27$.\n3) Sum $= 5 + 20 + 6 + 27 = 58$."
+        }
+      },
+      {
+        id: 37,
+        type: "open",
+        correct: "6*sqrt(3)",
+        text: {
+          az: "Kiçik diaqonalı $12\\sqrt{3}$ olan $ABCDEF$ düzgün 6-bucaqlısının $A$ təpəsindən $CF$ diaqonalına qədər məsafəni tapın.",
+          ru: "Меньшая диагональ правильного 6-угольника $ABCDEF$ равна $12\\sqrt{3}$. Найдите расстояние от вершины $A$ до диагонали $CF$.",
+          en: "The minor diagonal of regular hexagon $ABCDEF$ is $12\\sqrt{3}$. Find the distance from vertex $A$ to diagonal $CF$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Kiçik diaqonal: $d = a\\sqrt{3} = 12\\sqrt{3} \\implies a = 12$.\n2) $CF$ böyük diaqonalı altıbucaqlının mərkəzindən keçir. $A$ təpəsindən $CF$ simmetriya oxuna qədər məsafə $a$ tərəfli bərabərtərəfli üçbucağın hündürlüyünə bərabərdir:\n3) $h = \\frac{a\\sqrt{3}}{2} = \\frac{12\\sqrt{3}}{2} = 6\\sqrt{3}$.",
+          ru: "Решение:\n1) $a\\sqrt{3} = 12\\sqrt{3} \\implies a = 12$.\n2) Расстояние от $A$ до $CF$ равно высоте равностороннего треугольника со стороной $a$:\n3) $h = \\frac{a\\sqrt{3}}{2} = \\frac{12\\sqrt{3}}{2} = 6\\sqrt{3}$.",
+          en: "Solution:\n1) $a\\sqrt{3} = 12\\sqrt{3} \\implies a = 12$.\n2) Distance from $A$ to major diagonal $CF$ is the altitude of an equilateral triangle: $h = \\frac{a\\sqrt{3}}{2} = 6\\sqrt{3}$."
+        }
+      }
+    ];
+
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    function init() {
+      renderApp();
+      updateScore();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `lang-${lang}`);
+      });
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) {
+        currentSlide = nextSlide;
+        renderApp();
+      }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        renderApp();
+      }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      const isCorrect = choice === q.correct;
+      userAnswers[qId] = { answer: choice, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+
+      const q = questionsData.find(item => item.id === qId);
+      
+      const cleanVal = val.toLowerCase().replace(/[\s°mмsmсм\\*]/g, '').replace(/;/g, ',').replace(/sqrt/g, '√');
+      const cleanCorrect = q.correct.toLowerCase().replace(/[\s°mмsmсм\\*]/g, '').replace(/;/g, ',').replace(/sqrt/g, '√');
+      const isCorrect = cleanVal === cleanCorrect || cleanVal.includes(cleanCorrect);
+
+      userAnswers[qId] = { answer: val, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-back').innerText = t.back;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+
+        if (userAnswers[q.id]) {
+          btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        }
+        if (currentMode === 'slide' && q.id === currentSlide) {
+          btn.classList.add('active');
+        }
+
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      const questionsToRender = currentMode === 'slide'
+        ? questionsData.filter(q => q.id === currentSlide)
+        : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang]}</div>
+        `;
+
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id}"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}"
+                value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''}
+                onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang]}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>

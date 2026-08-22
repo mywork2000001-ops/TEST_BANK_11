@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paraleloqram, onun xassələri və əlamətləri</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      padding: 12px 20px;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topic-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #f1f5f9;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary);
+    }
+
+    .topic-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .btn-group button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .btn-group button.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .score-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .grid-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .grid-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .q-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 6px;
+    }
+
+    .q-btn {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .q-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .q-btn.active {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .q-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .q-btn.incorrect {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .q-type-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .q-image-container {
+      margin: 16px 0;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .q-image-container img {
+      max-width: 100%;
+      max-height: 230px;
+      height: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .option-btn.selected-correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46 !important;
+      font-weight: 700;
+    }
+
+    .option-btn.selected-incorrect {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b !important;
+      font-weight: 700;
+    }
+
+    .open-input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      max-width: 440px;
+    }
+
+    .open-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .open-input:focus {
+      border-color: var(--primary);
+    }
+
+    .submit-btn {
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .explanation-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-body {
+      white-space: pre-line;
+      color: #334155;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="topic-title-box">
+        <a href="../../index.html" class="back-btn">← <span id="ui-back">Əsas Menyu</span></a>
+        <div class="topic-title" id="ui-topic">Paraleloqram, onun xassələri və əlamətləri</div>
+      </div>
+      
+      <div class="controls">
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 38</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    const uiTranslations = {
+      az: {
+        topic: "Paraleloqram, onun xassələri və əlamətləri",
+        back: "Əsas Menyu",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual / Uyğunluq",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı daxil edin...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Параллелограмм, его свойства и признаки",
+        back: "Главное меню",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос / Соответствие",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Parallelogram, Its Properties and Criteria",
+        back: "Main Menu",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended / Matching",
+        check: "Submit",
+        enterAnswer: "Enter answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    const questionsData = [
+      {
+        id: 1,
+        type: "mcq",
+        correct: "B",
+        options: { A: "28 sm", B: "18 sm", C: "24 sm", D: "12 sm", E: "17 sm" },
+        text: {
+          az: "Paraleloqramın tərəfləri $5\\text{ sm}$ və $4\\text{ sm}$ olarsa, onun perimetrini tapın.",
+          ru: "Стороны параллелограмма равны $5\\text{ см}$ и $4\\text{ см}$. Найдите его периметр.",
+          en: "The sides of a parallelogram are $5\\text{ cm}$ and $4\\text{ cm}$. Find its perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P = 2(a + b) = 2(5 + 4) = 2 \\times 9 = 18\\text{ sm}$.",
+          ru: "Решение:\n1) $P = 2(a + b) = 2(5 + 4) = 18\\text{ см}$.",
+          en: "Solution:\n1) $P = 2(a + b) = 2(5 + 4) = 18\\text{ cm}$."
+        }
+      },
+      {
+        id: 2,
+        type: "mcq",
+        correct: "E",
+        options: { A: "24 m", B: "18 m", C: "20 m", D: "16 m", E: "28 m" },
+        text: {
+          az: "Paraleloqramın tərəfləri $8\\text{ m}$ və $6\\text{ m}$ olarsa, onun perimetrini tapın.",
+          ru: "Стороны параллелограмма равны $8\\text{ м}$ и $6\\text{ м}$. Найдите его периметр.",
+          en: "The sides of a parallelogram are $8\\text{ m}$ and $6\\text{ m}$. Find its perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P = 2(8 + 6) = 2 \\times 14 = 28\\text{ m}$.",
+          ru: "Решение:\n1) $P = 2(8 + 6) = 28\\text{ м}$.",
+          en: "Solution:\n1) $P = 2(8 + 6) = 28\\text{ m}$."
+        }
+      },
+      {
+        id: 3,
+        type: "mcq",
+        correct: "D",
+        image: "Paraleloqram_Image0003.png",
+        options: { A: "84°", B: "54°", C: "36°", D: "72°", E: "64°" },
+        text: {
+          az: "$ABCD$ paraleloqramında $\\angle A = 2x$ və $\\angle D = 3x$ olarsa, $C$ bucağını tapın.",
+          ru: "В параллелограмме $ABCD$ $\\angle A = 2x$ и $\\angle D = 3x$. Найдите угол $C$.",
+          en: "In parallelogram $ABCD$, $\\angle A = 2x$ and $\\angle D = 3x$. Find angle $C$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Bir tərəfə bitişik bucaqların cəmi $180^\\circ$-dir: $2x + 3x = 180^\\circ \\implies 5x = 180^\\circ \\implies x = 36^\\circ$.\n2) Paraleloqramın qarşı bucaqları bərabərdir: $\\angle C = \\angle A = 2x = 2 \\times 36^\\circ = 72^\\circ$.",
+          ru: "Решение:\n1) $2x + 3x = 180^\\circ \\implies x = 36^\\circ$.\n2) $\\angle C = \\angle A = 2x = 72^\\circ$.",
+          en: "Solution:\n1) $2x + 3x = 180^\\circ \\implies x = 36^\\circ$.\n2) $\\angle C = \\angle A = 2x = 72^\\circ$."
+        }
+      },
+      {
+        id: 4,
+        type: "mcq",
+        correct: "B",
+        image: "Paraleloqram_Image0004.png",
+        options: { A: "130°", B: "120°", C: "110°", D: "100°", E: "140°" },
+        text: {
+          az: "$ABCD$ paraleloqramında $\\angle A = 2x, \\angle B = 4x$ olarsa, $D$ bucağını tapın.",
+          ru: "В параллелограмме $ABCD$ $\\angle A = 2x, \\angle B = 4x$. Найдите угол $D$.",
+          en: "In parallelogram $ABCD$, $\\angle A = 2x, \\angle B = 4x$. Find angle $D$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $2x + 4x = 180^\\circ \\implies 6x = 180^\\circ \\implies x = 30^\\circ$.\n2) $\\angle D = \\angle B = 4x = 4 \\times 30^\\circ = 120^\\circ$.",
+          ru: "Решение:\n1) $6x = 180^\\circ \\implies x = 30^\\circ$.\n2) $\\angle D = \\angle B = 4x = 120^\\circ$.",
+          en: "Solution:\n1) $6x = 180^\\circ \\implies x = 30^\\circ$.\n2) $\\angle D = \\angle B = 4x = 120^\\circ$."
+        }
+      },
+      {
+        id: 5,
+        type: "mcq",
+        correct: "C",
+        options: { A: "50°; 130°; 50°; 130°", B: "65°; 115°; 65°; 115°", C: "75°; 105°; 75°; 105°", D: "80°; 100°; 80°; 100°", E: "60°; 120°; 60°; 120°" },
+        text: {
+          az: "Paraleloqramın bir tərəfinə bitişik bucaqları $5:7$ nisbətində olarsa, onun bucaqlarını tapın.",
+          ru: "Углы, прилежащие к одной стороне параллелограмма, относятся как $5:7$. Найдите углы параллелограмма.",
+          en: "Adjacent angles of a parallelogram are in the ratio $5:7$. Find the angles of the parallelogram."
+        },
+        explanation: {
+          az: "Həlli:\n1) $5k + 7k = 180^\\circ \\implies 12k = 180^\\circ \\implies k = 15^\\circ$.\n2) Bucaqlar: $5 \\times 15^\\circ = 75^\\circ$ və $7 \\times 15^\\circ = 105^\\circ$.\n3) Bütün bucaqlar: $75^\\circ, 105^\\circ, 75^\\circ, 105^\\circ$.",
+          ru: "Решение:\n1) $12k = 180^\\circ \\implies k = 15^\\circ$.\n2) Углы: $75^\\circ, 105^\\circ, 75^\\circ, 105^\\circ$.",
+          en: "Solution:\n1) $12k = 180^\\circ \\implies k = 15^\\circ$.\n2) Angles: $75^\\circ, 105^\\circ, 75^\\circ, 105^\\circ$."
+        }
+      },
+      {
+        id: 6,
+        type: "mcq",
+        correct: "A",
+        options: { A: "84°; 96°; 84°; 96°", B: "30°; 150°; 30°; 150°", C: "44°; 136°; 44°; 136°", D: "42°; 138°; 42°; 138°", E: "80°; 100°; 80°; 100°" },
+        text: {
+          az: "Paraleloqramın bir tərəfinə bitişik bucaqları $7:8$ nisbətində olarsa, onun bucaqlarını tapın.",
+          ru: "Углы, прилежащие к одной стороне параллелограмма, относятся как $7:8$. Найдите углы параллелограмма.",
+          en: "Adjacent angles of a parallelogram are in the ratio $7:8$. Find the angles of the parallelogram."
+        },
+        explanation: {
+          az: "Həlli:\n1) $7k + 8k = 180^\\circ \\implies 15k = 180^\\circ \\implies k = 12^\\circ$.\n2) Bucaqlar: $7 \\times 12^\\circ = 84^\\circ$ və $8 \\times 12^\\circ = 96^\\circ$.\n3) Cavab: $84^\\circ, 96^\\circ, 84^\\circ, 96^\\circ$.",
+          ru: "Решение:\n1) $15k = 180^\\circ \\implies k = 12^\\circ$.\n2) $84^\\circ, 96^\\circ, 84^\\circ, 96^\\circ$.",
+          en: "Solution:\n1) $15k = 180^\\circ \\implies k = 12^\\circ$.\n2) Angles: $84^\\circ, 96^\\circ, 84^\\circ, 96^\\circ$."
+        }
+      },
+      {
+        id: 7,
+        type: "mcq",
+        correct: "A",
+        image: "Paraleloqram_Image0007.png",
+        options: { A: "78°", B: "72°", C: "51°", D: "39°", E: "48°" },
+        text: {
+          az: "$ABCD$ paraleloqramında $\\angle 2 - \\angle 1 = 24^\\circ$ olarsa, $\\angle 1$-i tapın.",
+          ru: "В параллелограмме $ABCD$ $\\angle 2 - \\angle 1 = 24^\\circ$. Найдите $\\angle 1$.",
+          en: "In parallelogram $ABCD$, $\\angle 2 - \\angle 1 = 24^\\circ$. Find $\\angle 1$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle 1 + \\angle 2 = 180^\\circ$ və $\\angle 2 - \\angle 1 = 24^\\circ$.\n2) Tərəf-tərəfə çıxsaq: $2\\angle 1 = 180^\\circ - 24^\\circ = 156^\\circ \\implies \\angle 1 = 78^\\circ$.",
+          ru: "Решение:\n1) $\\angle 1 + \\angle 2 = 180^\\circ, \\angle 2 - \\angle 1 = 24^\\circ$.\n2) $2\\angle 1 = 156^\\circ \\implies \\angle 1 = 78^\\circ$.",
+          en: "Solution:\n1) $\\angle 1 + \\angle 2 = 180^\\circ, \\angle 2 - \\angle 1 = 24^\\circ$.\n2) $\\angle 1 = 78^\\circ$."
+        }
+      },
+      {
+        id: 8,
+        type: "mcq",
+        correct: "D",
+        image: "Paraleloqram_Image0008.png",
+        options: { A: "96°", B: "108°", C: "120°", D: "102°", E: "112°" },
+        text: {
+          az: "$ABCD$ paraleloqramında $\\angle 2 - \\angle 1 = 24^\\circ$ olarsa, $\\angle 2$-ni tapın.",
+          ru: "В параллелограмме $ABCD$ $\\angle 2 - \\angle 1 = 24^\\circ$. Найдите $\\angle 2$.",
+          en: "In parallelogram $ABCD$, $\\angle 2 - \\angle 1 = 24^\\circ$. Find $\\angle 2$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle 1 = 78^\\circ$.\n2) $\\angle 2 = 180^\\circ - 78^\\circ = 102^\\circ$.",
+          ru: "Решение:\n1) $\\angle 2 = 180^\\circ - 78^\\circ = 102^\\circ$.",
+          en: "Solution:\n1) $\\angle 2 = 180^\\circ - 78^\\circ = 102^\\circ$."
+        }
+      },
+      {
+        id: 9,
+        type: "mcq",
+        correct: "D",
+        options: { A: "$\\frac{a}{2}$", B: "$a$", C: "$3a$", D: "$2a$", E: "$4a$" },
+        text: {
+          az: "Bərabəryanlı üçbucağın yan tərəfi $a$-ya bərabərdir. Bu üçbucağın oturacağı üzərində götürülmüş nöqtədən yan tərəflərə paralel iki düz xətt çəkilmişdir. Alınan paraleloqramın perimetrini tapın.",
+          ru: "Боковая сторона равнобедренного треугольника равна $a$. Из точки на основании проведены прямые, параллельные боковым сторонам. Найдите периметр полученного параллелограмма.",
+          en: "The leg of an isosceles triangle is $a$. From a point on the base, lines are drawn parallel to the legs. Find the perimeter of the resulting parallelogram."
+        },
+        explanation: {
+          az: "Həlli:\n1) Paralleloqramın tərəfləri $x$ və $y$ olarsa, bərabəryanlı üçbucaq xassəsindən $x + y = a$ alınır.\n2) Paraleloqramın perimetri: $P = 2(x + y) = 2a$.",
+          ru: "Решение:\n1) Сумма смежных сторон параллелограмма равна боковой стороне треугольника: $x + y = a$.\n2) Периметр: $P = 2(x + y) = 2a$.",
+          en: "Solution:\n1) The sum of adjacent sides equals the leg: $x + y = a$.\n2) Perimeter: $P = 2(x + y) = 2a$."
+        }
+      },
+      {
+        id: 10,
+        type: "mcq",
+        correct: "A",
+        image: "Paraleloqram_Image0010.png",
+        options: { A: "3", B: "2", C: "1,5", D: "2,5", E: "$\\sqrt{3}+2$" },
+        text: {
+          az: "$ABCE$ paraleloqramdır, $AB = CD = 1$ və $\\angle AOD = 60^\\circ$. $CDE$ üçbucağının perimetrini tapın.",
+          ru: "$ABCE$ — параллелограмм, $AB = CD = 1$ и $\\angle AOD = 60^\\circ$. Найдите периметр треугольника $CDE$.",
+          en: "$ABCE$ is a parallelogram, $AB = CD = 1$, and $\\angle AOD = 60^\\circ$. Find the perimeter of $\\Delta CDE$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Paraleloqramın xassəsinə və $60^\\circ$-lik bucağa əsasən $\\triangle CDE$ tərəfi 1 olan bərabərtərəfli üçbucaqdır.\n2) $P_{\\triangle CDE} = 1 + 1 + 1 = 3$.",
+          ru: "Решение:\n1) $\\triangle CDE$ — равносторонний треугольник со стороной 1.\n2) $P = 1 + 1 + 1 = 3$.",
+          en: "Solution:\n1) $\\Delta CDE$ is equilateral with side length 1.\n2) Perimeter $= 3$."
+        }
+      },
+      {
+        id: 11,
+        type: "mcq",
+        correct: "B",
+        options: { A: "5", B: "8", C: "10", D: "6", E: "4" },
+        text: {
+          az: "$ABCD$ paraleloqramında $B$ təpəsindən $AD$ tərəfinə çəkilən hündürlük bu tərəfi yarıya bölür. $AB = 5$ və $P_{\\triangle ABD} = 18$ olarsa, $AD$-ni tapın.",
+          ru: "В параллелограмме $ABCD$ высота из $B$ к $AD$ делит $AD$ пополам. $AB = 5$ и $P_{\\triangle ABD} = 18$. Найдите $AD$.",
+          en: "In parallelogram $ABCD$, the altitude from $B$ to $AD$ bisects $AD$. $AB = 5$ and $P_{\\triangle ABD} = 18$. Find $AD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Hündürlük tərəfi yarıya böldüyündən $\\triangle ABD$ bərabəryanlıdır: $BD = AB = 5$.\n2) $P_{\\triangle ABD} = AB + BD + AD = 5 + 5 + AD = 18 \\implies AD = 8$.",
+          ru: "Решение:\n1) Так как высота является медианой, $BD = AB = 5$.\n2) $5 + 5 + AD = 18 \\implies AD = 8$.",
+          en: "Solution:\n1) Since the altitude bisects $AD$, $BD = AB = 5$.\n2) $5 + 5 + AD = 18 \\implies AD = 8$."
+        }
+      },
+      {
+        id: 12,
+        type: "mcq",
+        correct: "A",
+        options: { A: "14 sm; 8 sm", B: "16 sm; 6 sm", C: "15 sm; 9 sm", D: "12 sm; 10 sm", E: "13 sm; 9 sm" },
+        text: {
+          az: "Perimetri $44\\text{ sm}$ olan paraleloqram diaqonalları ilə 4 üçbucağa bölünmüşdür. İki qonşu üçbucağın perimetrləri fərqi $6\\text{ sm}$-ə bərabərdir. Paraleloqramın tərəflərinin uzunluqlarını tapın.",
+          ru: "Периметр параллелограмма равен $44\\text{ см}$. Разность периметров двух соседних треугольников, образованных диагоналями, равна $6\\text{ см}$. Найдите стороны параллелограмма.",
+          en: "The perimeter of a parallelogram is $44\\text{ см}$. The difference between the perimeters of two adjacent triangles formed by diagonals is $6\\text{ cm}$. Find the sides."
+        },
+        explanation: {
+          az: "Həlli:\n1) $a + b = \\frac{44}{2} = 22\\text{ sm}$.\n2) Qonşu üçbucaqların diaqonal yarıları ortaq olduğundan perimetrlər fərqi tərəflər fərqinə bərabərdir: $a - b = 6\\text{ sm}$.\n3) $a = \\frac{22 + 6}{2} = 14\\text{ sm}$, $b = 22 - 14 = 8\\text{ sm}$.",
+          ru: "Решение:\n1) $a + b = 22, a - b = 6$.\n2) $a = 14\\text{ см}, b = 8\\text{ см}$.",
+          en: "Solution:\n1) $a + b = 22, a - b = 6$.\n2) $a = 14\\text{ cm}, b = 8\\text{ cm}$."
+        }
+      },
+      {
+        id: 13,
+        type: "mcq",
+        correct: "D",
+        options: { A: "49 sm", B: "70 sm", C: "42 sm", D: "56 sm", E: "63 sm" },
+        text: {
+          az: "Perimetri $14\\text{ sm}$ olan paraleloqramın xarici oblastında olmaqla onun tərəfləri üzərində qurulmuş rombların perimetrləri cəmini tapın.",
+          ru: "Периметр параллелограмма равен $14\\text{ см}$. Найдите сумму периметров ромбов, построенных на его сторонах во внешнюю область.",
+          en: "The perimeter of a parallelogram is $14\\text{ cm}$. Find the sum of perimeters of rhombuses constructed externally on its sides."
+        },
+        explanation: {
+          az: "Həlli:\n1) Paraleloqramın 4 tərəfi var: $a, b, a, b$ və $2(a + b) = 14\\text{ sm}$.\n2) Hər tərəf üzərində qurulmuş rombun perimetri $4 \\times \\text{tərəf}$-dir.\n3) Cəm: $4a + 4b + 4a + 4b = 4 \\times (2a + 2b) = 4 \\times 14 = 56\\text{ sm}$.",
+          ru: "Решение:\n1) Сумма периметров 4 ромбов $= 4 \\times P_{\\text{пар}} = 4 \\times 14 = 56\\text{ см}$.",
+          en: "Solution:\n1) Total perimeter $= 4 \\times P = 4 \\times 14 = 56\\text{ cm}$."
+        }
+      },
+      {
+        id: 14,
+        type: "mcq",
+        correct: "E",
+        options: { A: "6 sm", B: "7 sm", C: "8 sm", D: "4 sm", E: "5 sm" },
+        text: {
+          az: "Diaqonallarından biri $7\\text{ sm}$ olan $ABCD$ dördbucaqlısının tərəflərinin orta nöqtələrini ardıcıl birləşdirməklə alınan dördbucaqlının perimetri $12\\text{ sm}$ olarsa, $ABCD$-nin digər diaqonalının uzunluğunu tapın.",
+          ru: "Отрезки, соединяющие середины сторон четырехугольника $ABCD$, образуют четырехугольник с периметром $12\\text{ см}$. Одна из диагоналей $ABCD$ равна $7\\text{ см}$. Найдите вторую диагональ.",
+          en: "The perimeter of the Varignon parallelogram of quadrilateral $ABCD$ is $12\\text{ cm}$. One diagonal is $7\\text{ cm}$. Find the other diagonal."
+        },
+        explanation: {
+          az: "Həlli:\n1) Orta nöqtələrin əmələ gətirdiyi paraleloqramın perimetri diaqonalların cəminə bərabərdir: $P = d_1 + d_2$.\n2) $12 = 7 + d_2 \\implies d_2 = 5\\text{ sm}$.",
+          ru: "Решение:\n1) Периметр параллелограмма Вариньона: $P = d_1 + d_2$.\n2) $12 = 7 + d_2 \\implies d_2 = 5\\text{ см}$.",
+          en: "Solution:\n1) Perimeter of Varignon parallelogram: $P = d_1 + d_2$.\n2) $d_2 = 12 - 7 = 5\\text{ cm}$."
+        }
+      },
+      {
+        id: 15,
+        type: "mcq",
+        correct: "D",
+        options: { A: "$6\\frac{2}{3}$", B: "3", C: "5", D: "4", E: "6" },
+        text: {
+          az: "$ABCD$ paraleloqramında $A$ və $D$ bucaqlarının tənbölənlərinin kəsişmə nöqtəsi paraleloqramın daxilində yerləşir. $AB = 12$ və $AD = 20$ olarsa, bu tənbölənlərin qarşı tərəf ilə kəsişmə nöqtələri arasındakı məsafəni tapın.",
+          ru: "В параллелограмме $ABCD$ биссектрисы углов $A$ и $D$ пересекают сторону $BC$ в точках $M$ и $N$. $AB = 12, AD = 20$. Найдите расстояние $MN$.",
+          en: "In parallelogram $ABCD$, bisectors of angles $A$ and $D$ intersect side $BC$ at points $M$ and $N$. $AB = 12, AD = 20$. Find $MN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $A$-dan çəkilən tənbölən $BM = AB = 12$ ayırır. $D$-dən çəkilən tənbölən $CN = CD = 12$ ayırır.\n2) $BC = AD = 20$.\n3) Kəsişmə parçası: $MN = BM + CN - BC = 12 + 12 - 20 = 4$.",
+          ru: "Решение:\n1) $BM = 12, CN = 12, BC = 20$.\n2) $MN = 12 + 12 - 20 = 4$.",
+          en: "Solution:\n1) $BM = 12, CN = 12, BC = 20$.\n2) $MN = 12 + 12 - 20 = 4$."
+        }
+      },
+      {
+        id: 16,
+        type: "mcq",
+        correct: "B",
+        image: "Paraleloqram_Image0016.png",
+        options: { A: "$\\frac{7}{9}$", B: "$\\frac{\\sqrt{7}}{3}$", C: "$\\frac{3}{\\sqrt{7}}$", D: "$\\frac{9}{7}$", E: "1" },
+        text: {
+          az: "$ABCD$ paraleloqramında $AC = 2AD$ və $AB = \\frac{3}{2}BD$ olarsa, $\\frac{AD}{AB}$ nisbətini tapın.",
+          ru: "В параллелограмме $ABCD$ $AC = 2AD$ и $AB = \\frac{3}{2}BD$. Найдите отношение $\\frac{AD}{AB}$.",
+          en: "In parallelogram $ABCD$, $AC = 2AD$ and $AB = \\frac{3}{2}BD$. Find the ratio $\\frac{AD}{AB}$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Paraleloqramın diaqonalları ilə tərəfləri arasındakı düstur: $d_1^2 + d_2^2 = 2(a^2 + b^2)$.\n2) Əvəzetmələri apardıqda: $\\frac{AD}{AB} = \\frac{\\sqrt{7}}{3}$.",
+          ru: "Решение:\n1) $d_1^2 + d_2^2 = 2(a^2 + b^2)$.\n2) После подстановки получаем отношение $\\frac{\\sqrt{7}}{3}$.",
+          en: "Solution:\n1) Using $d_1^2 + d_2^2 = 2(a^2 + b^2)$, we get $\\frac{AD}{AB} = \\frac{\\sqrt{7}}{3}$."
+        }
+      },
+      {
+        id: 17,
+        type: "mcq",
+        correct: "A",
+        image: "Paraleloqram_Image0017.png",
+        options: { A: "$\\sqrt{2}$", B: "$\\frac{1}{2}$", C: "$\\sqrt{3}$", D: "2", E: "3" },
+        text: {
+          az: "$ABCD$ paraleloqramında $BC = \\frac{1}{2}AC$ və $AB = BD$ olarsa, $\\frac{AB}{BC}$ nisbətini tapın.",
+          ru: "В параллелограмме $ABCD$ $BC = \\frac{1}{2}AC$ и $AB = BD$. Найдите отношение $\\frac{AB}{BC}$.",
+          en: "In parallelogram $ABCD$, $BC = \\frac{1}{2}AC$ and $AB = BD$. Find the ratio $\\frac{AB}{BC}$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AC = 2BC = 2b$, $BD = AB = a$.\n2) $d_1^2 + d_2^2 = 2(a^2 + b^2) \\implies (2b)^2 + a^2 = 2a^2 + 2b^2 \\implies 4b^2 - 2b^2 = a^2 \\implies a^2 = 2b^2$.\n3) $\\frac{a}{b} = \\sqrt{2}$.",
+          ru: "Решение:\n1) $4b^2 + a^2 = 2a^2 + 2b^2 \\implies a^2 = 2b^2$.\n2) $\\frac{a}{b} = \\sqrt{2}$.",
+          en: "Solution:\n1) $4b^2 + a^2 = 2a^2 + 2b^2 \\implies a^2 = 2b^2 \\implies \\frac{a}{b} = \\sqrt{2}$."
+        }
+      },
+      {
+        id: 18,
+        type: "mcq",
+        correct: "C",
+        options: { A: "1,6 sm", B: "2,4 sm", C: "0,8 sm", D: "3,2 sm", E: "4 sm" },
+        text: {
+          az: "Tərəfləri $8\\text{ sm}$ və $10\\text{ sm}$ olan paraleloqramın kiçik diaqonalı $7,2\\text{ sm}$-dir. Paraleloqramın iti bucaqlarının tənbölənlərinin bu diaqonalla kəsişmə nöqtələri arasındakı məsafəni tapın.",
+          ru: "Стороны параллелограмма равны $8\\text{ см}$ и $10\\text{ см}$, меньшая диагональ — $7,2\\text{ см}$. Найдите расстояние между точками пересечения биссектрис острых углов с этой диагональю.",
+          en: "The sides of a parallelogram are $8\\text{ cm}$ and $10\\text{ cm}$, and the minor diagonal is $7.2\\text{ cm}$. Find the distance between the intersection points of the acute angle bisectors with this diagonal."
+        },
+        explanation: {
+          az: "Həlli:\n1) Üçbucaqda tənbölən xassəsinə görə diaqonal hissələri: $x = \\frac{8}{8+10} \\times 7,2 = \\frac{8}{18} \\times 7,2 = 3,2\\text{ sm}$.\n2) Digər təpədən eyni məsafə: $3,2\\text{ sm}$.\n3) İki nöqtə arasındakı məsafə: $7,2 - 2(3,2) = 7,2 - 6,4 = 0,8\\text{ sm}$.",
+          ru: "Решение:\n1) Биссектриса делит диагональ в отношении $8:10$. Отрезок $= \\frac{8}{18} \\times 7,2 = 3,2\\text{ см}$.\n2) Расстояние между точками: $7,2 - 2 \\times 3,2 = 0,8\\text{ см}$.",
+          en: "Solution:\n1) Segment from vertex $= \\frac{8}{18}(7.2) = 3.2\\text{ cm}$.\n2) Distance between points $= 7.2 - 2(3.2) = 0.8\\text{ cm}$."
+        }
+      },
+      {
+        id: 19,
+        type: "open",
+        correct: "42",
+        image: "Paraleloqram_Image0019.png",
+        text: {
+          az: "$ABCD$ paraleloqramında $DE \\perp BC, \\angle A = 60^\\circ, AB = 12$ və $BE = 3$ olarsa, paraleloqramın perimetrini tapın.",
+          ru: "В параллелограмме $ABCD$ $DE \\perp BC, \\angle A = 60^\\circ, AB = 12, BE = 3$. Найдите периметр.",
+          en: "In parallelogram $ABCD$, $DE \\perp BC, \\angle A = 60^\\circ, AB = 12, BE = 3$. Find the perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $CD = AB = 12$. $\\angle C = \\angle A = 60^\\circ$.\n2) Düzbucaqlı $\\triangle DEC$-də $30^\\circ$-li bucaq qarşısındakı katet: $EC = \\frac{CD}{2} = 6$.\n3) $BC = BE + EC = 3 + 6 = 9$.\n4) $P = 2(AB + BC) = 2(12 + 9) = 42$.",
+          ru: "Решение:\n1) $CD = 12, EC = 12/2 = 6$.\n2) $BC = 3 + 6 = 9$.\n3) $P = 2(12 + 9) = 42$.",
+          en: "Solution:\n1) $CD = 12, EC = 6 \\implies BC = 9$.\n2) $P = 2(12 + 9) = 42$."
+        }
+      },
+      {
+        id: 20,
+        type: "open",
+        correct: "64",
+        image: "Paraleloqram_Image0020.png",
+        text: {
+          az: "$ABCD$ paraleloqramında $DE \\perp BC, \\angle A = 60^\\circ, AB = 18$ və $BE = 5$ olarsa, paraleloqramın perimetrini tapın.",
+          ru: "В параллелограмме $ABCD$ $DE \\perp BC, \\angle A = 60^\\circ, AB = 18, BE = 5$. Найдите периметр.",
+          en: "In parallelogram $ABCD$, $DE \\perp BC, \\angle A = 60^\\circ, AB = 18, BE = 5$. Find the perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $CD = 18 \\implies EC = \\frac{18}{2} = 9$.\n2) $BC = 5 + 9 = 14$.\n3) $P = 2(18 + 14) = 64$.",
+          ru: "Решение:\n1) $EC = 9 \\implies BC = 14$.\n2) $P = 2(18 + 14) = 64$.",
+          en: "Solution:\n1) $EC = 9 \\implies BC = 14$.\n2) $P = 2(18 + 14) = 64$."
+        }
+      },
+      {
+        id: 21,
+        type: "open",
+        correct: "20",
+        image: "Paraleloqram_Image0021.png",
+        text: {
+          az: "$P_{\\triangle ABN} = 10, \\angle NAC = \\angle NCA$ olarsa, $ABCD$ paraleloqramının perimetrini tapın.",
+          ru: "$P_{\\triangle ABN} = 10, \\angle NAC = \\angle NCA$. Найдите периметр параллелограмма $ABCD$.",
+          en: "$P_{\\triangle ABN} = 10, \\angle NAC = \\angle NCA$. Find the perimeter of parallelogram $ABCD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle NAC = \\angle NCA \\implies AN = NC$.\n2) $P_{\\triangle ABN} = AB + BN + AN = AB + BN + NC = AB + BC = 10$.\n3) $P_{ABCD} = 2(AB + BC) = 2 \\times 10 = 20$.",
+          ru: "Решение:\n1) $AN = NC \\implies AB + BC = 10$.\n2) $P_{ABCD} = 2 \\times 10 = 20$.",
+          en: "Solution:\n1) $AN = NC \\implies AB + BC = 10$.\n2) $P = 2(10) = 20$."
+        }
+      },
+      {
+        id: 22,
+        type: "open",
+        correct: "32",
+        image: "Paraleloqram_Image0022.png",
+        text: {
+          az: "$ABCD$ paraleloqramı verilmişdir və $ABM$ üçbucağının perimetri 16-dır. $\\angle MAC = \\angle MCA$ olarsa, $ABCD$ paraleloqramının perimetrini tapın.",
+          ru: "Периметр $\\triangle ABM$ равен 16, $\\angle MAC = \\angle MCA$. Найдите периметр параллелограмма $ABCD$.",
+          en: "The perimeter of $\\triangle ABM$ is 16, $\\angle MAC = \\angle MCA$. Find the perimeter of parallelogram $ABCD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AM = MC \\implies AB + BC = 16$.\n2) $P = 2 \\times 16 = 32$.",
+          ru: "Решение:\n1) $AB + BC = 16 \\implies P = 32$.",
+          en: "Solution:\n1) $AB + BC = 16 \\implies P = 32$."
+        }
+      },
+      {
+        id: 23,
+        type: "open",
+        correct: "5",
+        text: {
+          az: "$ABCD$ paraleloqramında $AC$ diaqonalının uzunluğu 10 olub, $AD$ tərəfi ilə $30^\\circ$-li bucaq əmələ gətirir. $B$ təpəsindən $AD$-yə qədər olan məsafəni tapın.",
+          ru: "Диагональ $AC = 10$ образует со стороной $AD$ угол $30^\\circ$. Найдите расстояние от вершины $B$ до прямой $AD$.",
+          en: "Diagonal $AC = 10$ makes a $30^\\circ$ angle with $AD$. Find the distance from vertex $B$ to line $AD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $B$-dən $AD$-yə qədər məsafə paraleloqramın hündürlüyüdür ($h$).\n2) $C$ nöqtəsindən $AD$-yə endirilən perpendikulyar da $h$-a bərabərdir.\n3) $h = AC \\cdot \\sin 30^\\circ = 10 \\times \\frac{1}{2} = 5$.",
+          ru: "Решение:\n1) Высота $h = AC \\sin 30^\\circ = 10 \\times 0,5 = 5$.",
+          en: "Solution:\n1) Height $h = AC \\sin 30^\\circ = 5$."
+        }
+      },
+      {
+        id: 24,
+        type: "open",
+        correct: "4",
+        text: {
+          az: "$ABCD$ paraleloqramında $BD$ diaqonalının uzunluğu 8 olub, $AD$ tərəfi ilə $30^\\circ$-li bucaq əmələ gətirir. $C$ təpəsindən $AD$-yə qədər olan məsafəni tapın.",
+          ru: "Диагональ $BD = 8$ образует со стороной $AD$ угол $30^\\circ$. Найдите расстояние от $C$ до $AD$.",
+          en: "Diagonal $BD = 8$ makes a $30^\\circ$ angle with $AD$. Find the distance from $C$ to $AD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $h = BD \\cdot \\sin 30^\\circ = 8 \\times \\frac{1}{2} = 4$.",
+          ru: "Решение:\n1) $h = 8 \\sin 30^\\circ = 4$.",
+          en: "Solution:\n1) $h = 8 \\sin 30^\\circ = 4$."
+        }
+      },
+      {
+        id: 25,
+        type: "open",
+        correct: "30",
+        image: "Paraleloqram_Image0025.png",
+        text: {
+          az: "$ABCD$ paraleloqramının $B$ təpəsindən $AD$ və $CD$ tərəflərinə uyğun olaraq $BN$ və $BM$ hündürlükləri çəkilmişdir. $\\angle BAD = 30^\\circ$ olarsa, $\\angle MBN$-in dərəcə ölçüsünü tapın.",
+          ru: "Высоты $BN$ и $BM$ проведены из вершины $B$. $\\angle BAD = 30^\\circ$. Найдите $\\angle MBN$.",
+          en: "Altitudes $BN$ and $BM$ are drawn from vertex $B$. $\\angle BAD = 30^\\circ$. Find $\\angle MBN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Kor bucaq təpəsindən çəkilən hündürlüklər arasındakı bucaq paraleloqramın iti bucağına bərabərdir:\n2) $\\angle MBN = \\angle BAD = 30^\\circ$.",
+          ru: "Решение:\n1) Угол между высотами из вершины тупого угла равен острому углу параллелограмма: $30^\\circ$.",
+          en: "Solution:\n1) The angle between altitudes from an obtuse vertex equals the acute angle: $30^\\circ$."
+        }
+      },
+      {
+        id: 26,
+        type: "open",
+        correct: "60",
+        image: "Paraleloqram_Image0026.png",
+        text: {
+          az: "$ABCD$ paraleloqramının $B$ təpəsindən $AD$ və $CD$ tərəflərinə uyğun olaraq $BN$ və $BM$ hündürlükləri çəkilmişdir. $\\angle BAD = 60^\\circ$ olarsa, $\\angle MBN$-in dərəcə ölçüsünü tapın.",
+          ru: "Высоты $BN$ и $BM$ проведены из $B$. $\\angle BAD = 60^\\circ$. Найдите $\\angle MBN$.",
+          en: "Altitudes $BN$ and $BM$ are drawn from $B$. $\\angle BAD = 60^\\circ$. Find $\\angle MBN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\angle MBN = \\angle BAD = 60^\\circ$.",
+          ru: "Решение:\n1) $\\angle MBN = 60^\\circ$.",
+          en: "Solution:\n1) $\\angle MBN = 60^\\circ$."
+        }
+      },
+      {
+        id: 27,
+        type: "open",
+        correct: "18",
+        image: "Paraleloqram_Image0027.png",
+        text: {
+          az: "$ABCD$ paraleloqramında $CN = ND, AC$ və $BD$ diaqonallar, $MC = 6$ olarsa, $AC$-ni tapın.",
+          ru: "В параллелограмме $ABCD$ $CN = ND, MC = 6$. Найдите $AC$.",
+          en: "In parallelogram $ABCD$, $CN = ND, MC = 6$. Find $AC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $M$ nöqtəsi $\\triangle BCD$-nin medianlarının kəsişmə nöqtəsidir (ağırlıq mərkəzi).\n2) $OC = 3 \\times MC / 2 = 9 \\implies AC = 2 \\times OC = 18$. (Və ya $MC = \\frac{1}{3}AC \\implies AC = 3 \\times 6 = 18$).",
+          ru: "Решение:\n1) $M$ — центроид $\\triangle BCD \\implies AC = 3 \\times MC = 18$.",
+          en: "Solution:\n1) $M$ is the centroid of $\\triangle BCD \\implies AC = 3 \\times 6 = 18$."
+        }
+      },
+      {
+        id: 28,
+        type: "open",
+        correct: "36",
+        image: "Paraleloqram_Image0028.png",
+        text: {
+          az: "$ABCD$ paraleloqramında $CN = ND, AC$ və $BD$ diaqonallar, $OM = 6$ olarsa, $AC$-ni tapın.",
+          ru: "В параллелограмме $ABCD$ $CN = ND, OM = 6$. Найдите $AC$.",
+          en: "In parallelogram $ABCD$, $CN = ND, OM = 6$. Find $AC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $M$ nöqtəsi medianı $2:1$ nisbətində bölür: $OM = \\frac{1}{3}OC = 6 \\implies OC = 18$.\n2) $AC = 2 \\times OC = 36$.",
+          ru: "Решение:\n1) $OC = 3 \\times OM = 18 \\implies AC = 36$.",
+          en: "Solution:\n1) $OC = 3(6) = 18 \\implies AC = 36$."
+        }
+      },
+      {
+        id: 29,
+        type: "open",
+        correct: "6",
+        image: "Paraleloqram_Image0029.png",
+        text: {
+          az: "$ABCD$ paraleloqramında $\\angle ABK = \\angle KBD, AB = 6AK$ və $P_{\\triangle ABD} = 42$ olarsa, $BC$-ni tapın.",
+          ru: "В параллелограмме $ABCD$ $\\angle ABK = \\angle KBD, AB = 6AK$ и $P_{\\triangle ABD} = 42$. Найдите $BC$.",
+          en: "In parallelogram $ABCD$, $\\angle ABK = \\angle KBD, AB = 6AK$, and $P_{\\triangle ABD} = 42$. Find $BC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $BK$ tənböləndir $\\implies \\frac{AB}{BD} = \\frac{AK}{KD} = \\frac{1}{6} \\implies BD = 6AB$.\n2) Həndəsi əlaqələrdən $AD = BC = 6$ tapılır.",
+          ru: "Решение:\n1) $BC = AD = 6$.",
+          en: "Solution:\n1) $BC = 6$."
+        }
+      },
+      {
+        id: 30,
+        type: "open",
+        correct: "48",
+        image: "Paraleloqram_Image0030.png",
+        text: {
+          az: "$ABCD$ paraleloqramında $\\angle ABK = \\angle KBD, BD = 7KD$ və $BC = 6$ olarsa, $P_{\\triangle ABD}$-ni tapın.",
+          ru: "В параллелограмме $ABCD$ $\\angle ABK = \\angle KBD, BD = 7KD, BC = 6$. Найдите $P_{\\triangle ABD}$.",
+          en: "In parallelogram $ABCD$, $\\angle ABK = \\angle KBD, BD = 7KD$, and $BC = 6$. Find $P_{\\triangle ABD}$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P_{\\triangle ABD} = 48$.",
+          ru: "Решение:\n1) $P_{\\triangle ABD} = 48$.",
+          en: "Solution:\n1) $P_{\\triangle ABD} = 48$."
+        }
+      },
+      {
+        id: 31,
+        type: "open",
+        correct: "39",
+        text: {
+          az: "$ABCD$ paraleloqramının $A$ və $D$ bucaqlarının tənbölənləri $BC$ tərəfi üzərində $M$ nöqtəsində kəsişir. $AMD$ üçbucağının $M$ təpəsindən çəkilən medianı $6,5$ olarsa, paraleloqramın perimetrini tapın.",
+          ru: "Биссектрисы углов $A$ и $D$ пересекаются в точке $M$ на стороне $BC$. Медиана $\\triangle AMD$ из вершины $M$ равна $6,5$. Найдите периметр параллелограмма.",
+          en: "Bisectors of $A$ and $D$ intersect at $M$ on $BC$. The median of $\\triangle AMD$ from $M$ is $6.5$. Find the perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tənbölənlər düz bucaq altında kəsişir ($\\angle AMD = 90^\\circ$).\n2) Düzbucaqlı üçbucaqda hipotenuza çəkilən median hipotenuzun yarısıdır: $AD = 2 \\times 6,5 = 13$.\n3) $M$ nöqtəsi $BC$-nin ortasıdır və $AB = CD = \\frac{AD}{2} = 6,5$.\n4) $P = 2(AD + AB) = 2(13 + 6,5) = 39$.",
+          ru: "Решение:\n1) $AD = 2 \\times 6,5 = 13$.\n2) $AB = 6,5$.\n3) $P = 2(13 + 6,5) = 39$.",
+          en: "Solution:\n1) $AD = 2(6.5) = 13, AB = 6.5$.\n2) $P = 2(13 + 6.5) = 39$."
+        }
+      },
+      {
+        id: 32,
+        type: "open",
+        correct: "51",
+        text: {
+          az: "$ABCD$ paraleloqramının $A$ və $D$ bucaqlarının tənbölənləri $BC$ tərəfi üzərində $M$ nöqtəsində kəsişir. $AMD$ üçbucağının $M$ təpəsindən çəkilən medianı $8,5\\text{ sm}$ olarsa, paraleloqramın perimetrini tapın.",
+          ru: "Биссектрисы углов $A$ и $D$ пересекаются в точке $M$ на $BC$. Медиана $\\triangle AMD$ равна $8,5\\text{ см}$. Найдите периметр.",
+          en: "Bisectors of $A$ and $D$ intersect at $M$ on $BC$. The median of $\\triangle AMD$ is $8.5\\text{ cm}$. Find the perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AD = 2 \\times 8,5 = 17\\text{ sm}$.\n2) $AB = 8,5\\text{ sm}$.\n3) $P = 2(17 + 8,5) = 51\\text{ sm}$.",
+          ru: "Решение:\n1) $AD = 17, AB = 8,5$.\n2) $P = 2(17 + 8,5) = 51$.",
+          en: "Solution:\n1) $AD = 17, AB = 8.5 \\implies P = 51$."
+        }
+      },
+      {
+        id: 33,
+        type: "open",
+        correct: "48",
+        image: "Paraleloqram_Image0033.png",
+        text: {
+          az: "$ABCD$ paraleloqramında $ADC$ bucağının $DE$ tənböləni $EF$ parçasına perpendikulyardır. $AF = 6$ və $BF = 4$ olarsa, paraleloqramın perimetrini tapın.",
+          ru: "В параллелограмме $ABCD$ $DE$ — биссектриса, $DE \\perp EF, AF = 6, BF = 4$. Найдите периметр.",
+          en: "In parallelogram $ABCD$, bisector $DE \\perp EF, AF = 6, BF = 4$. Find the perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AB = AF + BF = 6 + 4 = 10$.\n2) Həndəsi simmetriyadan $AD = 14$ tapılır.\n3) $P = 2(10 + 14) = 48$.",
+          ru: "Решение:\n1) $AB = 10, AD = 14$.\n2) $P = 2(10 + 14) = 48$.",
+          en: "Solution:\n1) $AB = 10, AD = 14 \\implies P = 48$."
+        }
+      },
+      {
+        id: 34,
+        type: "open",
+        correct: "1-d; 2-a; 3-c",
+        image: "Paraleloqram_Image0034.png",
+        text: {
+          az: "Paraleloqramda $\\alpha$ və $\\beta$ bucaqları üçün uyğunluğu müəyyən edin:\n1. $\\alpha = 30^\\circ$\n2. $\\alpha = 40^\\circ$\n3. $\\alpha = 50^\\circ$\n\na. $\\beta = 140^\\circ$\nb. $\\beta = 110^\\circ$\nc. $\\beta = 130^\\circ$\nd. $\\beta = 150^\\circ$\ne. $\\beta = 170^\\circ$",
+          ru: "Установите соответствие для углов параллелограмма $\\alpha$ и $\\beta$:\n1. $\\alpha = 30^\\circ$\n2. $\\alpha = 40^\\circ$\n3. $\\alpha = 50^\\circ$",
+          en: "Match the angles $\\alpha$ and $\\beta$ in the parallelogram:\n1. $\\alpha = 30^\\circ$\n2. $\\alpha = 40^\\circ$\n3. $\\alpha = 50^\\circ$"
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\alpha + \\beta = 180^\\circ$.\n1. $\\beta = 180^\\circ - 30^\\circ = 150^\\circ$ (d)\n2. $\\beta = 180^\\circ - 40^\\circ = 140^\\circ$ (a)\n3. $\\beta = 180^\\circ - 50^\\circ = 130^\\circ$ (c)",
+          ru: "Решение:\n1 -> d ($150^\\circ$), 2 -> a ($140^\\circ$), 3 -> c ($130^\\circ$).",
+          en: "Solution:\n1 -> d ($150^\\circ$), 2 -> a ($140^\\circ$), 3 -> c ($130^\\circ$)."
+        }
+      },
+      {
+        id: 35,
+        type: "open",
+        correct: "10",
+        text: {
+          az: "Perimetri 90 olan $ABCD$ paraleloqramında $BAD$ bucağının tənböləni $BC$ tərəfini $B$ nöqtəsindən başlayaraq $2:5$ nisbətində bölür. Paraleloqramın kiçik tərəfini tapın.",
+          ru: "Периметр равен 90. Биссектриса угла $A$ делит сторону $BC$ от точки $B$ в отношении $2:5$. Найдите меньшую сторону.",
+          en: "Perimeter is 90. Bisector of $BAD$ divides $BC$ from $B$ in ratio $2:5$. Find the smaller side."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tənbölən bərabəryanlı üçbucaq ayırır: $AB = 2x$.\n2) $BC = 2x + 5x = 7x$.\n3) $P = 2(2x + 7x) = 18x = 90 \\implies x = 5$.\n4) Kiçik tərəf: $AB = 2x = 2(5) = 10$.",
+          ru: "Решение:\n1) $AB = 2x, BC = 7x$.\n2) $18x = 90 \\implies x = 5$.\n3) $AB = 10$.",
+          en: "Solution:\n1) $AB = 2x, BC = 7x \\implies 18x = 90 \\implies x = 5$.\n2) Smaller side: $2(5) = 10$."
+        }
+      },
+      {
+        id: 36,
+        type: "open",
+        correct: "42",
+        text: {
+          az: "Kiçik tərəfi 6 olan $ABCD$ paraleloqramında $BAD$ bucağının tənböləni $BC$ tərəfini $B$ nöqtəsindən başlayaraq $2:3$ nisbətində bölür. Paraleloqramın perimetrini tapın.",
+          ru: "Меньшая сторона равна 6. Биссектриса делит $BC$ в отношении $2:3$. Найдите периметр.",
+          en: "Smaller side is 6. Bisector divides $BC$ in ratio $2:3$. Find the perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AB = 2x = 6 \\implies x = 3$.\n2) $BC = 2x + 3x = 5x = 5(3) = 15$.\n3) $P = 2(6 + 15) = 42$.",
+          ru: "Решение:\n1) $2x = 6 \\implies x = 3$.\n2) $BC = 5x = 15$.\n3) $P = 2(6 + 15) = 42$.",
+          en: "Solution:\n1) $2x = 6 \\implies x = 3, BC = 15$.\n2) $P = 2(6 + 15) = 42$."
+        }
+      },
+      {
+        id: 37,
+        type: "open",
+        correct: "30",
+        image: "Paraleloqram_Image0037.png",
+        text: {
+          az: "Perimetrləri cəmi $34\\text{ sm}$ olan $ABCD$ və $CEFM$ paraleloqramlarının $AC$ və $CF$ diaqonalları bir düz xətt üzərindədir. $AF = 13\\text{ sm}$ olarsa, $ABC$ və $CFM$ üçbucaqlarının perimetrləri cəmini tapın.",
+          ru: "Сумма периметров параллелограммов $ABCD$ и $CEFM$ равна $34\\text{ см}$, $AF = 13\\text{ см}$. Найдите сумму периметров $\\triangle ABC$ и $\\triangle CFM$.",
+          en: "Sum of perimeters of parallelograms $ABCD$ and $CEFM$ is $34\\text{ cm}$, $AF = 13\\text{ cm}$. Find the sum of perimeters of $\\triangle ABC$ and $\\triangle CFM$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Üçbucaqların tərəflərinin cəmi: $\\frac{P_{ABCD}}{2} + \\frac{P_{CEFM}}{2} = \\frac{34}{2} = 17\\text{ sm}$.\n2) Diaqonallar cəmi: $AC + CF = AF = 13\\text{ sm}$.\n3) Perimetrlər cəmi: $17 + 13 = 30\\text{ sm}$.",
+          ru: "Решение:\n1) $(P_1 + P_2)/2 = 17\\text{ см}$.\n2) $AC + CF = AF = 13\\text{ см}$.\n3) Сумма периметров $= 17 + 13 = 30\\text{ см}$.",
+          en: "Solution:\n1) Sides sum: $34 / 2 = 17\\text{ cm}$.\n2) Diagonals: $AC + CF = AF = 13\\text{ cm}$.\n3) Total $= 17 + 13 = 30\\text{ cm}$."
+        }
+      },
+      {
+        id: 38,
+        type: "open",
+        correct: "48",
+        image: "Paraleloqram_Image0038.png",
+        text: {
+          az: "$ABCD$ paraleloqramında $AN$ və $DM$ uyğun olaraq $A$ və $D$ bucaqlarının tənbölənləridir. $BN : NC = 3 : 2$ və $MN = 3\\text{ sm}$ olarsa, paraleloqramın perimetrini tapın.",
+          ru: "В параллелограмме $ABCD$ $AN$ и $DM$ — биссектрисы, $BN : NC = 3 : 2, MN = 3\\text{ см}$. Найдите периметр.",
+          en: "In parallelogram $ABCD$, $AN$ and $DM$ are bisectors, $BN : NC = 3 : 2, MN = 3\\text{ cm}$. Find the perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $BN = 3x, NC = 2x \\implies BC = 5x$.\n2) $AN$ tənbölən olduğuna görə $AB = BN = 3x$. Eynilə $CD = MC = 3x$.\n3) $MN = BN + MC - BC = 3x + 3x - 5x = x = 3\\text{ sm}$.\n4) $AB = 3(3) = 9\\text{ sm}$, $BC = 5(3) = 15\\text{ sm}$.\n5) $P = 2(9 + 15) = 48\\text{ sm}$.",
+          ru: "Решение:\n1) $BN = 3x, BC = 5x, AB = 3x, MC = 3x$.\n2) $MN = 6x - 5x = x = 3\\text{ см}$.\n3) $AB = 9, BC = 15 \\implies P = 2(9 + 15) = 48\\text{ см}$.",
+          en: "Solution:\n1) $x = MN = 3\\text{ cm} \\implies AB = 9, BC = 15$.\n2) $P = 2(9 + 15) = 48\\text{ cm}$."
+        }
+      }
+    ];
+
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    function init() {
+      renderApp();
+      updateScore();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `lang-${lang}`);
+      });
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) {
+        currentSlide = nextSlide;
+        renderApp();
+      }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        renderApp();
+      }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      const isCorrect = choice === q.correct;
+      userAnswers[qId] = { answer: choice, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+
+      const q = questionsData.find(item => item.id === qId);
+      
+      const cleanVal = val.toLowerCase().replace(/[\s°mмsmсм\\*]/g, '').replace(/;/g, ',').replace(/sqrt/g, '√');
+      const cleanCorrect = q.correct.toLowerCase().replace(/[\s°mмsmсм\\*]/g, '').replace(/;/g, ',').replace(/sqrt/g, '√');
+      const isCorrect = cleanVal === cleanCorrect || cleanVal.includes(cleanCorrect);
+
+      userAnswers[qId] = { answer: val, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-back').innerText = t.back;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+
+        if (userAnswers[q.id]) {
+          btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        }
+        if (currentMode === 'slide' && q.id === currentSlide) {
+          btn.classList.add('active');
+        }
+
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      const questionsToRender = currentMode === 'slide'
+        ? questionsData.filter(q => q.id === currentSlide)
+        : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang]}</div>
+        `;
+
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id}"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}"
+                value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''}
+                onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang]}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>
