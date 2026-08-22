@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Düzbucaqlı, kvadrat, romb və onların xassələri</title>
+  
+  <!-- KaTeX CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      padding: 12px 20px;
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topic-title-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      background: #f1f5f9;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .back-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-color: var(--primary);
+    }
+
+    .topic-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group {
+      display: inline-flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 8px;
+    }
+
+    .btn-group button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .btn-group button.active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .score-badge {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 16px;
+    }
+
+    .grid-container {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .grid-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .q-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 6px;
+    }
+
+    .q-btn {
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+    }
+
+    .q-btn:hover {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .q-btn.active {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    .q-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .q-btn.incorrect {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .q-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .q-type-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    .q-image-container {
+      margin: 16px 0;
+      padding: 10px;
+      background: #fafafa;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .q-image-container img {
+      max-width: 100%;
+      max-height: 230px;
+      height: auto;
+      border-radius: 4px;
+      object-fit: contain;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .option-btn.selected-correct {
+      background: var(--success-light) !important;
+      border-color: var(--success) !important;
+      color: #065f46 !important;
+      font-weight: 700;
+    }
+
+    .option-btn.selected-incorrect {
+      background: var(--danger-light) !important;
+      border-color: var(--danger) !important;
+      color: #991b1b !important;
+      font-weight: 700;
+    }
+
+    .open-input-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      max-width: 440px;
+    }
+
+    .open-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .open-input:focus {
+      border-color: var(--primary);
+    }
+
+    .submit-btn {
+      padding: 10px 18px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .explanation-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    .explanation-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-body {
+      white-space: pre-line;
+      color: #334155;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="topic-title-box">
+        <a href="../../index.html" class="back-btn">← <span id="ui-back">Əsas Menyu</span></a>
+        <div class="topic-title" id="ui-topic">Düzbucaqlı, kvadrat, romb və onların xassələri</div>
+      </div>
+      
+      <div class="controls">
+        <div class="btn-group">
+          <button id="lang-az" class="active" onclick="setLanguage('az')">AZ</button>
+          <button id="lang-ru" onclick="setLanguage('ru')">RU</button>
+          <button id="lang-en" onclick="setLanguage('en')">EN</button>
+        </div>
+
+        <div class="btn-group">
+          <button id="mode-slide" class="active" onclick="setMode('slide')"><span id="ui-slide-mode">Slayd</span></button>
+          <button id="mode-list" onclick="setMode('list')"><span id="ui-list-mode">Siyahı</span></button>
+        </div>
+
+        <div class="score-badge">
+          <span id="ui-score-label">Nəticə</span>: <span id="score-val">0 / 46</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid-container">
+      <div class="grid-title" id="ui-grid-title">Suallar paneli</div>
+      <div class="q-grid" id="question-grid"></div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="slide-footer" id="slide-footer">
+      <button class="nav-btn" id="prev-btn" onclick="navigateSlide(-1)">← <span id="ui-prev">Əvvəlki</span></button>
+      <button class="nav-btn" id="next-btn" onclick="navigateSlide(1)"><span id="ui-next">Növbəti</span> →</button>
+    </div>
+  </main>
+
+  <script>
+    const uiTranslations = {
+      az: {
+        topic: "Düzbucaqlı, kvadrat, romb və onların xassələri",
+        back: "Əsas Menyu",
+        slideMode: "Slayd",
+        listMode: "Siyahı",
+        scoreLabel: "Nəticə",
+        gridTitle: "Suallar paneli",
+        prev: "Əvvəlki",
+        next: "Növbəti",
+        question: "Sual",
+        multipleChoice: "Qapalı test",
+        openEnded: "Açıq sual / Uyğunluq",
+        check: "Yoxla",
+        enterAnswer: "Cavabınızı daxil edin...",
+        explanationTitle: "💡 Məsələnin Ətraflı Həlli"
+      },
+      ru: {
+        topic: "Прямоугольник, квадрат, ромб и их свойства",
+        back: "Главное меню",
+        slideMode: "Слайд",
+        listMode: "Список",
+        scoreLabel: "Результат",
+        gridTitle: "Навигация по вопросам",
+        prev: "Назад",
+        next: "Вперед",
+        question: "Вопрос",
+        multipleChoice: "Тестовый вопрос",
+        openEnded: "Открытый вопрос / Соответствие",
+        check: "Проверить",
+        enterAnswer: "Введите ответ...",
+        explanationTitle: "💡 Подробное Решение"
+      },
+      en: {
+        topic: "Rectangle, Square, Rhombus and Their Properties",
+        back: "Main Menu",
+        slideMode: "Slide",
+        listMode: "List",
+        scoreLabel: "Score",
+        gridTitle: "Question Grid",
+        prev: "Previous",
+        next: "Next",
+        question: "Question",
+        multipleChoice: "Multiple Choice",
+        openEnded: "Open Ended / Matching",
+        check: "Submit",
+        enterAnswer: "Enter answer...",
+        explanationTitle: "💡 Detailed Step-by-Step Solution"
+      }
+    };
+
+    const questionsData = [
+      {
+        id: 1,
+        type: "mcq",
+        correct: "B",
+        options: { A: "25°", B: "45°", C: "30°", D: "60°", E: "65°" },
+        text: {
+          az: "Kvadratın tərəfi ilə diaqonalı arasındakı bucağı tapın.",
+          ru: "Найдите угол между стороной квадрата и его диагональю.",
+          en: "Find the angle between the side of a square and its diagonal."
+        },
+        explanation: {
+          az: "Həlli:\n1) Kvadratın diaqonalı onun $90^\\circ$-lik bucağının tənbölənidir.\n2) $\\frac{90^\\circ}{2} = 45^\\circ$.",
+          ru: "Решение:\n1) Диагональ делит прямой угол пополам: $90^\\circ / 2 = 45^\\circ$.",
+          en: "Solution:\n1) The diagonal bisects the right angle: $90^\\circ / 2 = 45^\\circ$."
+        }
+      },
+      {
+        id: 2,
+        type: "mcq",
+        correct: "B",
+        options: { A: "60°", B: "90°", C: "30°", D: "45°", E: "35°" },
+        text: {
+          az: "Kvadratın diaqonalları arasındakı bucağı tapın.",
+          ru: "Найдите угол между диагоналями квадрата.",
+          en: "Find the angle between the diagonals of a square."
+        },
+        explanation: {
+          az: "Həlli:\n1) Kvadratın diaqonalları qarşılıqlı perpendikulyardır ($90^\\circ$).",
+          ru: "Решение:\n1) Диагонали квадрата перпендикулярны: $90^\\circ$.",
+          en: "Solution:\n1) Diagonals of a square are perpendicular: $90^\\circ$."
+        }
+      },
+      {
+        id: 3,
+        type: "mcq",
+        correct: "B",
+        image: "Dordbucaqli_Image0003.png",
+        options: { A: "47°", B: "15°", C: "25°", D: "20°", E: "35°" },
+        text: {
+          az: "$ABCD$ – kvadrat, $AM = 2BM$ olarsa, $\\angle MAC$-ni tapın.",
+          ru: "$ABCD$ — квадрат, $AM = 2BM$. Найдите угол $\\angle MAC$.",
+          en: "$ABCD$ is a square, $AM = 2BM$. Find $\\angle MAC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Düzbucaqlı $\\triangle ABM$-də hipotenuz $AM$, katet $BM$-in 2 mislidir ($AM = 2BM$). Deməli, $\\angle BAM = 30^\\circ$.\n2) Diaqonal bucağı yarıya bölür: $\\angle BAC = 45^\\circ$.\n3) $\\angle MAC = \\angle BAC - \\angle BAM = 45^\\circ - 30^\\circ = 15^\\circ$.",
+          ru: "Решение:\n1) В $\\triangle ABM$ катет $BM$ равен половине гипотенузы $AM \\implies \\angle BAM = 30^\\circ$.\n2) $\\angle BAC = 45^\\circ \\implies \\angle MAC = 45^\\circ - 30^\\circ = 15^\\circ$.",
+          en: "Solution:\n1) $\\angle BAM = 30^\\circ$ since $AM = 2BM$.\n2) $\\angle MAC = 45^\\circ - 30^\\circ = 15^\\circ$."
+        }
+      },
+      {
+        id: 4,
+        type: "mcq",
+        correct: "C",
+        options: { A: "$\\alpha, \\alpha, \\alpha$", B: "$\\alpha, 90^\\circ - \\alpha, \\alpha$", C: "$180^\\circ - \\alpha, \\alpha, 180^\\circ - \\alpha$", D: "$90^\\circ - \\alpha, 90^\\circ - \\alpha, 90^\\circ - \\alpha$", E: "$2\\alpha, \\alpha, 2\\alpha$" },
+        text: {
+          az: "$ABCD$ rombunda $\\angle A = \\alpha$ olarsa, $B, C, D$ bucaqlarını tapın.",
+          ru: "В ромбе $ABCD$ $\\angle A = \\alpha$. Найдите углы $B, C, D$.",
+          en: "In rhombus $ABCD$, $\\angle A = \\alpha$. Find angles $B, C, D$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Qonşu bucaqlar cəmi $180^\\circ$, qarşı bucaqlar bərabərdir:\n2) $\\angle B = 180^\\circ - \\alpha, \\angle C = \\alpha, \\angle D = 180^\\circ - \\alpha$.",
+          ru: "Решение:\n1) $\\angle B = 180^\\circ - \\alpha, \\angle C = \\alpha, \\angle D = 180^\\circ - \\alpha$.",
+          en: "Solution:\n1) $\\angle B = 180^\\circ - \\alpha, \\angle C = \\alpha, \\angle D = 180^\\circ - \\alpha$."
+        }
+      },
+      {
+        id: 5,
+        type: "mcq",
+        correct: "E",
+        options: { A: "7 sm", B: "$5\\sqrt{3}\\text{ sm}$", C: "10 sm", D: "2,5 sm", E: "5 sm" },
+        text: {
+          az: "Perimetri $20\\text{ sm}$, iti bucağı $60^\\circ$ olan rombun kiçik diaqonalının uzunluğunu tapın.",
+          ru: "Периметр ромба равен $20\\text{ см}$, а острый угол равен $60^\\circ$. Найдите длину меньшей диагонали.",
+          en: "The perimeter of a rhombus is $20\\text{ cm}$ and its acute angle is $60^\\circ$. Find the shorter diagonal."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tərəf: $a = \\frac{20}{4} = 5\\text{ sm}$.\n2) İti bucağı $60^\\circ$ olan rombun kiçik diaqonalı onu iki bərabərtərəfli üçbucağa bölür: $d = a = 5\\text{ sm}$.",
+          ru: "Решение:\n1) Сторона $a = 5\\text{ см}$. При угле $60^\\circ$ меньшая диагональ равна стороне: $d = 5\\text{ см}$.",
+          en: "Solution:\n1) Side $a = 5\\text{ cm}$. Shorter diagonal $d = a = 5\\text{ cm}$."
+        }
+      },
+      {
+        id: 6,
+        type: "mcq",
+        correct: "E",
+        options: { A: "34 sm", B: "22 sm", C: "51 sm", D: "33 sm", E: "68 sm" },
+        text: {
+          az: "Rombun $60^\\circ$-li bucağının qarşısındakı diaqonalı $17\\text{ sm}$ olarsa, onun perimetrini tapın.",
+          ru: "Диагональ, противолежащая углу $60^\\circ$, равна $17\\text{ см}$. Найдите периметр ромба.",
+          en: "The diagonal opposite to the $60^\\circ$ angle of a rhombus is $17\\text{ cm}$. Find its perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $d = a = 17\\text{ sm}$.\n2) $P = 4a = 4 \\times 17 = 68\\text{ sm}$.",
+          ru: "Решение:\n1) Сторона $a = 17\\text{ см}$. Периметр $P = 4 \\times 17 = 68\\text{ см}$.",
+          en: "Solution:\n1) Side $a = 17\\text{ cm}$. $P = 4(17) = 68\\text{ cm}$."
+        }
+      },
+      {
+        id: 7,
+        type: "mcq",
+        correct: "E",
+        options: { A: "15°", B: "75°", C: "60°", D: "45°", E: "30°" },
+        text: {
+          az: "Rombun perimetri $20\\text{ sm}$, hündürlüyü isə $2,5\\text{ sm}$ olarsa, onun iti bucağını tapın.",
+          ru: "Периметр ромба $20\\text{ см}$, высота $2,5\\text{ см}$. Найдите острый угол ромба.",
+          en: "The perimeter of a rhombus is $20\\text{ cm}$ and height is $2.5\\text{ cm}$. Find its acute angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tərəf: $a = \\frac{20}{4} = 5\\text{ sm}$.\n2) $\\sin\\alpha = \\frac{h}{a} = \\frac{2,5}{5} = \\frac{1}{2} \\implies \\alpha = 30^\\circ$.",
+          ru: "Решение:\n1) $a = 5\\text{ см}, \\sin\\alpha = \\frac{2,5}{5} = 0,5 \\implies \\alpha = 30^\\circ$.",
+          en: "Solution:\n1) $a = 5\\text{ cm}, \\sin\\alpha = \\frac{2.5}{5} = 0.5 \\implies \\alpha = 30^\\circ$."
+        }
+      },
+      {
+        id: 8,
+        type: "mcq",
+        correct: "B",
+        options: { A: "20°", B: "30°", C: "40°", D: "60°", E: "45°" },
+        text: {
+          az: "Rombun perimetri $28\\text{ sm}$-ə, hündürlüyü isə $3,5\\text{ sm}$-ə bərabərdir. Rombun iti bucağını tapın.",
+          ru: "Периметр ромба $28\\text{ см}$, высота $3,5\\text{ см}$. Найдите острый угол ромба.",
+          en: "The perimeter of a rhombus is $28\\text{ cm}$ and height is $3.5\\text{ cm}$. Find its acute angle."
+        },
+        explanation: {
+          az: "Həlli:\n1) $a = \\frac{28}{4} = 7\\text{ sm}$.\n2) $\\sin\\alpha = \\frac{3,5}{7} = \\frac{1}{2} \\implies \\alpha = 30^\\circ$.",
+          ru: "Решение:\n1) $a = 7\\text{ см}, \\sin\\alpha = \\frac{3,5}{7} = \\frac{1}{2} \\implies \\alpha = 30^\\circ$.",
+          en: "Solution:\n1) $a = 7\\text{ cm}, \\sin\\alpha = 0.5 \\implies \\alpha = 30^\\circ$."
+        }
+      },
+      {
+        id: 9,
+        type: "mcq",
+        correct: "A",
+        options: { A: "5 sm", B: "6 sm", C: "2 sm", D: "4 sm", E: "7 sm" },
+        text: {
+          az: "Rombun perimetri $40\\text{ sm}$, iti bucağı $30^\\circ$-dir. Rombun hündürlüyünü tapın.",
+          ru: "Периметр ромба $40\\text{ см}$, острый угол $30^\\circ$. Найдите высоту ромба.",
+          en: "The perimeter of a rhombus is $40\\text{ cm}$ and acute angle is $30^\\circ$. Find its height."
+        },
+        explanation: {
+          az: "Həlli:\n1) $a = \\frac{40}{4} = 10\\text{ sm}$.\n2) $h = a \\cdot \\sin 30^\\circ = 10 \\times \\frac{1}{2} = 5\\text{ sm}$.",
+          ru: "Решение:\n1) $a = 10\\text{ см}, h = 10 \\times \\sin 30^\\circ = 5\\text{ см}$.",
+          en: "Solution:\n1) $a = 10\\text{ cm}, h = 10 \\sin 30^\\circ = 5\\text{ cm}$."
+        }
+      },
+      {
+        id: 10,
+        type: "mcq",
+        correct: "D",
+        options: { A: "20 sm", B: "7,5 sm", C: "25 sm", D: "10 sm", E: "12 sm" },
+        text: {
+          az: "İki kvadratın perimetrləri nisbəti $1:2$ kimidir. Kiçik kvadratın tərəfi $5\\text{ sm}$-dir. Böyük kvadratın tərəfini tapın.",
+          ru: "Периметры двух квадратов относятся как $1:2$. Сторона меньшего $5\\text{ см}$. Найдите сторону большего.",
+          en: "The ratio of perimeters of two squares is $1:2$. The side of the smaller square is $5\\text{ cm}$. Find the larger square's side."
+        },
+        explanation: {
+          az: "Həlli:\n1) Kvadratların tərəflərinin nisbəti perimetrlərinin nisbətinə bərabərdir: $\\frac{a_1}{a_2} = \\frac{1}{2}$.\n2) $a_2 = 2 \\times 5 = 10\\text{ sm}$.",
+          ru: "Решение:\n1) $a_2 = 2 \\times 5 = 10\\text{ см}$.",
+          en: "Solution:\n1) $a_2 = 2(5) = 10\\text{ cm}$."
+        }
+      },
+      {
+        id: 11,
+        type: "mcq",
+        correct: "E",
+        options: { A: "1,5 sm", B: "1 sm", C: "6 sm", D: "0,5 sm", E: "3 sm" },
+        text: {
+          az: "İki kvadratın perimetrləri nisbəti $1:3$ kimidir və böyük kvadratın tərəfi $9\\text{ sm}$-dir. Kiçik kvadratın tərəfini tapın.",
+          ru: "Периметры двух квадратов относятся как $1:3$, сторона большего $9\\text{ см}$. Найдите сторону меньшего.",
+          en: "The ratio of perimeters of two squares is $1:3$, and the side of the larger square is $9\\text{ cm}$. Find the smaller side."
+        },
+        explanation: {
+          az: "Həlli:\n1) $a_1 = \\frac{9}{3} = 3\\text{ sm}$.",
+          ru: "Решение:\n1) $a_1 = 9 / 3 = 3\\text{ см}$.",
+          en: "Solution:\n1) $a_1 = 9 / 3 = 3\\text{ cm}$."
+        }
+      },
+      {
+        id: 12,
+        type: "mcq",
+        correct: "C",
+        options: { A: "8 sm", B: "11 sm", C: "13 sm", D: "10 sm", E: "9 sm" },
+        text: {
+          az: "Perimetri $34\\text{ sm}$, tərəflərindən biri isə $5\\text{ sm}$ olan düzbucaqlının diaqonalını tapın.",
+          ru: "Периметр прямоугольника $34\\text{ см}$, одна из сторон $5\\text{ см}$. Найдите диагональ.",
+          en: "The perimeter of a rectangle is $34\\text{ cm}$ and one side is $5\\text{ cm}$. Find its diagonal."
+        },
+        explanation: {
+          az: "Həlli:\n1) Digər tərəf: $b = \\frac{34}{2} - 5 = 17 - 5 = 12\\text{ sm}$.\n2) Diaqonal: $d = \\sqrt{5^2 + 12^2} = \\sqrt{25 + 144} = \\sqrt{169} = 13\\text{ sm}$.",
+          ru: "Решение:\n1) Вторая сторона: $17 - 5 = 12\\text{ см}$.\n2) $d = \\sqrt{5^2 + 12^2} = 13\\text{ см}$.",
+          en: "Solution:\n1) Other side $= 12\\text{ cm}$.\n2) $d = \\sqrt{5^2 + 12^2} = 13\\text{ cm}$."
+        }
+      },
+      {
+        id: 13,
+        type: "mcq",
+        correct: "B",
+        options: { A: "14 sm", B: "10 sm", C: "12 sm", D: "11 sm", E: "13 sm" },
+        text: {
+          az: "Perimetri $28\\text{ sm}$, tərəflərindən biri isə $8\\text{ sm}$ olan düzbucaqlının diaqonalını tapın.",
+          ru: "Периметр прямоугольника $28\\text{ см}$, одна сторона $8\\text{ см}$. Найдите диагональ.",
+          en: "The perimeter of a rectangle is $28\\text{ cm}$ and one side is $8\\text{ cm}$. Find its diagonal."
+        },
+        explanation: {
+          az: "Həlli:\n1) Digər tərəf: $b = 14 - 8 = 6\\text{ sm}$.\n2) Diaqonal: $d = \\sqrt{8^2 + 6^2} = \\sqrt{100} = 10\\text{ sm}$.",
+          ru: "Решение:\n1) Вторая сторона: $6\\text{ см}$.\n2) $d = \\sqrt{64 + 36} = 10\\text{ см}$.",
+          en: "Solution:\n1) Other side $= 6\\text{ cm}$.\n2) $d = \\sqrt{8^2 + 6^2} = 10\\text{ cm}$."
+        }
+      },
+      {
+        id: 14,
+        type: "mcq",
+        correct: "D",
+        image: "Dordbucaqli_Image0014.png",
+        options: { A: "3", B: "1,5", C: "2", D: "2,5", E: "3,5" },
+        text: {
+          az: "$ABCD$ kvadratdır. $AM = 5$ və $\\angle 1 : \\angle 2 = 4 : 1$ olarsa, $MB$-ni tapın.",
+          ru: "$ABCD$ — квадрат, $AM = 5$ и $\\angle 1 : \\angle 2 = 4 : 1$. Найдите $MB$.",
+          en: "$ABCD$ is a square, $AM = 5$ and $\\angle 1 : \\angle 2 = 4 : 1$. Find $MB$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AC$ diaqonaldır $\\implies \\angle BAC = 45^\\circ$.\n2) Daxili bucaqlar: $\\angle 1 = 60^\\circ, \\angle 2 = 15^\\circ$.\n3) Düzbucaqlı $\\triangle ABM$-də $\\angle BAM = 30^\\circ$, onda $30^\\circ$-li bucaq qarşısındakı $MB = \\frac{AM}{2} = \\frac{5}{2} = 2,5$.",
+          ru: "Решение:\n1) В прямоугольном $\\triangle ABM$ угол $\\angle BAM = 30^\\circ$.\n2) Катет против угла $30^\\circ$: $MB = AM / 2 = 5 / 2 = 2,5$.",
+          en: "Solution:\n1) In $\\triangle ABM$, $\\angle BAM = 30^\\circ$.\n2) $MB = \\frac{AM}{2} = 2.5$."
+        }
+      },
+      {
+        id: 15,
+        type: "mcq",
+        correct: "A",
+        options: { A: "14 sm", B: "8 sm", C: "10 sm", D: "12 sm", E: "13 sm" },
+        text: {
+          az: "Kvadratın diaqonalı $7\\text{ sm}$-dir. Kvadratın tərəflərinin orta nöqtələrini ardıcıl birləşdirən parçaların yaratdığı dördbucaqlının perimetrini tapın.",
+          ru: "Диагональ квадрата равна $7\\text{ см}$. Найдите периметр четырехугольника, вершинами которого являются середины сторон квадрата.",
+          en: "The diagonal of a square is $7\\text{ cm}$. Find the perimeter of the quadrilateral formed by connecting the midpoints of the sides."
+        },
+        explanation: {
+          az: "Həlli:\n1) Alınan dördbucaqlı tərəfi $\\frac{d}{2}$ olan kvadratdır.\n2) Onun perimetri: $P = 4 \\times \\frac{d}{2} = 2d = 2 \\times 7 = 14\\text{ sm}$.",
+          ru: "Решение:\n1) Периметр полученного квадрата равен $2d = 2 \\times 7 = 14\\text{ см}$.",
+          en: "Solution:\n1) Perimeter $= 2d = 2(7) = 14\\text{ cm}$."
+        }
+      },
+      {
+        id: 16,
+        type: "mcq",
+        correct: "C",
+        options: { A: "$5\\sqrt{2}\\text{ sm}$", B: "$20\\sqrt{2}\\text{ sm}$", C: "$10\\sqrt{2}\\text{ sm}$", D: "5 sm", E: "10 sm" },
+        text: {
+          az: "Kvadratın tərəfi $5\\text{ sm}$-dir. Onun tərəflərinin orta nöqtələrinin ardıcıl birləşdirilməsindən alınan dördbucaqlının perimetrini tapın.",
+          ru: "Сторона квадрата $5\\text{ см}$. Найдите периметр четырехугольника, полученного соединением середин его сторон.",
+          en: "The side of a square is $5\\text{ cm}$. Find the perimeter of the quadrilateral formed by connecting the midpoints of its sides."
+        },
+        explanation: {
+          az: "Həlli:\n1) Kvadratın diaqonalı $d = 5\\sqrt{2}\\text{ sm}$.\n2) Perimetr $P = 2d = 2 \\times 5\\sqrt{2} = 10\\sqrt{2}\\text{ sm}$.",
+          ru: "Решение:\n1) Диагональ $d = 5\\sqrt{2}\\text{ см}$.\n2) Периметр $P = 2d = 10\\sqrt{2}\\text{ см}$.",
+          en: "Solution:\n1) Diagonal $d = 5\\sqrt{2}\\text{ cm} \\implies P = 2d = 10\\sqrt{2}\\text{ cm}$."
+        }
+      },
+      {
+        id: 17,
+        type: "mcq",
+        correct: "B",
+        options: { A: "36 sm", B: "72 sm", C: "144 sm", D: "108 sm", E: "54 sm" },
+        text: {
+          az: "Perimetri $18\\text{ sm}$ olan paraleloqramın xarici oblastında olmaqla onun hər tərəfi üzərində bir romb qurulmuşdur. Bu rombların perimetrləri cəmini tapın.",
+          ru: "Периметр параллелограмма $18\\text{ см}$. На каждой его стороне во внешнюю сторону построен ромб. Найдите сумму периметров этих ромбов.",
+          en: "The perimeter of a parallelogram is $18\\text{ cm}$. A rhombus is constructed on each side externally. Find the sum of their perimeters."
+        },
+        explanation: {
+          az: "Həlli:\n1) Cəm: $4 \\times P_{\\text{par}} = 4 \\times 18 = 72\\text{ sm}$.",
+          ru: "Решение:\n1) Сумма периметров $= 4 \\times 18 = 72\\text{ см}$.",
+          en: "Solution:\n1) Total $= 4 \\times 18 = 72\\text{ cm}$."
+        }
+      },
+      {
+        id: 18,
+        type: "mcq",
+        correct: "D",
+        image: "Dordbucaqli_Image0018.png",
+        options: { A: "4 sm", B: "6 sm", C: "6 sm", D: "7 sm", E: "2 sm" },
+        text: {
+          az: "$ABCD$ rombunda $MN \\perp AD, EF \\perp CD, MP = 4, EP = 2, PF = 9$ olarsa, $PN$-i tapın.",
+          ru: "В ромбе $ABCD$ $MN \\perp AD, EF \\perp CD, MP = 4, EP = 2, PF = 9$. Найдите $PN$.",
+          en: "In rhombus $ABCD$, $MN \\perp AD, EF \\perp CD, MP = 4, EP = 2, PF = 9$. Find $PN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Rombun bütün hündürlükləri bərabərdir: $MN = EF$.\n2) $EF = EP + PF = 2 + 9 = 11$.\n3) $MN = MP + PN = 4 + PN = 11 \\implies PN = 7\\text{ sm}$.",
+          ru: "Решение:\n1) Высоты ромба равны: $MN = EF = 2 + 9 = 11$.\n2) $PN = 11 - 4 = 7\\text{ см}$.",
+          en: "Solution:\n1) All altitudes of a rhombus are equal: $MN = EF = 11$.\n2) $PN = 11 - 4 = 7\\text{ cm}$."
+        }
+      },
+      {
+        id: 19,
+        type: "mcq",
+        correct: "A",
+        options: { A: "15 sm", B: "10 sm", C: "7,5 sm", D: "12,5 sm", E: "18 sm" },
+        text: {
+          az: "$ABCD$ rombunun $B$ kor bucaq təpəsindən keçən düz xətt $AD$ tərəfini $M$ nöqtəsində kəsir. $\\angle ABM : \\angle MBC = 1 : 3, 2AB = 5AM$ və $P_{\\triangle ABD} = 35\\text{ sm}$ olarsa, $BD$-ni tapın.",
+          ru: "Прямая из тупого угла $B$ ромба делит $AD$ в точке $M$. $\\angle ABM : \\angle MBC = 1 : 3, 2AB = 5AM, P_{\\triangle ABD} = 35\\text{ см}$. Найдите $BD$.",
+          en: "A line from obtuse angle $B$ intersects $AD$ at $M$. $\\angle ABM : \\angle MBC = 1 : 3, 2AB = 5AM, P_{\\triangle ABD} = 35\\text{ см}$. Find $BD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Bucaq əlaqələrindən $AB = 10\\text{ sm}$ tapılır.\n2) $P_{\\triangle ABD} = AB + AD + BD = 10 + 10 + BD = 35 \\implies BD = 15\\text{ sm}$.",
+          ru: "Решение:\n1) $AB = 10\\text{ см}$.\n2) $BD = 35 - 20 = 15\\text{ см}$.",
+          en: "Solution:\n1) $AB = 10\\text{ cm} \\implies BD = 35 - 20 = 15\\text{ cm}$."
+        }
+      },
+      {
+        id: 20,
+        type: "open",
+        correct: "18",
+        text: {
+          az: "Düzbucaqlının diaqonalları arasındakı bucaqlardan biri $120^\\circ$, diaqonalı 36 olarsa, kiçik tərəfini tapın.",
+          ru: "Угол между диагоналями прямоугольника равен $120^\\circ$, диагональ равна 36. Найдите меньшую сторону.",
+          en: "The angle between diagonals of a rectangle is $120^\\circ$ and the diagonal is 36. Find the smaller side."
+        },
+        explanation: {
+          az: "Həlli:\n1) Diaqonallar arasındakı iti bucaq: $180^\\circ - 120^\\circ = 60^\\circ$.\n2) Diaqonalların kəsişməsindən yaranan üçbucaq bərabərtərəflidir: $a = \\frac{d}{2} = \\frac{36}{2} = 18$.",
+          ru: "Решение:\n1) Острый угол между диагоналями $60^\\circ \\implies a = d/2 = 18$.",
+          en: "Solution:\n1) Smaller side $a = d/2 = 18$."
+        }
+      },
+      {
+        id: 21,
+        type: "open",
+        correct: "12",
+        text: {
+          az: "Düzbucaqlının diaqonalları arasındakı bucaqlardan biri $120^\\circ$, diaqonalı 24 olarsa, kiçik tərəfini tapın.",
+          ru: "Угол между диагоналями $120^\\circ$, диагональ 24. Найдите меньшую сторону.",
+          en: "Angle between diagonals is $120^\\circ$, diagonal is 24. Find the smaller side."
+        },
+        explanation: {
+          az: "Həlli:\n1) $a = \\frac{d}{2} = \\frac{24}{2} = 12$.",
+          ru: "Решение:\n1) $a = 24 / 2 = 12$.",
+          en: "Solution:\n1) $a = 24 / 2 = 12$."
+        }
+      },
+      {
+        id: 22,
+        type: "open",
+        correct: "20",
+        text: {
+          az: "Rombun kor bucaq təpəsindən çəkilmiş hündürlüyü onun tərəfi ilə $30^\\circ$-li bucaq əmələ gətirir. Rombun kiçik diaqonalının 5 olduğunu bilərək, onun perimetrini tapın.",
+          ru: "Высота ромба из вершины тупого угла образует со стороной угол $30^\\circ$. Меньшая диагональ равна 5. Найдите периметр.",
+          en: "The altitude from an obtuse vertex makes a $30^\\circ$ angle with a side. The shorter diagonal is 5. Find the perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) Rombun iti bucağı: $90^\\circ - 30^\\circ = 60^\\circ$.\n2) İti bucağı $60^\\circ$ olduqda kiçik diaqonal tərəfə bərabərdir: $a = d = 5$.\n3) $P = 4a = 4 \\times 5 = 20$.",
+          ru: "Решение:\n1) Острый угол $60^\\circ \\implies a = d = 5$.\n2) $P = 4 \\times 5 = 20$.",
+          en: "Solution:\n1) Acute angle is $60^\\circ \\implies a = 5$.\n2) $P = 4(5) = 20$."
+        }
+      },
+      {
+        id: 23,
+        type: "open",
+        correct: "48",
+        text: {
+          az: "Kor bucağı iti bucağından 5 dəfə böyük, hündürlüyü 6 olan rombun perimetrini tapın.",
+          ru: "Тупой угол ромба в 5 раз больше острого, высота равна 6. Найдите периметр.",
+          en: "The obtuse angle is 5 times the acute angle, and height is 6. Find the perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $x + 5x = 180^\\circ \\implies 6x = 180^\\circ \\implies x = 30^\\circ$.\n2) $\\sin 30^\\circ = \\frac{h}{a} \\implies a = \\frac{6}{1/2} = 12$.\n3) $P = 4a = 4 \\times 12 = 48$.",
+          ru: "Решение:\n1) Острый угол $30^\\circ \\implies a = 6 / \\sin 30^\\circ = 12$.\n2) $P = 4 \\times 12 = 48$.",
+          en: "Solution:\n1) Angle $= 30^\\circ \\implies a = 12$.\n2) $P = 4(12) = 48$."
+        }
+      },
+      {
+        id: 24,
+        type: "open",
+        correct: "24",
+        image: "Dordbucaqli_Image0024.png",
+        text: {
+          az: "$ABCD$ rombunda $\\angle B = 120^\\circ, AM = KC = \\frac{1}{2}MB$ və $MK = 2\\sqrt{13}$ olarsa, rombun perimetrini tapın.",
+          ru: "В ромбе $ABCD$ $\\angle B = 120^\\circ, AM = KC = \\frac{1}{2}MB, MK = 2\\sqrt{13}$. Найдите периметр.",
+          en: "In rhombus $ABCD$, $\\angle B = 120^\\circ, AM = KC = \\frac{1}{2}MB, MK = 2\\sqrt{13}$. Find perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $AM = x \\implies MB = 2x, AB = 3x$.\n2) Kosinuslar teoremindən $x = 2$ tapılır $\\implies a = 3x = 6$.\n3) $P = 4a = 24$.",
+          ru: "Решение:\n1) $a = 6 \\implies P = 24$.",
+          en: "Solution:\n1) Side $a = 6 \\implies P = 24$."
+        }
+      },
+      {
+        id: 25,
+        type: "open",
+        correct: "4",
+        image: "Dordbucaqli_Image0025.png",
+        text: {
+          az: "$ABCD$ kvadratında $E$ nöqtəsi $AC$ diaqonalı üzərində, $EP \\perp AB, EK \\perp BC, DC = 16, EP = 3EK$ olarsa, $EK$-nı tapın.",
+          ru: "В квадрате $ABCD$ $E$ лежит на $AC$, $EP \\perp AB, EK \\perp BC, DC = 16, EP = 3EK$. Найдите $EK$.",
+          en: "In square $ABCD$, $E$ is on $AC$, $EP \\perp AB, EK \\perp BC, DC = 16, EP = 3EK$. Find $EK$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $EK = x$ olarsa, $EP = 3x$.\n2) $x + 3x = 16 \\implies 4x = 16 \\implies x = 4$.",
+          ru: "Решение:\n1) $x + 3x = 16 \\implies x = 4$.",
+          en: "Solution:\n1) $x + 3x = 16 \\implies x = 4$."
+        }
+      },
+      {
+        id: 26,
+        type: "open",
+        correct: "3",
+        image: "Dordbucaqli_Image0026.png",
+        text: {
+          az: "$ABCD$ kvadratında $M$ nöqtəsi $AC$ diaqonalı üzərində, $ME \\perp AD, MN \\perp CD, BC = 12, ME = 3MN$ olarsa, $MN$-ni tapın.",
+          ru: "В квадрате $ABCD$ $M$ лежит на $AC$, $ME \\perp AD, MN \\perp CD, BC = 12, ME = 3MN$. Найдите $MN$.",
+          en: "In square $ABCD$, $M$ is on $AC$, $ME \\perp AD, MN \\perp CD, BC = 12, ME = 3MN$. Find $MN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $MN + 3MN = 12 \\implies 4MN = 12 \\implies MN = 3$.",
+          ru: "Решение:\n1) $4MN = 12 \\implies MN = 3$.",
+          en: "Solution:\n1) $4MN = 12 \\implies MN = 3$."
+        }
+      },
+      {
+        id: 27,
+        type: "open",
+        correct: "16",
+        image: "Dordbucaqli_Image0027.png",
+        text: {
+          az: "$ABCD$ düzbucaqlısında $\\angle OCD = 60^\\circ, BE \\perp AC$ və $OE = 4$ olarsa, $AC$-ni tapın.",
+          ru: "В прямоугольнике $ABCD$ $\\angle OCD = 60^\\circ, BE \\perp AC, OE = 4$. Найдите $AC$.",
+          en: "In rectangle $ABCD$, $\\angle OCD = 60^\\circ, BE \\perp AC, OE = 4$. Find $AC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\triangle BOC$ bərabərtərəflidir ($OB = OC$). $BE$ hündürlük olduğundan medianıdır: $OE = EC = 4 \\implies OC = 8$.\n2) $AC = 2 \\times OC = 16$.",
+          ru: "Решение:\n1) $\\triangle BOC$ равносторонний $\\implies OC = 2 \\times 4 = 8$.\n2) $AC = 16$.",
+          en: "Solution:\n1) $OC = 8 \\implies AC = 16$."
+        }
+      },
+      {
+        id: 28,
+        type: "open",
+        correct: "3",
+        image: "Dordbucaqli_Image0028.png",
+        text: {
+          az: "$ABCD$ düzbucaqlısında $BE \\perp AC, \\angle ACD = 60^\\circ$ və $AB = 6$ olarsa, $OE$-ni tapın.",
+          ru: "В прямоугольнике $ABCD$ $BE \\perp AC, \\angle ACD = 60^\\circ, AB = 6$. Найдите $OE$.",
+          en: "In rectangle $ABCD$, $BE \\perp AC, \\angle ACD = 60^\\circ, AB = 6$. Find $OE$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $OB = AB = 6$.\n2) $OE = \\frac{OB}{2} = 3$.",
+          ru: "Решение:\n1) $OE = 6 / 2 = 3$.",
+          en: "Solution:\n1) $OE = 3$."
+        }
+      },
+      {
+        id: 29,
+        type: "open",
+        correct: "6",
+        text: {
+          az: "İki təpəsi tərəfi 9 olan kvadratın diaqonalı üzərində, o biri təpələri isə həmin kvadratın tərəfləri üzərində yerləşən kvadratın diaqonalını tapın.",
+          ru: "Найдите диагональ квадрата, две вершины которого лежат на диагонали квадрата со стороной 9, а две другие — на его сторонах.",
+          en: "Find the diagonal of a square having two vertices on the diagonal of a square with side 9 and other two vertices on its sides."
+        },
+        explanation: {
+          az: "Həlli:\n1) Kvadratın diaqonalı: $9\\sqrt{2}$. Daxildəki kvadratın diaqonalı onun $\\frac{2}{3}$ hissəsidir.\n2) $d = \\frac{2}{3} \\times 9 = 6$.",
+          ru: "Решение:\n1) Диагональ $= 6$.",
+          en: "Solution:\n1) Diagonal $= 6$."
+        }
+      },
+      {
+        id: 30,
+        type: "open",
+        correct: "8",
+        text: {
+          az: "İki təpəsi tərəfi 12 olan kvadratın diaqonalı üzərində, o biri təpələri isə həmin kvadratın tərəfləri üzərində yerləşən kvadratın diaqonalını tapın.",
+          ru: "Найдите диагональ квадрата, вписанного аналогично в квадрат со стороной 12.",
+          en: "Find the diagonal of a square inscribed similarly in a square with side 12."
+        },
+        explanation: {
+          az: "Həlli:\n1) $d = \\frac{2}{3} \\times 12 = 8$.",
+          ru: "Решение:\n1) $d = \\frac{2}{3} \\times 12 = 8$.",
+          en: "Solution:\n1) $d = 8$."
+        }
+      },
+      {
+        id: 31,
+        type: "open",
+        correct: "4",
+        image: "Dordbucaqli_Image0031.png",
+        text: {
+          az: "$ABCD$ rombunda $BC = \\frac{4\\sqrt{6}}{3}, \\angle BAD = 60^\\circ, \\angle KCD = 15^\\circ$ olarsa, $CK$-nı tapın.",
+          ru: "В ромбе $ABCD$ $BC = \\frac{4\\sqrt{6}}{3}, \\angle BAD = 60^\\circ, \\angle KCD = 15^\\circ$. Найдите $CK$.",
+          en: "In rhombus $ABCD$, $BC = \\frac{4\\sqrt{6}}{3}, \\angle BAD = 60^\\circ, \\angle KCD = 15^\\circ$. Find $CK$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Sinuslar teoremindən $CK = 4$ tapılır.",
+          ru: "Решение:\n1) $CK = 4$.",
+          en: "Solution:\n1) $CK = 4$."
+        }
+      },
+      {
+        id: 32,
+        type: "open",
+        correct: "6",
+        image: "Dordbucaqli_Image0032.png",
+        text: {
+          az: "$ABCD$ rombunda $CK = 3\\sqrt{6}, \\angle BAD = 60^\\circ, \\angle KCD = 15^\\circ$ olarsa, $BC$-ni tapın.",
+          ru: "В ромбе $ABCD$ $CK = 3\\sqrt{6}, \\angle BAD = 60^\\circ, \\angle KCD = 15^\\circ$. Найдите $BC$.",
+          en: "In rhombus $ABCD$, $CK = 3\\sqrt{6}, \\angle BAD = 60^\\circ, \\angle KCD = 15^\\circ$. Find $BC$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $BC = 6$.",
+          ru: "Решение:\n1) $BC = 6$.",
+          en: "Solution:\n1) $BC = 6$."
+        }
+      },
+      {
+        id: 33,
+        type: "open",
+        correct: "36",
+        image: "Dordbucaqli_Image0033.png",
+        text: {
+          az: "$ABCD$ rombunda $\\angle B = 120^\\circ, AM = KC = \\frac{1}{2}MB$ və $MK = 3\\sqrt{13}$ olarsa, rombun perimetrini tapın.",
+          ru: "В ромбе $ABCD$ $\\angle B = 120^\\circ, AM = KC = \\frac{1}{2}MB, MK = 3\\sqrt{13}$. Найдите периметр.",
+          en: "In rhombus $ABCD$, $\\angle B = 120^\\circ, AM = KC = \\frac{1}{2}MB, MK = 3\\sqrt{13}$. Find perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $a = 9 \\implies P = 4 \\times 9 = 36$.",
+          ru: "Решение:\n1) $a = 9 \\implies P = 36$.",
+          en: "Solution:\n1) $a = 9 \\implies P = 36$."
+        }
+      },
+      {
+        id: 34,
+        type: "open",
+        correct: "14",
+        image: "Dordbucaqli_Image0034.png",
+        text: {
+          az: "$ABCD$ düzbucaqlısında $BM \\perp AC, BM = 2,4, MC = 3,2$ olarsa, düzbucaqlının perimetrini tapın.",
+          ru: "В прямоугольнике $ABCD$ $BM \\perp AC, BM = 2,4, MC = 3,2$. Найдите периметр.",
+          en: "In rectangle $ABCD$, $BM \\perp AC, BM = 2.4, MC = 3.2$. Find perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $BC = \\sqrt{2,4^2 + 3,2^2} = 4$.\n2) $AB = 3$.\n3) $P = 2(3 + 4) = 14$.",
+          ru: "Решение:\n1) $BC = 4, AB = 3 \\implies P = 14$.",
+          en: "Solution:\n1) $BC = 4, AB = 3 \\implies P = 14$."
+        }
+      },
+      {
+        id: 35,
+        type: "open",
+        correct: "28",
+        image: "Dordbucaqli_Image0035.png",
+        text: {
+          az: "$ABCD$ düzbucaqlısında $BM \\perp AC, BM = 4,8, MC = 6,4$ olarsa, düzbucaqlının perimetrini tapın.",
+          ru: "В прямоугольнике $ABCD$ $BM \\perp AC, BM = 4,8, MC = 6,4$. Найдите периметр.",
+          en: "In rectangle $ABCD$, $BM \\perp AC, BM = 4.8, MC = 6.4$. Find perimeter."
+        },
+        explanation: {
+          az: "Həlli:\n1) $BC = 8, AB = 6 \\implies P = 2(6 + 8) = 28$.",
+          ru: "Решение:\n1) $P = 28$.",
+          en: "Solution:\n1) $P = 28$."
+        }
+      },
+      {
+        id: 36,
+        type: "open",
+        correct: "56",
+        text: {
+          az: "Rombun diaqonallarının kəsişmə nöqtəsindən rombun tərəfinə çəkilmiş perpendikulyar onu $3:4$ nisbətində bölür. Rombun kiçik diaqonalı $28\\sqrt{3}$ olarsa, onun böyük diaqonalını tapın.",
+          ru: "Перпендикуляр из точки пересечения диагоналей делит сторону ромба в отношении $3:4$. Меньшая диагональ $28\\sqrt{3}$. Найдите большую диагональ.",
+          en: "Perpendicular from intersection of diagonals divides side in ratio $3:4$. Minor diagonal is $28\\sqrt{3}$. Find major diagonal."
+        },
+        explanation: {
+          az: "Həlli:\n1) $D = 56$.",
+          ru: "Решение:\n1) $D = 56$.",
+          en: "Solution:\n1) $D = 56$."
+        }
+      },
+      {
+        id: 37,
+        type: "open",
+        correct: "90",
+        text: {
+          az: "Rombun diaqonallarının kəsişmə nöqtəsindən rombun tərəfinə çəkilmiş perpendikulyar həmin tərəfi $4:5$ nisbətində bölür. Rombun kiçik diaqonalı $36\\sqrt{5}$ olarsa, onun böyük diaqonalını tapın.",
+          ru: "Перпендикуляр делит сторону в отношении $4:5$. Меньшая диагональ $36\\sqrt{5}$. Найдите большую диагональ.",
+          en: "Perpendicular divides side in ratio $4:5$. Minor diagonal is $36\\sqrt{5}$. Find major diagonal."
+        },
+        explanation: {
+          az: "Həlli:\n1) $D = 90$.",
+          ru: "Решение:\n1) $D = 90$.",
+          en: "Solution:\n1) $D = 90$."
+        }
+      },
+      {
+        id: 38,
+        type: "open",
+        correct: "10",
+        image: "Dordbucaqli_Image0038.png",
+        text: {
+          az: "$ABCD$ kvadratında $\\angle ADM = \\angle MDC, MK \\perp MD, MD = 11\\sqrt{2}$ və $AK = 6$ olarsa, $BK$-nı tapın.",
+          ru: "В квадрате $ABCD$ $\\angle ADM = \\angle MDC, MK \\perp MD, MD = 11\\sqrt{2}, AK = 6$. Найдите $BK$.",
+          en: "In square $ABCD$, $\\angle ADM = \\angle MDC, MK \\perp MD, MD = 11\\sqrt{2}, AK = 6$. Find $BK$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Tərəf $a = 16 \\implies BK = 16 - 6 = 10$.",
+          ru: "Решение:\n1) $BK = 10$.",
+          en: "Solution:\n1) $BK = 10$."
+        }
+      },
+      {
+        id: 39,
+        type: "open",
+        correct: "8",
+        image: "Dordbucaqli_Image0039.png",
+        text: {
+          az: "$ABCD$ kvadratında $\\angle ADM = \\angle MDC, MK \\perp MD, MD = 14\\sqrt{2}$ və $AK = 10$ olarsa, $BK$-nı tapın.",
+          ru: "В квадрате $ABCD$ $\\angle ADM = \\angle MDC, MK \\perp MD, MD = 14\\sqrt{2}, AK = 10$. Найдите $BK$.",
+          en: "In square $ABCD$, $\\angle ADM = \\angle MDC, MK \\perp MD, MD = 14\\sqrt{2}, AK = 10$. Find $BK$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $BK = 8$.",
+          ru: "Решение:\n1) $BK = 8$.",
+          en: "Solution:\n1) $BK = 8$."
+        }
+      },
+      {
+        id: 40,
+        type: "open",
+        correct: "0,5",
+        image: "Dordbucaqli_Image0040.png",
+        text: {
+          az: "$ABCD$ kvadratında $BE = DF = 4$ və $CE = 2$ olarsa, $\\operatorname{tg}\\angle AKF$-i tapın.",
+          ru: "В квадрате $ABCD$ $BE = DF = 4, CE = 2$. Найдите $\\operatorname{tg}\\angle AKF$.",
+          en: "In square $ABCD$, $BE = DF = 4, CE = 2$. Find $\\tan\\angle AKF$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $\\operatorname{tg}\\angle AKF = 0,5$.",
+          ru: "Решение:\n1) $\\operatorname{tg}\\angle AKF = 0,5$.",
+          en: "Solution:\n1) $\\tan\\angle AKF = 0.5$."
+        }
+      },
+      {
+        id: 41,
+        type: "open",
+        correct: "1-b; 2-c,e; 3-a,d",
+        text: {
+          az: "Uyğunluğu müəyyən edin:\n1. Paraleloqram\n2. Düzbucaqlı\n3. Kvadrat\n\na. həm daxilinə, həm də xaricinə çevrə çəkmək olar\nb. simmetriya oxu yoxdur\nc. iki simmetriya oxu var\nd. diaqonalları perpendikulyardır\ne. yalnız xaricinə çevrə çəkmək olar",
+          ru: "Установите соответствие:\n1. Параллелограмм\n2. Прямоугольник\n3. Квадрат",
+          en: "Match the properties:\n1. Parallelogram\n2. Rectangle\n3. Square"
+        },
+        explanation: {
+          az: "Həlli:\n1 - b (simmetriya oxu yoxdur)\n2 - c, e (2 simmetriya oxu, yalnız xaricinə çevrə)\n3 - a, d (daxilinə və xaricinə çevrə, diaqonalları $\\perp$)",
+          ru: "Решение:\n1 -> b; 2 -> c, e; 3 -> a, d.",
+          en: "Solution:\n1 -> b; 2 -> c, e; 3 -> a, d."
+        }
+      },
+      {
+        id: 42,
+        type: "open",
+        correct: "24",
+        image: "Dordbucaqli_Image0042.png",
+        text: {
+          az: "Kvadratların diaqonalları, uzunluğu $6\\sqrt{2}$ olan $AB$ parçası üzərində olarsa, hər üç kvadratın perimetrləri cəmini tapın.",
+          ru: "Диагонали трех квадратов лежат на отрезке $AB = 6\\sqrt{2}$. Найдите сумму их периметров.",
+          en: "The diagonals of three squares lie on segment $AB = 6\\sqrt{2}$. Find the sum of their perimeters."
+        },
+        explanation: {
+          az: "Həlli:\n1) Diaqonallar cəmi: $d_1 + d_2 + d_3 = 6\\sqrt{2}$.\n2) Tərəflər cəmi: $a_1 + a_2 + a_3 = 6$.\n3) Perimetrlər cəmi: $4 \\times 6 = 24$.",
+          ru: "Решение:\n1) $P_1 + P_2 + P_3 = 4 \\times 6 = 24$.",
+          en: "Solution:\n1) Total perimeter $= 24$."
+        }
+      },
+      {
+        id: 43,
+        type: "open",
+        correct: "20*sqrt(3)/3",
+        image: "Dordbucaqli_Image0043.png",
+        text: {
+          az: "$ABCD$ düzbucaqlısında $\\angle BAO = 60^\\circ$ və $DF = 5$ olarsa, $BD$-ni tapın.",
+          ru: "В прямоугольнике $ABCD$ $\\angle BAO = 60^\\circ, DF = 5$. Найдите $BD$.",
+          en: "In rectangle $ABCD$, $\\angle BAO = 60^\\circ, DF = 5$. Find $BD$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $BD = \\frac{20\\sqrt{3}}{3}$.",
+          ru: "Решение:\n1) $BD = \\frac{20\\sqrt{3}}{3}$.",
+          en: "Solution:\n1) $BD = \\frac{20\\sqrt{3}}{3}$."
+        }
+      },
+      {
+        id: 44,
+        type: "open",
+        correct: "3*sqrt(2)",
+        image: "Dordbucaqli_Image0044.png",
+        text: {
+          az: "Kvadratların perimetrləri cəmi 24-dür. Birinci və dördüncü kvadratın perimetrləri cəmi, ikinci və üçüncü kvadratın perimetrləri cəminə bərabərdir. İkinci və üçüncü kvadratın diaqonalları cəmini tapın.",
+          ru: "Сумма периметров квадратов равна 24. $P_1 + P_4 = P_2 + P_3$. Найдите сумму диагоналей 2-го и 3-го квадратов.",
+          en: "Sum of perimeters is 24. $P_1 + P_4 = P_2 + P_3$. Find the sum of diagonals of 2nd and 3rd squares."
+        },
+        explanation: {
+          az: "Həlli:\n1) $P_2 + P_3 = 12 \\implies a_2 + a_3 = 3$.\n2) $d_2 + d_3 = (a_2 + a_3)\\sqrt{2} = 3\\sqrt{2}$.",
+          ru: "Решение:\n1) $a_2 + a_3 = 3 \\implies d_2 + d_3 = 3\\sqrt{2}$.",
+          en: "Solution:\n1) $d_2 + d_3 = 3\\sqrt{2}$."
+        }
+      },
+      {
+        id: 45,
+        type: "open",
+        correct: "0,9",
+        image: "Dordbucaqli_Image0045.png",
+        text: {
+          az: "Perimetri $12\\text{ sm}$ olan $ABCD$ düzbucaqlısı $KF$ parçası ilə iki konqruyent düzbucaqlıya ayrılmışdır. $\\triangle ABF$-in orta xətti $MN, BF + FC = 6\\text{ sm}$ olarsa, $MN$ parçasının uzunluğunu tapın.",
+          ru: "Периметр $ABCD$ равен $12\\text{ см}$. $MN$ — средняя линия $\\triangle ABF$. Найдите $MN$.",
+          en: "Perimeter of $ABCD$ is $12\\text{ см}$. $MN$ is the midsegment of $\\triangle ABF$. Find $MN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) $MN = 0,9\\text{ sm}$.",
+          ru: "Решение:\n1) $MN = 0,9\\text{ см}$.",
+          en: "Solution:\n1) $MN = 0.9\\text{ cm}$."
+        }
+      },
+      {
+        id: 46,
+        type: "open",
+        correct: "9",
+        image: "Dordbucaqli_Image0046.png",
+        text: {
+          az: "Tərəfi $12\\text{ sm}$, iti bucağı $60^\\circ$ olan rombun $B$ kor bucaq təpəsindən $BM$ və $BN$ hündürlükləri çəkilmişdir. Rombun kiçik diaqonalının $BMN$ üçbucağı daxilində qalan hissəsinin uzunluğunu tapın.",
+          ru: "Сторона ромба $12\\text{ см}$, угол $60^\\circ$. Найдите часть меньшей диагонали внутри $\\triangle BMN$.",
+          en: "Side is $12\\text{ cm}$, acute angle $60^\\circ$. Find the part of shorter diagonal inside $\\triangle BMN$."
+        },
+        explanation: {
+          az: "Həlli:\n1) Kiçik diaqonal $d = 12\\text{ sm}$.\n2) Daxildə qalan hissə: $\\frac{3}{4} \\times 12 = 9\\text{ sm}$.",
+          ru: "Решение:\n1) Отрезок $= 9\\text{ см}$.",
+          en: "Solution:\n1) Length $= 9\\text{ cm}$."
+        }
+      }
+    ];
+
+    let currentLang = 'az';
+    let currentMode = 'slide';
+    let currentSlide = 1;
+    let userAnswers = {};
+
+    function init() {
+      renderApp();
+      updateScore();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.btn-group button[id^="lang-"]').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `lang-${lang}`);
+      });
+      renderApp();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-slide').classList.toggle('active', mode === 'slide');
+      document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+      document.getElementById('slide-footer').style.display = mode === 'slide' ? 'flex' : 'none';
+      renderApp();
+    }
+
+    function navigateSlide(direction) {
+      const nextSlide = currentSlide + direction;
+      if (nextSlide >= 1 && nextSlide <= questionsData.length) {
+        currentSlide = nextSlide;
+        renderApp();
+      }
+    }
+
+    function goToSlide(id) {
+      currentSlide = id;
+      if (currentMode === 'list') {
+        const el = document.getElementById(`question-card-${id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        renderApp();
+      }
+    }
+
+    function handleMCQAnswer(qId, choice) {
+      if (userAnswers[qId]) return;
+      const q = questionsData.find(item => item.id === qId);
+      const isCorrect = choice === q.correct;
+      userAnswers[qId] = { answer: choice, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function handleOpenAnswer(qId) {
+      if (userAnswers[qId]) return;
+      const input = document.getElementById(`input-${qId}`);
+      if (!input) return;
+      const val = input.value.trim();
+      if (!val) return;
+
+      const q = questionsData.find(item => item.id === qId);
+      
+      const cleanVal = val.toLowerCase().replace(/[\s°mмsmсм\\*]/g, '').replace(/;/g, ',').replace(/sqrt/g, '√');
+      const cleanCorrect = q.correct.toLowerCase().replace(/[\s°mмsmсм\\*]/g, '').replace(/;/g, ',').replace(/sqrt/g, '√');
+      const isCorrect = cleanVal === cleanCorrect || cleanVal.includes(cleanCorrect);
+
+      userAnswers[qId] = { answer: val, isCorrect };
+      updateScore();
+      renderApp();
+    }
+
+    function updateScore() {
+      const correctCount = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      document.getElementById('score-val').innerText = `${correctCount} / ${questionsData.length}`;
+    }
+
+    function renderApp() {
+      const t = uiTranslations[currentLang];
+      document.getElementById('ui-topic').innerText = t.topic;
+      document.getElementById('ui-back').innerText = t.back;
+      document.getElementById('ui-slide-mode').innerText = t.slideMode;
+      document.getElementById('ui-list-mode').innerText = t.listMode;
+      document.getElementById('ui-score-label').innerText = t.scoreLabel;
+      document.getElementById('ui-grid-title').innerText = t.gridTitle;
+      document.getElementById('ui-prev').innerText = t.prev;
+      document.getElementById('ui-next').innerText = t.next;
+
+      const grid = document.getElementById('question-grid');
+      grid.innerHTML = '';
+      questionsData.forEach(q => {
+        const btn = document.createElement('button');
+        btn.className = 'q-btn';
+        btn.innerText = q.id;
+
+        if (userAnswers[q.id]) {
+          btn.classList.add(userAnswers[q.id].isCorrect ? 'correct' : 'incorrect');
+        }
+        if (currentMode === 'slide' && q.id === currentSlide) {
+          btn.classList.add('active');
+        }
+
+        btn.onclick = () => goToSlide(q.id);
+        grid.appendChild(btn);
+      });
+
+      if (currentMode === 'slide') {
+        document.getElementById('prev-btn').disabled = currentSlide === 1;
+        document.getElementById('next-btn').disabled = currentSlide === questionsData.length;
+      }
+
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      const questionsToRender = currentMode === 'slide'
+        ? questionsData.filter(q => q.id === currentSlide)
+        : questionsData;
+
+      questionsToRender.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `question-card-${q.id}`;
+
+        const isAnswered = !!userAnswers[q.id];
+        const userAns = userAnswers[q.id];
+
+        let cardHtml = `
+          <div class="q-header">
+            <span class="q-number">${t.question} ${q.id}</span>
+            <span class="q-type-badge">${q.type === 'mcq' ? t.multipleChoice : t.openEnded}</span>
+          </div>
+          <div class="q-text">${q.text[currentLang]}</div>
+        `;
+
+        if (q.image) {
+          cardHtml += `
+            <div class="q-image-container">
+              <img src="${q.image}" alt="Q${q.id}"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'color:#94a3b8; font-size:0.85rem; font-style:italic;\\'>[Şəkil: ${q.image}]</div>';">
+            </div>
+          `;
+        }
+
+        if (q.type === 'mcq') {
+          cardHtml += `<div class="options-grid">`;
+          for (const [key, val] of Object.entries(q.options)) {
+            let btnClass = 'option-btn';
+            if (isAnswered) {
+              if (key === q.correct) btnClass += ' selected-correct';
+              else if (userAns.answer === key && !userAns.isCorrect) btnClass += ' selected-incorrect';
+            }
+            cardHtml += `
+              <button class="${btnClass}" ${isAnswered ? 'disabled' : ''} onclick="handleMCQAnswer(${q.id}, '${key}')">
+                <strong>${key})</strong> <span>${val}</span>
+              </button>
+            `;
+          }
+          cardHtml += `</div>`;
+        } else {
+          cardHtml += `
+            <div class="open-input-container">
+              <input type="text" class="open-input" id="input-${q.id}" placeholder="${t.enterAnswer}"
+                value="${isAnswered ? userAns.answer : ''}" ${isAnswered ? 'disabled' : ''}
+                onkeydown="if(event.key==='Enter') handleOpenAnswer(${q.id})">
+              ${!isAnswered ? `<button class="submit-btn" onclick="handleOpenAnswer(${q.id})">${t.check}</button>` : ''}
+            </div>
+          `;
+        }
+
+        cardHtml += `
+          <div class="explanation-box" style="display: ${isAnswered ? 'block' : 'none'};">
+            <div class="explanation-title">${t.explanationTitle}</div>
+            <div class="explanation-body">${q.explanation[currentLang]}</div>
+          </div>
+        `;
+
+        card.innerHTML = cardHtml;
+        container.appendChild(card);
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
+</body>
+</html>
